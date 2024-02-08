@@ -11,7 +11,7 @@ import { Title } from "./title";
 import { Banner } from "./banner";
 import { Menu } from "./menu";
 import { Publish } from "./publish";
-import OffcanvasMenu from "@/components/offcamvasMenu/OffcanvasMenu";
+import OffcanvasMenu from "@/components/offcanvasMenu/OffcanvasMenu";
 
 interface NavbarProps {
   isCollapsed: boolean;
