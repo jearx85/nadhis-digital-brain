@@ -1,0 +1,56 @@
+/* stylelint-disable-next-line selector-class-pattern */
+.chat-header {
+  border-radius: 10px;
+  height: 8%;
+  width: 100%;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.chat-header-icon {
+  border: none;
+  background-color: inherit;
+  border-radius: 50px;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.chat-header-icon:hover {
+  cursor: pointer;
+  background-color: aqua;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.sendBtn {
+  margin-top: 10px;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.user-message {
+  background-color: lightgray;
+  padding: 10px;
+  border-radius: 10px;
+  display: inline-block;
+  max-width: 200px;
+  overflow: hidden;
+  word-wrap: break-word;
+  white-space: normal; /* Agrega esta propiedad para forzar el salto de línea */
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.response-area {
+  /* display: flex; */
+  padding: 10px;
+
+  /* align-items: center;
+    justify-content: center; */
+  height: 75%;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  overflow-y: auto;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.request-chat-area {
+  border: 1px solid lightgray;
+  margin-top: 16px;
+  border-radius: 10px;
+  width: 100%;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.main-chat {
+  padding: 10px;
+  height: auto;
+}

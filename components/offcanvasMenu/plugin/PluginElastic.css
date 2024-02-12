@@ -1,0 +1,53 @@
+/* stylelint-disable-next-line selector-class-pattern */
+.respuestaPlugin {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  overflow-x: auto;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.plugin-input {
+  border: 1px solid lightgray;
+  width: 100%;
+  margin-top: 15px;
+  border-radius: 10px;
+  padding: 10px;
+
+  /* box-shadow: 0 0 3px; */
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.plugin-text-area {
+  border: 1px solid lightgray;
+  width: 100%;
+  margin-top: 15px;
+  border-radius: 10px;
+  padding: 10px;
+
+  /* box-shadow: 0 0 3px; */
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.titulos {
+  margin-top: 25px;
+  font-size: 13px;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: inset 0 0.5px 0.5px 0.5px rgb(255 255 255 / 9%),
+    0 2px 4px 0 rgb(0 0 0 / 15%), 0 1px 1.5px 0 rgb(0 0 0 / 10%),
+    0 1px 2px 0 rgb(0 0 0 / 20%), 0 0 0 0 transparent;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.titulos:hover {
+  cursor: pointer;
+  background-color: rgb(186 188 194);
+  border-color: lightgray;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.Mydropdown {
+  width: 100%;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  padding: 10px;
+
+  /* box-shadow: 0 0 3px; */
+}

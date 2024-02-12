@@ -59,6 +59,7 @@ export const Navbar = ({
             <Publish initialData={document} />
             <Menu documentId={document._id} />
             < OffcanvasMenu />
+            
           </div>
         </div>
       </nav>

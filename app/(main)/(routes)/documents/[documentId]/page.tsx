@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery } from "convex/react";
 import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -10,6 +10,8 @@ import { Toolbar } from "@/components/toolbar";
 import { Cover } from "@/components/cover";
 import { Skeleton } from "@/components/ui/skeleton";
 import Blocksuit from "@/components/Blocksuit";
+import EditorComponent from "@/components/editorjs"
+
 
 interface DocumentIdPageProps {
   params: {
@@ -20,7 +22,7 @@ interface DocumentIdPageProps {
 const DocumentIdPage = ({
   params
 }: DocumentIdPageProps) => {
-  const Editor = useMemo(() => dynamic(() => import("@/components/Blocksuit"), { ssr: false }) ,[]);
+  const Editor = useMemo(() => dynamic(() => import("@/components/editorjs"), { ssr: false }) ,[]);
 
   const document = useQuery(api.documents.getById, {
     documentId: params.documentId
@@ -33,7 +35,11 @@ const DocumentIdPage = ({
       id: params.documentId,
       content
     });
+    // localStorage.setItem('blocksuit-document', content);
   };
+  // const changes = localStorage.getItem("blocksuit-document");
+  // console.log("localstorage:", (changes));
+
 
   if (document === undefined) {
     return (
@@ -54,7 +60,8 @@ const DocumentIdPage = ({
   if (document === null) {
     return <div>Not found</div>
   }
-
+  
+ 
   
 
   return ( 
@@ -70,10 +77,20 @@ const DocumentIdPage = ({
     
         <Editor
           onChange={onChange}
-          initialContent={document.content}
+          content={document.content} 
+          holder={"editorjs-container"}       
         />
+
+
+        {/* <Editor
+          onChange={onChange}
+          initialContent={document.content}
+        /> */}
+
+
+        </div>;
       </div>
-    </div>
+   
    );
 }
  
