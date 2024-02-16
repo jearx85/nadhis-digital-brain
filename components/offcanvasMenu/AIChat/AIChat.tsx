@@ -62,10 +62,10 @@ export default function AIChat() {
 
   return (
     <>
-      <div className="response-area overflow-y-auto max-h-screen">
-        <div className="chat-header">
+      <div className="response-area overflow-y-auto h-3/4 max-h-screen">
+        <div className="chat-header rounded-lg h-8 w-full">
           <button
-            className="chat-header-icon"
+            className="chat-header-icon border-none bg-transparent rounded-full"
             onClick={handleNewChat}
             data-tooltip-id="new-chat-tooltip"
             data-tooltip-content="Nuevo chat"
@@ -78,17 +78,17 @@ export default function AIChat() {
         <div className="main-chat">
           <div className="textUser">{/* <p>hola</p> */}</div>
           {displayedText && (
-            <div className="user-message">
+            <div className="user-message bg-lightgray p-10 rounded overflow-hidden break-words whitespace-normal max-w-200">
               <p>{displayedText}</p>
             </div>
           )}
         </div>
       </div>
 
-      <div className="request-chat d-flex">
-        <textarea ref={chatTextAreaRef} className="request-chat-area" />
+      <div className="request-chat flex">
+        <textarea ref={chatTextAreaRef} className="request-chat-area border-1 border-lightgray mt-16 rounded w-full" />
       </div>
-      <button className="sendBtn btn btn-primary" onClick={handleSendClick}>
+      <button className="sendBtn btn btn-primary mt-10" onClick={handleSendClick}>
         send
       </button>
     </>

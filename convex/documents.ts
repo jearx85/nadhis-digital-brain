@@ -112,7 +112,7 @@ export const create = mutation({
 export const createNote = mutation({
   args: {
     title: v.string(),
-    content: v.optional(v.string()), // Cambiado a un array de strings
+    content: v.optional(v.string()), 
     parentDocument: v.optional(v.id("documents"))
   },
   handler: async (ctx, args) => {
@@ -126,7 +126,7 @@ export const createNote = mutation({
 
     const document = await ctx.db.insert("documents", {
       title: args.title,
-      content: args.content, // Pasando el array de strings como contenido
+      content: args.content,
       parentDocument: args.parentDocument,
       userId,
       isArchived: false,

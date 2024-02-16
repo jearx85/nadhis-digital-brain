@@ -4,7 +4,7 @@ import './PluginElastic.css';
 import { getContent, queryCategories, queryCategory } from '../funciones';
 import router from 'next/router';
 import { toast } from 'sonner';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { generateUUID } from './noteUtils';
 
@@ -53,28 +53,58 @@ const PluginElastic = () => {
       const mark = data.hits[0]._source.mark;
   
       const uuid = generateUUID();
-      const lines = mark.split('\n'); // Dividir el texto por salto de línea
+      const lines = mark.split('\n'); 
   
       const newData = lines.map((line: string) => {
         let type = "paragraph"; 
         let level = 0; 
-        
-        if (line.startsWith('#')) {
+        let textColor = "default";
+
+        if (line.startsWith('![') && line.includes('](') && line.includes(')')) {
+          type = "image";
+          const urlMatch = line.match(/\((.*?)\)/);
+          const url = urlMatch ? urlMatch[1] : ''; 
+          return {
+            "id": uuid,
+            "type": type,
+            "props": {
+              "backgroundColor": "default",
+              "textAlignment": "left",
+              "url": url,
+              "caption": "",
+              "width": 512 
+            },
+            "children": []
+          };
+        } else if (line.startsWith('- ')) {
+          type = "bulletListItem"; 
+          level = 0;
+          line = line.slice(2).trim();
+        } else  if (/^\d+\.\s/.test(line)) { 
+          type = "numberedListItem"; 
+          level = 0;
+          line = line.replace(/^\d+\.\s/, '').trim(); 
+         } else if (line.startsWith('#')) {
           type = "heading";
           let i = 0;
-         
+  
           while (line.charAt(i) === '#') {
             i++;
           }
-          level = i; 
-          level = level > 0 ? level : 1; 
+          level = i;
+          level = level > 0 ? level : 1;
+  
+          if (level === 2) {
+            textColor = "gray";
+          }
         }
+  
   
         return {
           "id": uuid,
           "type": type,
           "props": {
-            "textColor": "default",
+            "textColor": textColor,
             "backgroundColor": "default",
             "textAlignment": "left",
             "level": level
@@ -145,7 +175,6 @@ const PluginElastic = () => {
             className="titulos"
             key={index}
             onClick={() => handleTitleClick(titulo)}
-            // onClick={() => handletestClick()}
           >
             {titulo}
           </h4>

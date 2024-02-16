@@ -7,7 +7,8 @@ import {
   PlusCircle,
   Search,
   Settings,
-  Trash
+  Trash,
+  Globe
 } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
@@ -30,6 +31,8 @@ import { Item } from "./item";
 import { DocumentList } from "./document-list";
 import { TrashBox } from "./trash-box";
 import { Navbar } from "./navbar";
+import Link from 'next/link';
+import EmbeddedPage from "./appsearch/appSearch";
 
 export const Navigation = () => {
   const router = useRouter();
@@ -45,6 +48,8 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+  const [embedAppSearch, setEmbedAppSearch] = useState(false);
+  const [showEmbeddedPage, setShowEmbeddedPage] = useState(false);
 
   useEffect(() => {
     if (isMobile) {
@@ -132,6 +137,21 @@ export const Navigation = () => {
     });
   };
 
+      
+    const handleShowEmbeddedPage = () => {
+      setShowEmbeddedPage(true);
+    };
+
+
+    const handleCloseEmbeddedPage = () => {
+      setShowEmbeddedPage(false);
+    };
+
+    // const handleAppSearchClick = () => {
+    //   router.push('/appsearch');
+    // };
+    
+
   return (
     <>
       <aside
@@ -154,6 +174,7 @@ export const Navigation = () => {
         </div>
         <div>
           <UserItem />
+          <hr className="mt-2 mb-5 border-b-2"/>
           <Item
             label="Search"
             icon={Search}
@@ -161,35 +182,53 @@ export const Navigation = () => {
             onClick={search.onOpen}
           />
           <Item
-            label="Settings"
-            icon={Settings}
-            onClick={settings.onOpen}
-          />
+            label="App Search"
+            icon={Globe}
+            onClick={() => setShowEmbeddedPage(true)} 
+            />
+
+            {showEmbeddedPage && <EmbeddedPage url="http://10.11.230.52:3030/" onClose={handleCloseEmbeddedPage} />}
+
+          <hr className="mt-2 mb-5 border-b-2"/>
           <Item
             onClick={handleCreate}
             label="New page"
             icon={PlusCircle}
           />
         </div>
+
         <div className="mt-4">
           <DocumentList />
           <Item
             onClick={handleCreate}
             icon={Plus}
             label="Add a page"
-          />
-          <Popover>
-            <PopoverTrigger className="w-full mt-4">
-              <Item label="Trash" icon={Trash} />
-            </PopoverTrigger>
-            <PopoverContent
-              className="p-0 w-72"
-              side={isMobile ? "bottom" : "right"}
-            >
-              <TrashBox />
-            </PopoverContent>
-          </Popover>
-        </div>
+            />
+
+            <Popover>
+              <PopoverTrigger className="w-full mt-4">
+                <Item label="Trash" icon={Trash} />
+              </PopoverTrigger>
+              <PopoverContent
+                className="p-0 w-72"
+                side={isMobile ? "bottom" : "right"}
+              >
+                <TrashBox />
+              </PopoverContent>
+            </Popover>  
+          </div>
+          
+          <hr className="mt-5 mb-5 border-b-2"/>
+              
+          <div className="mt-auto mb-4">
+            
+
+            <Item
+              label="Settings"
+              icon={Settings}
+              onClick={settings.onOpen}
+            />
+          </div>
         <div
           onMouseDown={handleMouseDown}
           onClick={resetWidth}
