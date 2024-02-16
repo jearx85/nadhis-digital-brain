@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect, useRef } from "react";
 import EditorJS, { OutputData } from "@editorjs/editorjs";
 import { EDITOR_TOOLS } from "./EditorTools";
@@ -11,6 +13,8 @@ export default function Editor({ content, onChange, holder }) {
     //initialize editor if we don't have a reference
     if (!ref.current) {
       const editor = new EditorJS({
+        autofocus: true,
+        inlineToolbar: true,
         holder: holder,
         tools: EDITOR_TOOLS,
         content,

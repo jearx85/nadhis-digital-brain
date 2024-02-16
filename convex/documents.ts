@@ -108,6 +108,38 @@ export const create = mutation({
     return document;
   }
 });
+//-----------------
+export const createNote = mutation({
+  args: {
+    title: v.string(),
+    content: v.optional(v.string()), // Cambiado a un array de strings
+    parentDocument: v.optional(v.id("documents"))
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const userId = identity.subject;
+
+    const document = await ctx.db.insert("documents", {
+      title: args.title,
+      content: args.content, // Pasando el array de strings como contenido
+      parentDocument: args.parentDocument,
+      userId,
+      isArchived: false,
+      isPublished: false,
+    });
+
+    return document;
+  }
+});
+
+
+//-----------------
+
 
 export const getTrash = query({
   handler: async (ctx) => {

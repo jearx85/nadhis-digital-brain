@@ -62,7 +62,7 @@ export default function AIChat() {
 
   return (
     <>
-      <div className="response-area">
+      <div className="response-area overflow-y-auto max-h-screen">
         <div className="chat-header">
           <button
             className="chat-header-icon"

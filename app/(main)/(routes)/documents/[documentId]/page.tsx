@@ -10,7 +10,7 @@ import { Toolbar } from "@/components/toolbar";
 import { Cover } from "@/components/cover";
 import { Skeleton } from "@/components/ui/skeleton";
 import Blocksuit from "@/components/Blocksuit";
-import EditorComponent from "@/components/editorjs"
+// import EditorComponent from "@/components/editorjs"
 
 
 interface DocumentIdPageProps {
@@ -22,7 +22,8 @@ interface DocumentIdPageProps {
 const DocumentIdPage = ({
   params
 }: DocumentIdPageProps) => {
-  const Editor = useMemo(() => dynamic(() => import("@/components/editorjs"), { ssr: false }) ,[]);
+  // const Editor = useMemo(() => dynamic(() => import("@/components/Blocksuit"), { ssr: false }) ,[]);
+  const Editor = useMemo(() => dynamic(() => import("@/components/editor"), { ssr: false }) ,[]);
 
   const document = useQuery(api.documents.getById, {
     documentId: params.documentId
@@ -35,11 +36,7 @@ const DocumentIdPage = ({
       id: params.documentId,
       content
     });
-    // localStorage.setItem('blocksuit-document', content);
   };
-  // const changes = localStorage.getItem("blocksuit-document");
-  // console.log("localstorage:", (changes));
-
 
   if (document === undefined) {
     return (
@@ -61,9 +58,6 @@ const DocumentIdPage = ({
     return <div>Not found</div>
   }
   
- 
-  
-
   return ( 
     <div className="pb-40">
       <Cover url={document.coverImage} />
@@ -75,20 +69,20 @@ const DocumentIdPage = ({
           initialContent={document.content}
         /> */}
     
-        <Editor
+        {/* editorjs */}
+        {/* <EditorComponent
           onChange={onChange}
           content={document.content} 
           holder={"editorjs-container"}       
-        />
-
-
-        {/* <Editor
-          onChange={onChange}
-          initialContent={document.content}
         /> */}
 
+        {/* blocknote */}
+        <Editor
+          onChange={onChange}
+          initialContent={document.content}
+        /> 
 
-        </div>;
+        </div>
       </div>
    
    );

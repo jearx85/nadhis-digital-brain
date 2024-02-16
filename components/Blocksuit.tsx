@@ -30,12 +30,13 @@ const Blocksuit = ({initialContent, onChange}: any) => {
         const paragraph = paragraphs[0];
         page.updateBlock(paragraph, { text: new Text(initialContent)});
 
-
-        editor.addEventListener('change', () => {
-          const content = paragraph;
-          console.log(content)
-        });
       }
+
+      editor.addEventListener('change', () => {
+        const paragraphs = page.getBlockByFlavour('affine:paragraph');
+        const paragraph = paragraphs[0];
+        console.log(paragraph);
+      });
 
     };
 

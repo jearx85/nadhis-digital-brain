@@ -43,7 +43,6 @@ const Editor = ({
       : undefined,
     onEditorContentChange: (editor) => {
       onChange(JSON.stringify(editor.topLevelBlocks, null, 2));
-      console.log(editor);
     },
     uploadFile: handleUpload
   })

@@ -6,7 +6,7 @@ import { Tooltip } from 'react-tooltip';
 import './navOffcanvas.css' 
 import MyCalendar from './MyCalendar/myCalendar';
 
-export default function OffcanvasExample() {
+const OffcanvasMenu = () => {
   const [open, setOpen] = useState(false);
   const [activeComponent, setActiveComponent] = useState('ChatboxOutline');
 
@@ -89,22 +89,24 @@ export default function OffcanvasExample() {
             <hr />
 
             {/* Contenido del offcanvas */}
-            <div className="px-4 py-6">
-               {activeComponent === 'CalendarOutline' && (
-                  <>
-                    <MyCalendar />
-                  </>
-                )}
-                {activeComponent === 'ChatboxOutline' && (
-                  <>
-                    <AIChat />
-                  </>
-                )}
-                {activeComponent === 'plugin' && (
-                  <>
-                    <PluginElastic />
-                  </>
-                )}
+            <div className="overflow-y-auto max-h-screen">
+              <div className="px-4 py-6">
+                {activeComponent === 'CalendarOutline' && (
+                    <>
+                      <MyCalendar />
+                    </>
+                  )}
+                  {activeComponent === 'ChatboxOutline' && (
+                    <>
+                      <AIChat />
+                    </>
+                  )}
+                  {activeComponent === 'plugin' && (
+                    <>
+                      <PluginElastic />
+                    </>
+                  )}
+              </div>
             </div>
           </div>
         </Fragment>
@@ -112,3 +114,5 @@ export default function OffcanvasExample() {
     </div>
   );
 }
+
+export default OffcanvasMenu;

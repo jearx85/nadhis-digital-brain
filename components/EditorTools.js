@@ -9,7 +9,8 @@ import List from "@editorjs/list";
 import Quote from "@editorjs/quote";
 import SimpleImage from "@editorjs/simple-image";
 import Paragraph from "@editorjs/paragraph";
-import Header from "@editorjs/header"
+import Header from "@editorjs/header";
+import Table from "@editorjs/table";
 
 export const EDITOR_TOOLS = {
   code: Code,
@@ -30,5 +31,6 @@ export const EDITOR_TOOLS = {
   list: List,
   quote: Quote,
   simpleImage: SimpleImage,
-  delimiter: Delimiter
+  delimiter: Delimiter,
+  table: Table,
 };

@@ -10,7 +10,7 @@ export async function queryCategory(): Promise<any> {
         throw new Error('No se pudo obtener los datos para la consulta');
       }
       const data = await response.json(); // Parse JSON from the response
-      //console.log(data)
+      // console.log(data)
   
       return data;
     } catch (error: any) {

@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import './PluginElastic.css';
 
-import { getContent, queryCategories, queryCategory } from '../funciones'; // Agrega la función create
-import { create } from '@/convex/documents';
+import { getContent, queryCategories, queryCategory } from '../funciones';
 import router from 'next/router';
 import { toast } from 'sonner';
-import { useMutation } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { generateUUID } from './noteUtils';
 
-export default function PluginElastic() {
+const PluginElastic = () => {
+  
   const [options, setOptions] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [categoryContent, setCategoryContent] = useState<string[]>([]);
-  
+
   useEffect(() => {
     async function loadCategories() {
       try {
@@ -42,37 +43,68 @@ export default function PluginElastic() {
     setSelectedCategory(selectedValue === '' ? null : selectedValue);
   }
 
-  async function getContentAndLog(titulo: string) {
+
+  const createNoteMutation  = useMutation(api.documents.createNote);
+
+  async function handleTitleClick(titulo: string) {
     try {
       const response = await getContent(titulo);
       const data = await response?.json();
       const mark = data.hits[0]._source.mark;
-      const title = data.hits[0]._source.mark
-      console.log('Resultado de getContent para', titulo, ':', mark);
+  
+      const uuid = generateUUID();
+      const lines = mark.split('\n'); // Dividir el texto por salto de línea
+  
+      const newData = lines.map((line: string) => {
+        let type = "paragraph"; 
+        let level = 0; 
+        
+        if (line.startsWith('#')) {
+          type = "heading";
+          let i = 0;
+         
+          while (line.charAt(i) === '#') {
+            i++;
+          }
+          level = i; 
+          level = level > 0 ? level : 1; 
+        }
+  
+        return {
+          "id": uuid,
+          "type": type,
+          "props": {
+            "textColor": "default",
+            "backgroundColor": "default",
+            "textAlignment": "left",
+            "level": level
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": line.replace(/^#+\s*/, ''), 
+              "styles": {}
+            }
+          ],
+          "children": []
+        };
+      });
+  
+      const promise = createNoteMutation({
+        title: titulo,
+        content: JSON.stringify(newData),
+      }).then((documentId) => router.push(`/documents/${documentId}`));
+  
+      toast.promise(promise, {
+        loading: "Creating a new note...",
+        success: "New note created!",
+        error: "Failed to create a new note."
+      });
     } catch (error: any) {
-      console.error('Error al obtener el contenido:', error.message);
+      console.error('Error al crear la nota:', error.message);
     }
   }
-
-  // function handleTitleClick(titulo: string) {
-  //   getContentAndLog(titulo);
-  //   // Aquí llamas a la función para crear una nueva nota
-  //   crearNota(titulo); // Pasa el título como argumento a la función crearNota
-  // }
-
-  const create = useMutation(api.documents.create);
-
-  const onCreate = () => {
-    const promise = create({ title: "Untitled" })
-      .then((documentId) => router.push(`/documents/${documentId}`))
-
-    toast.promise(promise, {
-      loading: "Creating a new note...",
-      success: "New note created!",
-      error: "Failed to create a new note."
-    });
-  };
-
+  
   return (
     <>
       <div className="filtro-categorias d-flex">
@@ -112,7 +144,8 @@ export default function PluginElastic() {
           <h4
             className="titulos"
             key={index}
-            onClick={onCreate}
+            onClick={() => handleTitleClick(titulo)}
+            // onClick={() => handletestClick()}
           >
             {titulo}
           </h4>
@@ -121,3 +154,5 @@ export default function PluginElastic() {
     </>
   );
 }
+
+export default PluginElastic
