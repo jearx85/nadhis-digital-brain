@@ -44,7 +44,7 @@ const OffcanvasMenu = () => {
                 id="AIChat"
                 onClick={() => handleComponentClick('ChatboxOutline')}
                 data-tooltip-id="AIchat-tooltip"
-                data-tooltip-content="Asistente"
+                data-tooltip-content="Chat"
               >
                 <MessageSquare  />
               </button>

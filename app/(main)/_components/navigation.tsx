@@ -8,7 +8,8 @@ import {
   Search,
   Settings,
   Trash,
-  Globe
+  Globe,
+  Bot 
 } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
@@ -33,6 +34,7 @@ import { TrashBox } from "./trash-box";
 import { Navbar } from "./navbar";
 import Link from 'next/link';
 import EmbeddedPage from "./appsearch/appSearch";
+import OffcanvasMenu from "@/components/offcanvasMenu/OffcanvasMenu";
 
 export const Navigation = () => {
   const router = useRouter();
@@ -50,6 +52,7 @@ export const Navigation = () => {
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
   const [embedAppSearch, setEmbedAppSearch] = useState(false);
   const [showEmbeddedPage, setShowEmbeddedPage] = useState(false);
+  const [openOffcanvas, setOpenOffcanvas] = useState(false);
 
   useEffect(() => {
     if (isMobile) {
@@ -151,6 +154,9 @@ export const Navigation = () => {
     //   router.push('/appsearch');
     // };
     
+    const handleAssistantClick = () => {
+      setOpenOffcanvas(true); // Aquí estableces el estado para abrir el offcanvas
+    };
 
   return (
     <>
@@ -189,15 +195,22 @@ export const Navigation = () => {
 
             {showEmbeddedPage && <EmbeddedPage url="http://10.11.230.52:3030/" onClose={handleCloseEmbeddedPage} />}
 
-          <hr className="mt-2 mb-5 border-b-2"/>
           <Item
+            label="Asistente"
+            icon={Bot}
+            onClick={() => handleAssistantClick} 
+          />
+
+          <hr className="mt-2 mb-5 border-b-2"/>
+         
+        </div>
+
+        <div className="mt-4">
+        <Item
             onClick={handleCreate}
             label="New page"
             icon={PlusCircle}
           />
-        </div>
-
-        <div className="mt-4">
           <DocumentList />
           <Item
             onClick={handleCreate}
@@ -221,8 +234,6 @@ export const Navigation = () => {
           <hr className="mt-5 mb-5 border-b-2"/>
               
           <div className="mt-auto mb-4">
-            
-
             <Item
               label="Settings"
               icon={Settings}
