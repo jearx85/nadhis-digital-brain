@@ -50,9 +50,9 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
-  const [embedAppSearch, setEmbedAppSearch] = useState(false);
   const [showEmbeddedPage, setShowEmbeddedPage] = useState(false);
   const [openOffcanvas, setOpenOffcanvas] = useState(false);
+  const [appSearchOpen, setAppSearchOpen] = useState(false);
 
   useEffect(() => {
     if (isMobile) {
@@ -148,15 +148,17 @@ export const Navigation = () => {
 
     const handleCloseEmbeddedPage = () => {
       setShowEmbeddedPage(false);
+      setAppSearchOpen(false);
     };
 
-    // const handleAppSearchClick = () => {
-    //   router.push('/appsearch');
-    // };
-    
     const handleAssistantClick = () => {
-      setOpenOffcanvas(true); // Aquí estableces el estado para abrir el offcanvas
+      console.log("click")
+      setOpenOffcanvas(true); 
     };
+
+    const handleAppSearch  = () =>{
+    router.push('/appsearch');
+  }
 
   return (
     <>
@@ -190,17 +192,18 @@ export const Navigation = () => {
           <Item
             label="App Search"
             icon={Globe}
-            onClick={() => setShowEmbeddedPage(true)} 
+            // onClick={() => setShowEmbeddedPage(true)} 
+            onClick={handleShowEmbeddedPage} 
             />
 
             {showEmbeddedPage && <EmbeddedPage url="http://10.11.230.52:3030/" onClose={handleCloseEmbeddedPage} />}
 
-          <Item
+          {/* <Item
             label="Asistente"
             icon={Bot}
-            onClick={() => handleAssistantClick} 
+            onClick={() => handleAssistantClick()} 
           />
-
+          {openOffcanvas && <OffcanvasMenu />} */}
           <hr className="mt-2 mb-5 border-b-2"/>
          
         </div>

@@ -9,8 +9,6 @@ import { Id } from "@/convex/_generated/dataModel";
 import { Toolbar } from "@/components/toolbar";
 import { Cover } from "@/components/cover";
 import { Skeleton } from "@/components/ui/skeleton";
-import Blocksuit from "@/components/Blocksuit";
-// import EditorComponent from "@/components/editorjs"
 
 
 interface DocumentIdPageProps {
@@ -22,7 +20,6 @@ interface DocumentIdPageProps {
 const DocumentIdPage = ({
   params
 }: DocumentIdPageProps) => {
-  // const Editor = useMemo(() => dynamic(() => import("@/components/Blocksuit"), { ssr: false }) ,[]);
   const Editor = useMemo(() => dynamic(() => import("@/components/editor"), { ssr: false }) ,[]);
 
   const document = useQuery(api.documents.getById, {
@@ -63,20 +60,6 @@ const DocumentIdPage = ({
       <Cover url={document.coverImage} />
       <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
         <Toolbar initialData={document} />
-
-        {/* < Blocksuit 
-          onChange={onChange}
-          initialContent={document.content}
-        /> */}
-    
-        {/* editorjs */}
-        {/* <EditorComponent
-          onChange={onChange}
-          content={document.content} 
-          holder={"editorjs-container"}       
-        /> */}
-
-        {/* blocknote */}
         <Editor
           onChange={onChange}
           initialContent={document.content}

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './PluginElastic.css';
 
-import { getContent, queryCategories, queryCategory } from '../funciones';
-import router from 'next/router';
+import { queryCategories, queryCategory } from '../funciones';
 import { toast } from 'sonner';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { generateUUID } from './noteUtils';
+import { useRouter } from 'next/navigation';
 
 const PluginElastic = () => {
-  
+  const router = useRouter();
   const [options, setOptions] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [categoryContent, setCategoryContent] = useState<string[]>([]);
@@ -52,14 +52,10 @@ const PluginElastic = () => {
 
   const createNoteMutation  = useMutation(api.documents.createNote);
 //============================================================================
-async function handleTitleClick(titulo: string) {
+async function handleTitleClick(titulo: any , content : any) {
   try {
-      const response = await getContent(titulo);
-      const data = await response?.json();
-      const mark = data.hits[0]._source.mark;
-
       const uuid = generateUUID();
-      const lines = mark.split('\n');
+      const lines = content.split('\n');
 
       const newData = lines.map((line: string) => {
           let type = "paragraph";
@@ -128,6 +124,33 @@ async function handleTitleClick(titulo: string) {
                   ],
                   "children": []
               };
+            } else if (line.includes('|')) {
+              type = "table";
+              const rows = line.split('|').map(cell => {
+                  return {
+                      cells: [
+                          [{
+                              type: "text",
+                              text: cell.trim(),
+                              styles: {}
+                          }]
+                      ]
+                  };
+              });
+
+              return {
+                  "id": uuid,
+                  "type": type,
+                  "props": {
+                      "textColor": textColor,
+                      "backgroundColor": "default"
+                  },
+                  "content": {
+                      "type": "tableContent",
+                      "rows": rows
+                  },
+                  "children": []
+              };
           }
 
           return {
@@ -192,7 +215,7 @@ async function handleTitleClick(titulo: string) {
   }
 //=====================================================================
 const titulos: string[] = [];
-async function listarDocsVault(titulo: string) {
+async function createNotePlugin(titulo: string) {
   const selected = titulo;
   documents?.forEach((document) => {
     titulos.push(document.title);
@@ -209,9 +232,11 @@ async function listarDocsVault(titulo: string) {
       });
 
       if (response.status === 201) {
-        const noteTitle = titulo; // Título de la nota
-        // const noteContent = await response.json();
-        handleTitleClick(noteTitle);
+        const noteTitle = titulo; 
+        const noteContent = await response.json();
+
+        handleTitleClick(noteTitle, noteContent);
+
       }
     } catch (error) {
       console.log(error);
@@ -224,8 +249,12 @@ const handleKeyPress = (event: { key: string; }) => {
   if (event.key === 'Enter') {
     const textarea = document.querySelector(".plugin-text-area") as HTMLTextAreaElement;
     const data = textarea?.value;
-    setSearching(true);
-    getEmbeddings(data);
+    if (data) {
+      setSearching(true);
+      getEmbeddings(data);
+    } else {
+      toast("El campo de busqueda esta vacío")
+    }
   }
 };
 //==================================================================
@@ -279,7 +308,7 @@ useEffect(() => {
           <h4
             className="titulos"
             key={index}
-            onClick={() => handleTitleClick(titulo)}
+            onClick={() => createNotePlugin(titulo)}
           >
             {titulo}
           </h4>
@@ -287,7 +316,7 @@ useEffect(() => {
         {apiTitles.map((title, index) => (
           <h4 className="titulos" 
             key={index}
-            onClick={() => listarDocsVault(title)}
+            onClick={() => createNotePlugin(title)}
           >
             {title}
           </h4>

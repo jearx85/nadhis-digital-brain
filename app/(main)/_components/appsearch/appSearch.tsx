@@ -1,5 +1,3 @@
-// components/EmbeddedPage.js
-
 import React from 'react';
 
 const EmbeddedPage = ({ url, onClose }: any) => {
