@@ -15,6 +15,8 @@ const PluginElastic = () => {
   const [categoryContent, setCategoryContent] = useState<string[]>([]);
   const [apiTitles, setApiTitles] = useState<string[]>([]);
   const [searching, setSearching] = useState<boolean>(false); 
+  const [filteredTitles, setFilteredTitles] = useState<string[]>([]); 
+  const [inputValue, setInputValue] = useState<string>('');
 
   const documents = useQuery(api.documents.getAllDocuments);
 
@@ -61,6 +63,7 @@ async function handleTitleClick(titulo: any , content : any) {
           let type = "paragraph";
           let level = 0;
           let textColor = "default";
+          let tableUUID = ''; 
 
           if (line.startsWith('![') && line.includes('](') && line.includes(')')) {
               type = "image";
@@ -126,67 +129,72 @@ async function handleTitleClick(titulo: any , content : any) {
               };
             } else if (line.includes('|')) {
               type = "table";
-              const rows = line.split('|').map(cell => {
-                  return {
-                      cells: [
-                          [{
-                              type: "text",
-                              text: cell.trim(),
-                              styles: {}
-                          }]
-                      ]
-                  };
+              const rows = [];
+              const cells = line.split('|').map(cell => {
+                return {
+                  type: "text",
+                  text: cell.trim(),
+                  styles: {}
+                };
               });
-
+      
+              const filteredCells = cells.filter(cell => cell.text !== "");
+      
+              rows.push({
+                cells: filteredCells.map(cell => [cell])
+              });
+      
+              tableUUID = uuid;
+      
               return {
-                  "id": uuid,
-                  "type": type,
-                  "props": {
-                      "textColor": textColor,
-                      "backgroundColor": "default"
-                  },
-                  "content": {
-                      "type": "tableContent",
-                      "rows": rows
-                  },
-                  "children": []
+                "id": tableUUID, 
+                "type": type,
+                "props": {
+                  "textColor": textColor,
+                  "backgroundColor": "default"
+                },
+                "content": {
+                  "type": "tableContent",
+                  "rows": rows
+                },
+                "children": []
               };
-          }
-
-          return {
-              "id": uuid,
+            }
+      
+            return {
+              "id": uuid, 
               "type": type,
               "props": {
-                  "textColor": textColor,
-                  "backgroundColor": "default",
-                  "textAlignment": "left",
-                  "level": level
+                "textColor": textColor,
+                "backgroundColor": "default",
+                "textAlignment": "left",
+                "level": level
               },
               "content": [
-                  {
-                      "type": "text",
-                      "text": line.replace(/^#+\s*/, ''),
-                      "styles": {}
-                  }
+                {
+                  "type": "text",
+                  "text": line.replace(/^#+\s*/, ''),
+                  "styles": {}
+                }
               ],
               "children": []
-          };
-      });
-
-      const promise = createNoteMutation({
-          title: titulo,
-          content: JSON.stringify(newData),
-      }).then((documentId) => router.push(`/documents/${documentId}`));
-
-      toast.promise(promise, {
-          loading: "Creating a new note...",
-          success: "New note created!",
-          error: "Failed to create a new note."
-      });
-  } catch (error: any) {
-      console.error('Error al crear la nota:', error.message);
-  }
-}
+            };
+          });
+      
+          const promise = createNoteMutation({
+            title: titulo,
+            content: JSON.stringify(newData),
+          }).then((documentId) => router.push(`/documents/${documentId}`));
+      
+          toast.promise(promise, {
+            loading: "Creating a new note...",
+            success: "New note created!",
+            error: "Failed to create a new note."
+          });
+        } catch (error: any) {
+          console.error('Error al crear la nota:', error.message);
+        }
+      }
 
 //=====================================================================
   async function getEmbeddings(query: string) {
@@ -267,6 +275,23 @@ useEffect(() => {
   }
 }, [searching]);
 
+//====================================================================
+const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const value = event.target.value;
+  console.log("Input value:", value);
+
+  const combinedTitles = [...categoryContent, ...apiTitles];
+  console.log("Combined titles:", combinedTitles);
+
+  const filtered = combinedTitles.filter((titulo: string) =>
+    titulo.toLowerCase().includes(value.toLowerCase())
+  );
+  console.log("Filtered titles:", filtered);
+
+  setInputValue(value);
+  setFilteredTitles(filtered);
+};
+
   
   return (
     <>
@@ -289,11 +314,13 @@ useEffect(() => {
       </div>
 
       <input
-        className="plugin-input"
-        type="text"
-        placeholder="Buscar..."
-        id="plugin-input-filter"
-      />
+      className="plugin-input"
+      type="text"
+      placeholder="Buscar..."
+      id="plugin-input-filter"
+      value={inputValue}
+      onChange={handleInputChange}
+    />
 
       <textarea
         className="plugin-text-area"

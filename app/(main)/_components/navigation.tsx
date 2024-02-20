@@ -32,10 +32,8 @@ import { Item } from "./item";
 import { DocumentList } from "./document-list";
 import { TrashBox } from "./trash-box";
 import { Navbar } from "./navbar";
-import Link from 'next/link';
-import EmbeddedPage from "./appsearch/appSearch";
 import OffcanvasMenu from "@/components/offcanvasMenu/OffcanvasMenu";
-
+ 
 export const Navigation = () => {
   const router = useRouter();
   const settings = useSettings();
@@ -50,9 +48,7 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
-  const [showEmbeddedPage, setShowEmbeddedPage] = useState(false);
   const [openOffcanvas, setOpenOffcanvas] = useState(false);
-  const [appSearchOpen, setAppSearchOpen] = useState(false);
 
   useEffect(() => {
     if (isMobile) {
@@ -140,17 +136,6 @@ export const Navigation = () => {
     });
   };
 
-      
-    const handleShowEmbeddedPage = () => {
-      setShowEmbeddedPage(true);
-    };
-
-
-    const handleCloseEmbeddedPage = () => {
-      setShowEmbeddedPage(false);
-      setAppSearchOpen(false);
-    };
-
     const handleAssistantClick = () => {
       console.log("click")
       setOpenOffcanvas(true); 
@@ -192,11 +177,8 @@ export const Navigation = () => {
           <Item
             label="App Search"
             icon={Globe}
-            // onClick={() => setShowEmbeddedPage(true)} 
-            onClick={handleShowEmbeddedPage} 
+            onClick={handleAppSearch} 
             />
-
-            {showEmbeddedPage && <EmbeddedPage url="http://10.11.230.52:3030/" onClose={handleCloseEmbeddedPage} />}
 
           {/* <Item
             label="Asistente"
