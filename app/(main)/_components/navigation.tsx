@@ -180,12 +180,7 @@ export const Navigation = () => {
             onClick={handleAppSearch} 
             />
 
-          {/* <Item
-            label="Asistente"
-            icon={Bot}
-            onClick={() => handleAssistantClick()} 
-          />
-          {openOffcanvas && <OffcanvasMenu />} */}
+          <OffcanvasMenu />
           <hr className="mt-2 mb-5 border-b-2"/>
          
         </div>

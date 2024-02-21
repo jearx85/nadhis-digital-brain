@@ -62,21 +62,25 @@ export default function AIChat() {
 
   return (
     <>
-      <div className="response-area overflow-y-auto h-3/4 max-h-screen">
-        <div className="chat-header rounded-lg h-8 w-full">
-          <button
-            className="chat-header-icon border-none bg-transparent rounded-full"
-            onClick={handleNewChat}
-            data-tooltip-id="new-chat-tooltip"
-            data-tooltip-content="Nuevo chat"
-          >
-            <IoAddOutline />
-          </button>
-          <Tooltip id="new-chat-tooltip" />
-        </div>
-        <hr />
+      <div className="chat-header rounded-lg h-8 w-full">
+        <button
+          className="chat-header-icon border-none bg-transparent"
+          onClick={handleNewChat}
+          data-tooltip-id="new-chat-tooltip"
+          data-tooltip-content="Nuevo chat"
+        >
+          <IoAddOutline />
+        </button>
+        <Tooltip id="new-chat-tooltip" />
+      </div>
+
+      <hr className="mb-10 border-b-2"/>
+
+      <div className="h-96 response-area">
         <div className="main-chat">
-          <div className="textUser">{/* <p>hola</p> */}</div>
+          <div className="textUser">
+            {/* <p>hola</p> */}
+          </div>
           {displayedText && (
             <div className="user-message bg-lightgray p-10 rounded overflow-hidden break-words whitespace-normal max-w-200">
               <p>{displayedText}</p>
@@ -85,11 +89,17 @@ export default function AIChat() {
         </div>
       </div>
 
-      <div className="request-chat flex">
-        <textarea ref={chatTextAreaRef} className="request-chat-area border-1 border-lightgray mt-16 rounded w-full" />
+      <div className="request-chat flex mt-5">
+        <textarea autoFocus ref={chatTextAreaRef} 
+          className="request-chat-area mt-5 w-full p-2" 
+          rows={3} cols={50}
+        />
       </div>
-      <button className="sendBtn btn btn-primary mt-10" onClick={handleSendClick}>
-        send
+      <button 
+        className="border-solid border-2 border-gray-400 mt-10 rounded-lg px-2 py-2 hover:bg-neutral-200" 
+        onClick={handleSendClick}
+      >
+        Enviar
       </button>
     </>
   );

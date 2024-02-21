@@ -130,7 +130,7 @@ async function handleTitleClick(titulo: any , content : any) {
             } else if (line.includes('|')) {
               type = "table";
               const rows = [];
-              const cells = line.split('|').map(cell => {
+              const cells = line.split('|').flatMap(cell => {
                 return {
                   type: "text",
                   text: cell.trim(),

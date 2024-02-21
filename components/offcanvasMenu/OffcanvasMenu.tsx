@@ -1,10 +1,11 @@
 import { Fragment, useState } from 'react';
 import PluginElastic from './plugin/elasticdocs';
-import { ChevronsLeft, FileSearch2, MessageSquare, CalendarDays  } from 'lucide-react';
+import { FileSearch2, MessageSquare, CalendarDays, Bot  } from 'lucide-react';
 import AIChat from './AIChat/AIChat';
 import { Tooltip } from 'react-tooltip';
-import './navOffcanvas.css' 
+// import './navOffcanvas.css' 
 import MyCalendar from './MyCalendar/myCalendar';
+import { Item } from '@/app/(main)/_components/item';
 
 const OffcanvasMenu = () => {
   const [open, setOpen] = useState(false);
@@ -16,15 +17,13 @@ const OffcanvasMenu = () => {
  
 
   return (
-    <div className="relative rounded-3xl overflow-y-auto">
-      {/* <button
-        onClick={() => setOpen(true)}
-        className="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
-      >
-        Abrir Menú
-      </button> */}
+    <div className="relative overflow-y-auto rounded-lg">
 
-      <ChevronsLeft className="h-6 w-6 cursor-pointer" onClick={() => setOpen(true)}/>
+      <Item
+        label="Asistente"
+        icon={Bot}
+        onClick={() => setOpen(true)} 
+      />
 
       {/* Offcanvas */}
       {open && (
@@ -36,9 +35,9 @@ const OffcanvasMenu = () => {
           ></div>
 
           {/* Contenedor del offcanvas */}
-          <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-white z-50 shadow-lg">
+          <div className="fixed inset-y-0 right-0 mb-2 mt-1 mr-2 max-w-xs w-full bg-white z-50 shadow-lg rounded-lg">
             {/* Cabecera del offcanvas */}
-            <div className="flex justify-between items-center bg-gray-500 text-white px-4 py-3">
+            <div className="flex justify-between items-center bg-neutral-100 px-4 py-3 ">
             <button
                 className="nav-offcanvas-item"
                 id="AIChat"
@@ -46,7 +45,11 @@ const OffcanvasMenu = () => {
                 data-tooltip-id="AIchat-tooltip"
                 data-tooltip-content="Chat"
               >
-                <MessageSquare  />
+                <MessageSquare
+                  style={{
+                    color: 'gray'
+                  }}
+                />
               </button>
               <Tooltip id="AIchat-tooltip" />
 
@@ -57,7 +60,7 @@ const OffcanvasMenu = () => {
                 data-tooltip-id="calendar-tooltip"
                 data-tooltip-content="Calendario"
               >
-                <CalendarDays  />
+                <CalendarDays  style={{color: 'gray'}}/>
               </button>
               <Tooltip id="calendar-tooltip" />
 
@@ -68,20 +71,13 @@ const OffcanvasMenu = () => {
                 data-tooltip-id="plugin-tooltip"
                 data-tooltip-content="Plugin"
               >
-                <FileSearch2 />
+                <FileSearch2 style={{color: 'gray'}}/>
               </button>
               <Tooltip id="plugin-tooltip" />
-
-              <button
-                className="btn btn-close"
-                type="button"
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"
-              ></button>
              
               <button
                 onClick={() => setOpen(false)}
-                className="text-white  focus:outline-none focus:ring-2 focus:ring-white"
+                className="text-black  focus:outline-none focus:ring-2 focus:ring-white"
               >
                 Cerrar
               </button>
@@ -89,7 +85,7 @@ const OffcanvasMenu = () => {
             <hr />
 
             {/* Contenido del offcanvas */}
-            <div className="overflow-y-auto max-h-screen">
+            <div className="overflow-y-auto max-h-screen rounded-lg">
               <div className="px-4 py-6">
                 {activeComponent === 'CalendarOutline' && (
                     <>

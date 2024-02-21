@@ -1,11 +1,11 @@
 import React from 'react';
 
-function EmbeddedPage({ url }: any) {
+function EmbeddedPage() {
 
   return (
     <div className="container">
       <div className="embedded-page-container">
-        <iframe src={url} title="Embedded Page" className="embedded-page-iframe" />
+        <iframe src="http://10.11.230.52:3030/" title="Embedded Page" className="embedded-page-iframe" />
       </div>
       <style jsx>{`
         .container {
