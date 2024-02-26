@@ -6,6 +6,7 @@ import { Tooltip } from 'react-tooltip';
 // import './navOffcanvas.css' 
 import MyCalendar from './MyCalendar/myCalendar';
 import { Item } from '@/app/(main)/_components/item';
+import ElastidPruebas from './plugin/elasticdPruebas';
 
 const OffcanvasMenu = () => {
   const [open, setOpen] = useState(false);
@@ -99,7 +100,8 @@ const OffcanvasMenu = () => {
                   )}
                   {activeComponent === 'plugin' && (
                     <>
-                      <PluginElastic />
+                      {/* <PluginElastic /> */}
+                      < ElastidPruebas /> 
                     </>
                   )}
               </div>
