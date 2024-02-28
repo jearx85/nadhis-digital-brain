@@ -9,7 +9,7 @@ import {
   Settings,
   Trash,
   Globe,
-  Bot 
+  BrainCircuit 
 } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
@@ -48,7 +48,6 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
-  const [openOffcanvas, setOpenOffcanvas] = useState(false);
 
   useEffect(() => {
     if (isMobile) {
@@ -136,9 +135,8 @@ export const Navigation = () => {
     });
   };
 
-    const handleAssistantClick = () => {
-      console.log("click")
-      setOpenOffcanvas(true); 
+    const handleGraficView = () => {
+      router.push('/graficView');
     };
 
     const handleAppSearch  = () =>{
@@ -181,6 +179,13 @@ export const Navigation = () => {
             />
 
           <OffcanvasMenu />
+
+          <Item
+            label="Vista gráfica"
+            icon={BrainCircuit}
+            onClick={handleGraficView} 
+            />
+
           <hr className="mt-2 mb-5 border-b-2"/>
          
         </div>

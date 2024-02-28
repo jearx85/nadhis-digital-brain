@@ -52,7 +52,23 @@ const PluginElastic = () => {
   }
 
 
+  
+  // const handleLinkClick = (title: any) => {
+  //   const titleId =  getId({title: title});
+    
+  //   titleId.then((docId: any) =>{
+  //     if(docId){
+  //       console.log("title: ", title);
+  //       console.log("docId: ", docId);
+  //       // router.push(`/documents/${docId}`);
+        
+  //     }
+  //   })
+  // };
+  
+  const getId  = useMutation(api.documents.getTitleId);
   const createNoteMutation  = useMutation(api.documents.createNote);
+ 
 //============================================================================
 async function handleTitleClick(titulo: any , content : any) {
   try {
@@ -62,7 +78,7 @@ async function handleTitleClick(titulo: any , content : any) {
     let headerCells: string | any[] = [];
     let tableUUID = '';
 
-    const formattedData = newContent.map((line: any) => {
+    const formattedDataPromises = newContent.map(async (line: any) => {
       let type = "paragraph";
       let level = 0;
       let textColor = "default";
@@ -135,11 +151,105 @@ async function handleTitleClick(titulo: any , content : any) {
         if (headerCells.length === 0) {
           headerCells = cells;
         } else {
-          tableArr.push({cells});
+          tableArr.push(cells);
         }
         tableUUID = uuid;
-        return null; // Regresamos null ya que no queremos que se agregue nada al arreglo formattedData en este punto
-      }
+        return null; 
+      } else if (line.startsWith('>[') && line.includes(']')) {
+        type = "paragraph";
+        const matches = line.match(/\[(.*?)\]/);
+        let documentName = matches ? matches[1] : '';
+        documentName = documentName.replace('!', '');
+    
+        const documentLink = line.match(/\[\[(.*?)\]\]/) ? line.match(/\[\[(.*?)\]\]/)![1] : '';
+        return {
+          id: generateUUID(),
+          type: type,
+          props: {
+            textColor: textColor,
+            backgroundColor: "gray",
+            textAlignment: "left"
+          },
+          content: [
+            {
+              type: "text",
+              text: "🔗" + documentName,
+              styles: {
+                bold: true
+              }
+            },
+            {
+              type: "link",
+              href: documentLink,
+              content: [
+                {
+                  type: "text",
+                  text: documentLink,
+                  styles: {}
+                }
+              ]
+            }
+          ],
+         
+          children: []
+        };
+      } else if (line.startsWith('[[') && line.includes(']]')) { 
+        const linkText = line.match(/\[\[(.*?)\]\]/)![1];
+
+        const docId = await getId({title: linkText});
+          if(docId){
+            const formatLinkDoc = {
+              id: generateUUID(),
+              type: type,
+              props: {
+                  textColor: "blue",
+                  backgroundColor: "gray",
+                  textAlignment: "left"
+              },
+              content: [
+                {
+                  type: "link",
+                  href: `http://localhost:3000/documents/${docId}`,
+                  content: [
+                    {
+                      type: "text",
+                      text: linkText,
+                      styles: {}
+                    }
+                  ]
+                }
+              ],
+              children: []
+            }
+            return formatLinkDoc;
+
+          }else{
+            const formatLinks = {
+              id: generateUUID(),
+              type: type,
+              props: {
+                  textColor: "blue",
+                  backgroundColor: "gray",
+                  textAlignment: "left"
+              },
+              content: [
+                {
+                  type: "link",
+                  href: linkText,
+                  content: [
+                    {
+                      type: "text",
+                      text: linkText,
+                      styles: {}
+                    }
+                  ]
+                }
+              ],
+              children: []
+            }
+            return formatLinks;
+          }
+    }
       
       return {
         id: generateUUID(),
@@ -159,27 +269,26 @@ async function handleTitleClick(titulo: any , content : any) {
       };
     });
 
+    const formattedData = await Promise.all(formattedDataPromises);
+      // Filter out null values
+    const filteredFormattedData = formattedData.filter((data: any) => data !== null);
+  
     // Agregar la tabla al arreglo formattedData si hay datos de la tabla
     if (tableUUID && headerCells.length > 0 && tableArr.length > 0) {
-      formattedData.push({
+      filteredFormattedData.push({
         id: tableUUID,
         type: "table",
         props: {
-          textColor: "default",
-          backgroundColor: "default"
+            textColor: "default",
+            backgroundColor: "default"
         },
         content: {
-          type: "tableContent",
-          rows: [{ cells: headerCells }, ...tableArr]
+            type: "tableContent",
+            rows: [{ cells: headerCells }, ...tableArr.map(cells => ({ cells })) ] // Mapear las celdas correctamente
         },
         children: []
-      });
+    });
     }
-
-    // Filtrar los valores nulos del arreglo formattedData
-    const filteredFormattedData = formattedData.filter((data: null) => data !== null);
-
-    // console.log(filteredFormattedData);
 
     const promise = createNoteMutation({
       title: titulo,
@@ -191,6 +300,15 @@ async function handleTitleClick(titulo: any , content : any) {
       success: "New note created!",
       error: "Failed to create a new note."
     });
+ 
+
+
+    // Filtrar los valores nulos del arreglo formattedData
+    // const filteredFormattedData = formattedData.filter((data: null) => data !== null);
+
+    // console.log(filteredFormattedData);
+
+    
 
   } catch (error: any) {
     console.error('Error al crear la nota:', error.message);

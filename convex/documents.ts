@@ -425,3 +425,34 @@ export const removeCoverImage = mutation({
     return document;
   }
 });
+
+
+
+export const getTitleId = mutation({
+  args: { title: v.optional(v.string())},
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthenticated");
+    }
+
+    const userId = identity.subject;
+
+    const documents = await ctx.db
+      .query("documents")
+      .withIndex("by_user_parent", (q) =>
+        q
+          .eq("userId", userId)
+      )
+      .filter((q) =>
+        q.eq(q.field("title"), args.title)
+      )
+      .order("desc")
+      .first();
+
+    return documents?._id;
+  }
+
+});
+

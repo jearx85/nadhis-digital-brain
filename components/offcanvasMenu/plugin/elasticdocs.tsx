@@ -56,149 +56,148 @@ const PluginElastic = () => {
 //============================================================================
 async function handleTitleClick(titulo: any , content : any) {
   try {
-      const uuid = generateUUID();
-      const lines = content.split('\n');
+    const newContent = content.split('\n');
+    const uuid = generateUUID();
+    const tableArr: any[] = [];
+    let headerCells: string | any[] = [];
+    let tableUUID = '';
 
-      const newData = lines.map((line: string) => {
-          let type = "paragraph";
-          let level = 0;
-          let textColor = "default";
-          let tableUUID = ''; 
+    const formattedData = newContent.map((line: any) => {
+      let type = "paragraph";
+      let level = 0;
+      let textColor = "default";
 
-          if (line.startsWith('![') && line.includes('](') && line.includes(')')) {
-              type = "image";
-              const urlMatch = line.match(/\((.*?)\)/);
-              const url = urlMatch ? urlMatch[1] : '';
-              return {
-                  "id": uuid,
-                  "type": type,
-                  "props": {
-                      "backgroundColor": "default",
-                      "textAlignment": "left",
-                      "url": url,
-                      "caption": "",
-                      "width": 512
-                  },
-                  "children": []
-              };
-          } else if (line.startsWith('- ')) {
-              type = "bulletListItem";
-              level = 0;
-              line = line.slice(2).trim();
-          } else if (/^\d+\.\s/.test(line)) {
-              type = "numberedListItem";
-              level = 0;
-              line = line.replace(/^\d+\.\s/, '').trim();
-          } else if (line.startsWith('#')) {
-              type = "heading";
-              let i = 0;
-
-              while (line.charAt(i) === '#') {
-                  i++;
-              }
-              level = i;
-              level = level > 0 ? level : 1;
-
-              if (level === 2) {
-                  textColor = "gray";
-              }
-          } else if (line.includes('http')) {
-              type = "paragraph";
-              return {
-                  "id": uuid,
-                  "type": type,
-                  "props": {
-                      "textColor": "blue",
-                      "backgroundColor": "default",
-                      "textAlignment": "left"
-                  },
-                  "content": [
-                      {
-                          "type": "link",
-                          "href": line.trim(),
-                          "content": [
-                              {
-                                  "type": "text",
-                                  "text": line.trim(),
-                                  "styles": {}
-                              }
-                          ]
-                      }
-                  ],
-                  "children": []
-              };
-            } else if (line.includes('|')) {
-              type = "table";
-              const rows = [];
-              const cells = line.split('|').flatMap(cell => {
-                return {
-                  type: "text",
-                  text: cell.trim(),
-                  styles: {}
-                };
-              });
-      
-              const filteredCells = cells.filter(cell => cell.text !== "");
-      
-              rows.push({
-                cells: filteredCells.map(cell => [cell])
-              });
-      
-              tableUUID = uuid;
-      
-              const tableFormat = {
-                "id": tableUUID, 
-                "type": type,
-                "props": {
-                  "textColor": textColor,
-                  "backgroundColor": "default"
-                },
-                "content": {
-                  "type": "tableContent",
-                  "rows": rows
-                },
-                "children": []
-              };
-    
-              console.log(tableFormat)
-    
-              return tableFormat
-            }
-      
-            return {
-              "id": uuid, 
-              "type": type,
-              "props": {
-                "textColor": textColor,
-                "backgroundColor": "default",
-                "textAlignment": "left",
-                "level": level
-              },
-              "content": [
-                {
-                  "type": "text",
-                  "text": line.replace(/^#+\s*/, ''),
-                  "styles": {}
-                }
-              ],
-              "children": []
-            };
-          });
-      
-          const promise = createNoteMutation({
-            title: titulo,
-            content: JSON.stringify(newData),
-          }).then((documentId) => router.push(`/documents/${documentId}`));
-      
-          toast.promise(promise, {
-            loading: "Creating a new note...",
-            success: "New note created!",
-            error: "Failed to create a new note."
-          });
-        } catch (error: any) {
-          console.error('Error al crear la nota:', error.message);
+      if (line.startsWith('![') && line.includes('](') && line.includes(')')) {
+        type = "image";
+        const urlMatch = line.match(/\((.*?)\)/);
+        const url = urlMatch ? urlMatch[1] : '';
+        return {
+          id: generateUUID(),
+          type: type,
+          props: {
+            backgroundColor: "default",
+            textAlignment: "left",
+            url: url,
+            caption: "",
+            width: 512
+          },
+          children: []
+        };
+      } else if (line.includes('http')) {
+        type = "paragraph";
+        return {
+          id: generateUUID(),
+          type: type,
+          props: {
+            textColor: "blue",
+            backgroundColor: "default",
+            textAlignment: "left"
+          },
+          content: [{
+            type: "link",
+            href: line.trim(),
+            content: [{
+              type: "text",
+              text: line.trim(),
+              styles: {}
+            }]
+          }],
+          children: []
+        };
+      } else if (line.startsWith('- ')) {
+        type = "bulletListItem";
+        level = 0;
+        line = line.slice(2).trim();
+      } else if (/^\d+\.\s/.test(line)) {
+        type = "numberedListItem";
+        level = 0;
+        line = line.replace(/^\d+\.\s/, '').trim();
+      } else if (line.startsWith('#')) {
+        type = "heading";
+        let i = 0;
+        while (line.charAt(i) === '#') {
+          i++;
         }
+        level = i;
+        level = level > 0 ? level : 1;
+        if (level === 2) {
+          textColor = "gray";
+        }
+      } else if (line.startsWith('|')) {
+        type = "table";
+        const cells = line.split('|').map((cell: string) => {
+          return cell.trim() === "" ? null : [{
+            type: "text",
+            text: cell.trim(),
+            styles: {}
+          }];
+        }).filter((cell: any) => cell !== null);
+        if (headerCells.length === 0) {
+          headerCells = cells;
+        } else {
+          tableArr.push({cells});
+        }
+        tableUUID = uuid;
+        return null; // Regresamos null ya que no queremos que se agregue nada al arreglo formattedData en este punto
       }
+      
+      return {
+        id: generateUUID(),
+        type: type,
+        props: {
+          textColor: textColor,
+          backgroundColor: "default",
+          textAlignment: "left",
+          level: level
+        },
+        content: [{
+          type: "text",
+          text: line.replace(/^#+\s*/, ''),
+          styles: {}
+        }],
+        children: []
+      };
+    });
+
+    // Agregar la tabla al arreglo formattedData si hay datos de la tabla
+    if (tableUUID && headerCells.length > 0 && tableArr.length > 0) {
+      formattedData.push({
+        id: tableUUID,
+        type: "table",
+        props: {
+          textColor: "default",
+          backgroundColor: "default"
+        },
+        content: {
+          type: "tableContent",
+          rows: [{ cells: headerCells }, ...tableArr]
+        },
+        children: []
+      });
+    }
+
+    // Filtrar los valores nulos del arreglo formattedData
+    const filteredFormattedData = formattedData.filter((data: null) => data !== null);
+
+    // console.log(filteredFormattedData);
+
+    const promise = createNoteMutation({
+      title: titulo,
+      content: JSON.stringify(filteredFormattedData),
+    }).then((documentId) => router.push(`/documents/${documentId}`));
+
+    toast.promise(promise, {
+      loading: "Creating a new note...",
+      success: "New note created!",
+      error: "Failed to create a new note."
+    });
+
+  } catch (error: any) {
+    console.error('Error al crear la nota:', error.message);
+  }
+}
+
+
 
 //=====================================================================
 //========= Listar titulos cuando se hace busqueda semantica ==========
