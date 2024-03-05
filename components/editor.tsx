@@ -3,15 +3,36 @@
 import { useTheme } from "next-themes";
 import {
   BlockNoteEditor,
-  PartialBlock
+  PartialBlock,
+  defaultBlockSchema,
+  defaultBlockSpecs,
 } from "@blocknote/core";
 import {
   BlockNoteView,
-  useBlockNote
+  useBlockNote,
+  getDefaultReactSlashMenuItems,
 } from "@blocknote/react";
 import "@blocknote/react/style.css";
 
 import { useEdgeStore } from "@/lib/edgestore";
+import { linkDocsBlock, DocLinkBlock } from "./myTypeBlocks/linkdocsType";
+import { insertChart, ChartBlock } from "./myTypeBlocks/chartType";
+import { insertFontParagraph, FontParagraphBlock } from "./myTypeBlocks/font";
+
+
+ const blockSchema = {
+  ...defaultBlockSchema,
+  docLink: DocLinkBlock.config,
+  chart: ChartBlock.config,
+  fontParagraph: FontParagraphBlock.config
+};
+
+ const blockSpecs = {
+  ...defaultBlockSpecs,
+  docLink: DocLinkBlock,
+  chart: ChartBlock,
+  fontParagraph: FontParagraphBlock
+};
 
 interface EditorProps {
   onChange: (value: string) => void;
@@ -35,7 +56,15 @@ const Editor = ({
     return response.url;
   }
 
-  const editor: BlockNoteEditor = useBlockNote({
+  const editor = useBlockNote({
+    blockSpecs: blockSpecs,
+    slashMenuItems: [
+      ...getDefaultReactSlashMenuItems(blockSchema),
+      linkDocsBlock,
+      insertChart,
+      insertFontParagraph
+      
+    ],
     editable,
     initialContent: 
       initialContent 

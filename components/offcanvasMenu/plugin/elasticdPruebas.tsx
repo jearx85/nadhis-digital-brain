@@ -8,7 +8,9 @@ import { api } from '@/convex/_generated/api';
 import { generateUUID } from './noteUtils';
 import { useRouter } from 'next/navigation';
 
-const PluginElastic = () => {
+console.log("ElastidPruebas");
+const ElasticDPruebas = () => {
+
   const router = useRouter();
   const [options, setOptions] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -50,27 +52,13 @@ const PluginElastic = () => {
     setCategoryContent([]); 
     setApiTitles([]);
   }
-
-
   
-  // const handleLinkClick = (title: any) => {
-  //   const titleId =  getId({title: title});
-    
-  //   titleId.then((docId: any) =>{
-  //     if(docId){
-  //       console.log("title: ", title);
-  //       console.log("docId: ", docId);
-  //       // router.push(`/documents/${docId}`);
-        
-  //     }
-  //   })
-  // };
   
+  //============================================================================
   const getId  = useMutation(api.documents.getTitleId);
   const createNoteMutation  = useMutation(api.documents.createNote);
- 
-//============================================================================
-async function handleTitleClick(titulo: any , content : any) {
+
+   async function parseBlocks(titulo: any , content : any) {
   try {
     const newContent = content.split('\n');
     const uuid = generateUUID();
@@ -160,8 +148,7 @@ async function handleTitleClick(titulo: any , content : any) {
         const matches = line.match(/\[(.*?)\]/);
         let documentName = matches ? matches[1] : '';
         documentName = documentName.replace('!', '');
-    
-        const documentLink = line.match(/\[\[(.*?)\]\]/) ? line.match(/\[\[(.*?)\]\]/)![1] : '';
+
         return {
           id: generateUUID(),
           type: type,
@@ -177,22 +164,12 @@ async function handleTitleClick(titulo: any , content : any) {
               styles: {
                 bold: true
               }
-            },
-            {
-              type: "link",
-              href: documentLink,
-              content: [
-                {
-                  type: "text",
-                  text: documentLink,
-                  styles: {}
-                }
-              ]
             }
           ],
-         
+          
           children: []
         };
+       
       } else if (line.startsWith('[[') && line.includes(']]')) { 
         const linkText = line.match(/\[\[(.*?)\]\]/)![1];
 
@@ -270,7 +247,6 @@ async function handleTitleClick(titulo: any , content : any) {
     });
 
     const formattedData = await Promise.all(formattedDataPromises);
-      // Filter out null values
     const filteredFormattedData = formattedData.filter((data: any) => data !== null);
   
     // Agregar la tabla al arreglo formattedData si hay datos de la tabla
@@ -284,7 +260,7 @@ async function handleTitleClick(titulo: any , content : any) {
         },
         content: {
             type: "tableContent",
-            rows: [{ cells: headerCells }, ...tableArr.map(cells => ({ cells })) ] // Mapear las celdas correctamente
+            rows: [{ cells: headerCells }, ...tableArr.map(cells => ({ cells })) ]
         },
         children: []
     });
@@ -301,15 +277,6 @@ async function handleTitleClick(titulo: any , content : any) {
       error: "Failed to create a new note."
     });
  
-
-
-    // Filtrar los valores nulos del arreglo formattedData
-    // const filteredFormattedData = formattedData.filter((data: null) => data !== null);
-
-    // console.log(filteredFormattedData);
-
-    
-
   } catch (error: any) {
     console.error('Error al crear la nota:', error.message);
   }
@@ -320,7 +287,7 @@ async function handleTitleClick(titulo: any , content : any) {
 //=====================================================================
 //========= Listar titulos cuando se hace busqueda semantica ==========
   async function getEmbeddings(query: string) {
-    const url = `http://192.168.50.236:8087/query/${query}`;
+    const url = `http://192.168.50.230:8087/query/${query}`;
 
     try {
       const response = await fetch(url, {
@@ -353,7 +320,7 @@ async function createNotePlugin(titulo: string) {
   if (!titulos.includes(selected)) {
     titulos.splice(0, 0, selected); // Agregar el elemento seleccionado en la primera posición
     try {
-      const response = await fetch("http://192.168.50.236:8087/relacion/", {
+      const response = await fetch("http://192.168.50.230:8087/relacion/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -365,7 +332,7 @@ async function createNotePlugin(titulo: string) {
         const noteTitle = titulo; 
         const noteContent = await response.json();
 
-        handleTitleClick(noteTitle, noteContent);
+        parseBlocks(noteTitle, noteContent);
 
       }
     } catch (error) {
@@ -475,4 +442,4 @@ const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   );
 }
 
-export default PluginElastic
+export default ElasticDPruebas
