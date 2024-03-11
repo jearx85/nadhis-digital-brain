@@ -166,12 +166,7 @@ export const Navigation = () => {
         <div>
           <UserItem />
           <hr className="mt-2 mb-5 border-b-2"/>
-          <Item
-            label="Search"
-            icon={Search}
-            isSearch
-            onClick={search.onOpen}
-          />
+          
           <Item
             label="App Search"
             icon={Globe}
@@ -189,8 +184,15 @@ export const Navigation = () => {
           <hr className="mt-2 mb-5 border-b-2"/>
          
         </div>
-
+        <Item
+            label="Search"
+            icon={Search}
+            isSearch
+            onClick={search.onOpen}
+          />
+          
         <div className="mt-4">
+        
         <Item
             onClick={handleCreate}
             label="New page"

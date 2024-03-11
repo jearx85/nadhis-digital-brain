@@ -8,7 +8,6 @@ import { api } from '@/convex/_generated/api';
 import { generateUUID } from './noteUtils';
 import { useRouter } from 'next/navigation';
 
-console.log("ElastidPruebas");
 const ElasticDPruebas = () => {
 
   const router = useRouter();
@@ -177,7 +176,7 @@ const ElasticDPruebas = () => {
           if(docId){
             const formatLinkDoc = {
               id: generateUUID(),
-              type: type,
+              type: "docLink",
               props: {
                   textColor: "blue",
                   backgroundColor: "gray",

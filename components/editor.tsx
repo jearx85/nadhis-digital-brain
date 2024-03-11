@@ -1,38 +1,36 @@
 "use client";
-
 import { useTheme } from "next-themes";
 import {
-  BlockNoteEditor,
-  PartialBlock,
-  defaultBlockSchema,
   defaultBlockSpecs,
+  BlockNoteSchema,
+  filterSuggestionItems
 } from "@blocknote/core";
 import {
   BlockNoteView,
-  useBlockNote,
+  useCreateBlockNote ,
   getDefaultReactSlashMenuItems,
+  SuggestionMenuController,
+  SideMenuController,
+  SideMenu,
+  DragHandleMenu,
+  RemoveBlockItem,
+  BlockColorsItem,
 } from "@blocknote/react";
 import "@blocknote/react/style.css";
 
 import { useEdgeStore } from "@/lib/edgestore";
-import { linkDocsBlock, DocLinkBlock } from "./myTypeBlocks/linkdocsType";
-import { insertChart, ChartBlock } from "./myTypeBlocks/chartType";
-import { insertFontParagraph, FontParagraphBlock } from "./myTypeBlocks/font";
+import { insertAlert, Alert } from './myTypeBlocks/alert/Alert';
+import { ChartBlock, insertChart } from "./myTypeBlocks/chartType";
+import MenuCharts from './dragHandleMenu/menuCharts/menuCharts';
+// import { insertFontParagraph, FontParagraphBlock } from "./myTypeBlocks/font";
 
-
- const blockSchema = {
-  ...defaultBlockSchema,
-  docLink: DocLinkBlock.config,
-  chart: ChartBlock.config,
-  fontParagraph: FontParagraphBlock.config
-};
-
- const blockSpecs = {
-  ...defaultBlockSpecs,
-  docLink: DocLinkBlock,
-  chart: ChartBlock,
-  fontParagraph: FontParagraphBlock
-};
+const schema = BlockNoteSchema.create({
+  blockSpecs: {
+    ...defaultBlockSpecs,
+    alert: Alert,
+    chart: ChartBlock,
+  },
+});
 
 interface EditorProps {
   onChange: (value: string) => void;
@@ -47,7 +45,7 @@ const Editor = ({
 }: EditorProps) => {
   const { resolvedTheme } = useTheme();
   const { edgestore } = useEdgeStore();
-
+  
   const handleUpload = async (file: File) => {
     const response = await edgestore.publicFiles.upload({ 
       file
@@ -55,33 +53,67 @@ const Editor = ({
 
     return response.url;
   }
-
-  const editor = useBlockNote({
-    blockSpecs: blockSpecs,
-    slashMenuItems: [
-      ...getDefaultReactSlashMenuItems(blockSchema),
-      linkDocsBlock,
-      insertChart,
-      insertFontParagraph
-      
-    ],
-    editable,
+  
+  const editor = useCreateBlockNote({
+    schema,
     initialContent: 
       initialContent 
       ? JSON.parse(initialContent)
       : undefined,
-    onEditorContentChange: (editor) => {
-      onChange(JSON.stringify(editor.topLevelBlocks, null, 2));
-    },
-    uploadFile: handleUpload
-  })
+      uploadFile: handleUpload
+  });
 
   return (
     <div>
-      <BlockNoteView
+      <BlockNoteView 
         editor={editor}
         theme={resolvedTheme === "dark" ? "dark" : "light"}
+        editable={editable}
+        slashMenu={false}
+        sideMenu={false}
+        onChange={() => {
+          // Saves the document JSON to state.
+          const blocks = editor.document;
+          onChange(JSON.stringify(blocks, null, 2))
+        }}
+        > 
+        <SuggestionMenuController 
+          triggerCharacter={"/"}
+          getItems={async (query) =>
+            filterSuggestionItems(
+              [...getDefaultReactSlashMenuItems(editor), 
+                insertChart(editor),
+                insertAlert(editor)
+              ],
+              query
+            )
+          }
+        />
+         <SideMenuController
+          sideMenu={(props) => {
+            return props.block.type === "table" ? (
+              <SideMenu
+                {...props}
+                dragHandleMenu={(props) => (
+                  <DragHandleMenu {...props}>
+                    <RemoveBlockItem {...props}>Delete</RemoveBlockItem>
+                    <BlockColorsItem {...props}>Colors</BlockColorsItem>
+                    < MenuCharts editor={editor}/> 
+                  </DragHandleMenu>
+                )}
+              />
+            ): <SideMenu
+            {...props}
+            dragHandleMenu={(props) => (
+              <DragHandleMenu {...props}>
+                <RemoveBlockItem {...props}>Delete</RemoveBlockItem>
+                <BlockColorsItem {...props}>Colors</BlockColorsItem>
+              </DragHandleMenu>
+            )}
+          />
+        }}
       />
+      </BlockNoteView>
     </div>
   )
 }

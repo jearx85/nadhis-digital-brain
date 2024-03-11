@@ -1,21 +1,26 @@
 // "use client"
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  defaultBlockSchema,
+  BlockNoteSchema,
+  insertOrUpdateBlock,
+  defaultBlockSpecs,
   defaultProps,
 } from "@blocknote/core";
 import {
-  createReactBlockSpec,
-  ReactSlashMenuItem,
+  createReactBlockSpec
 } from "@blocknote/react";
 import "@blocknote/react/style.css";
 import { BiBarChartSquare } from "react-icons/bi";
-
-import { Line } from 'react-chartjs-2';
+import { MdCancel, MdCheckCircle, MdError, MdInfo } from "react-icons/md";
+import { Menu } from "@mantine/core";
+import './alert/styles.css'
+import { Line, Doughnut, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
+  ArcElement,
   CategoryScale,
   LinearScale,
+  BarElement,
   PointElement,
   LineElement,
   Title,
@@ -25,10 +30,12 @@ import {
 } from "chart.js"
 
 ChartJS.register(
+  ArcElement,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -57,22 +64,162 @@ const miData= {
 
 const misoptions={}
 
+const chartTypes = [
+  {
+    title: "Line",
+    value: "Line",
+    icon: MdError,
+    color: "#e69819",
+    backgroundColor: {
+      light: "#fff6e6",
+      dark: "#805d20",
+    },
+  },
+  {
+    title: "Bar",
+    value: "Bar",
+    icon: MdCancel,
+    color: "#d80d0d",
+    backgroundColor: {
+      light: "#ffe6e6",
+      dark: "#802020",
+    },
+  },
+  {
+    title: "Area",
+    value: "Area",
+    icon: MdInfo,
+    color: "#507aff",
+    backgroundColor: {
+      light: "#e6ebff",
+      dark: "#203380",
+    },
+  },
+  {
+    title: "Doughnut",
+    value: "Doughnut",
+    icon: MdCheckCircle,
+    color: "#0bc10b",
+    backgroundColor: {
+      light: "#e6ffe6",
+      dark: "#208020",
+    },
+  },
+] as const;
+
+const RenderChartBlock = ({ chartType }: any) => {
+  const miData = { /* tus datos aquí */ };
+
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      {HandleClick(chartType, miData)}
+    </div>
+  );
+};
+
+// Modifica la función HandleClick para que devuelva el tipo de gráfico seleccionado
+function HandleClick(chartType: any, miData: any) {
+  if (chartType === "Line") {
+    return <Line data={miData} />;
+  } else if (chartType === "Bar") {
+    return <Bar data={miData} />;
+  } else if (chartType === "Doughnut") {
+    return <Doughnut data={miData} />;
+  }
+}
 
   // Creates a paragraph block with custom font.
-  export const ChartBlock: any = createReactBlockSpec(
+  export const ChartBlock = createReactBlockSpec(
   {
     type: "chart",
     propSchema: {
-      ...defaultProps,
+      textAlignment: defaultProps.textAlignment,
+        textColor: defaultProps.textColor,
+      type: {
+        default: "Line",
+        values: [ "Line", "Bar", "Area", "Doughnut"]
+      }
     },
-    content: "inline",
+    content: "none",
   },
+  // {
+  //   render: (props) => {
+  //     const [selectedChartType, setSelectedChartType] = useState(props.block.props.type);
+  //     const [showChart, setShowChart] = useState(false);
+
+  //     const charType = chartTypes.find(
+  //       (a) => a.value === props.block.props.type
+  //     )!;
+  //     const Icon = charType.icon;
+  //     return (
+  //       <div className={"alert"} data-alert-type={selectedChartType}>
+  //         {/*Icon which opens a menu to choose the Alert type*/}
+  //         <Menu withinPortal={false} zIndex={999999}>
+  //           <Menu.Target>
+  //             <div className={"alert-icon-wrapper"} contentEditable={false}>
+  //           {/* <p>{props.block.props.type}</p> */}
+  //               <Icon
+  //                 className={"alert-icon"}
+  //                 data-alert-icon-type={props.block.props.type}
+  //                 size={32}
+                 
+  //               />
+  //             </div>
+  //           </Menu.Target>
+  //           {/*Dropdown to change the Alert type*/}
+  //           <Menu.Dropdown>
+  //             <Menu.Label>Chart Type</Menu.Label>
+  //             <Menu.Divider />
+  //             {chartTypes.map((type) => {
+  //               const ItemIcon = type.icon;
+
+  //               return (
+  //                 <Menu.Item
+  //                   key={type.value}
+  //                   leftSection={
+  //                     <>
+  //                     <ItemIcon
+  //                       className={"alert-icon"}
+  //                       data-alert-icon-type={type.value}
+                        
+  //                     />
+                      
+  //                     </>
+  //                   }
+  //                   onClick={() =>
+  //                     {
+  //                       setSelectedChartType(type.value);
+  //                       setShowChart(true);
+  //                       // HandleClick(type.value)
+  //                       props.editor.updateBlock(props.block, {
+  //                         type: "chart",
+  //                         props: { type: type.value },
+                        
+  //                       })
+  //                     }
+  //                   }
+  //                 >
+  //                   {type.title}
+  //                 </Menu.Item>
+  //               );
+  //             })}
+  //           </Menu.Dropdown>
+  //         </Menu>
+  //         {showChart && <RenderChartBlock chartType={selectedChartType} />}
+  //         {/*Rich text field for user to type in*/}
+  //         <div className={"inline-content"} ref={props.contentRef} />
+  //       </div>
+  //     );
+  //   }
+      
+  // }
+  
   {
       render: ({ contentRef }) => {
         return (
           <>
             <div ref={contentRef} >
-              <Line data={miData} />
+              <Bar data={miData} />
               
             </div>
           </>
@@ -87,41 +234,31 @@ const misoptions={}
   }
   )
 
-  const blockSchema = {
-  ...defaultBlockSchema,
-  chart: ChartBlock.config,
-};
+  const schema = BlockNoteSchema.create({
+    blockSpecs: {
+      // Adds all default blocks.
+      ...defaultBlockSpecs,
+      chart: ChartBlock,
+    },
+  });
 
 
-export const insertChart: ReactSlashMenuItem<typeof blockSchema> = {
-  name: "Charts",
-  execute: (editor) => {
-
-  editor.insertBlocks(
-      [
-        {
-          type: "chart",
-          props: {
-            backgroundColor: "default",
-            textColor: "default",
-            // chartData: miData, 
-          },
-          content: [
-              {
-                type: "text",
-                text: `${JSON.stringify(miData)}`,
-                styles: {}
-              },
-          ]
-        },
-      ],
-      editor.getTextCursorPosition().block
-    );
+export const insertChart = (editor: typeof schema.BlockNoteEditor) => ({
+  title: "chart",
+  onItemClick: () => {
+    insertOrUpdateBlock(editor, {
+      type: "chart",
+    });
+    editor.getTextCursorPosition().block,
+    "after"
   },
-  aliases: ["chartjs"],
+  aliases: [
+    "chart",
+    "grafics"
+  ],
   group: "Other",
   icon: <BiBarChartSquare />,
-};
+});
 
 
 

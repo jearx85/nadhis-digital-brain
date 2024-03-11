@@ -5,7 +5,7 @@ function EmbeddedPage() {
   return (
     <div className="container">
       <div className="embedded-page-container">
-        <iframe src="http://10.11.230.52:3030/" title="Embedded Page" className="embedded-page-iframe" />
+        <iframe src="http://localhost:3030/" title="Embedded Page" className="embedded-page-iframe" />
       </div>
       <style jsx>{`
         .container {
