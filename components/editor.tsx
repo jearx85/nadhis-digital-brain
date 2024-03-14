@@ -20,8 +20,11 @@ import "@blocknote/react/style.css";
 
 import { useEdgeStore } from "@/lib/edgestore";
 import { insertAlert, Alert } from './myTypeBlocks/alert/Alert';
-import { ChartBlock, insertChart } from "./myTypeBlocks/chartType";
+import { ChartBlock, insertChart } from "./myTypeBlocks/charts/chartType";
 import MenuCharts from './dragHandleMenu/menuCharts/menuCharts';
+import {DocLinkBlock, linkDocsBlock} from './myTypeBlocks/linkDocs/linkdocsType'
+import { ChartCommand } from "./chart-command";
+import { useState } from "react";
 // import { insertFontParagraph, FontParagraphBlock } from "./myTypeBlocks/font";
 
 const schema = BlockNoteSchema.create({
@@ -29,6 +32,7 @@ const schema = BlockNoteSchema.create({
     ...defaultBlockSpecs,
     alert: Alert,
     chart: ChartBlock,
+    docLink: DocLinkBlock
   },
 });
 
@@ -53,7 +57,7 @@ const Editor = ({
 
     return response.url;
   }
-  
+
   const editor = useCreateBlockNote({
     schema,
     initialContent: 
@@ -62,6 +66,19 @@ const Editor = ({
       : undefined,
       uploadFile: handleUpload
   });
+
+  function getCurrentBlock(){
+    console.log(editor.document)
+    editor.document.map((block: any) => {
+        if(block.type === "table"){
+          console.log("is table")
+          const currentBlock = editor.getBlock(block.id);
+          // editor.insertBlocks([{type: "chart", text: "Hello World"}], currentBlock, "after")
+          // console.log("currentBlock: ", currentBlock)
+          return currentBlock;
+        };
+      });
+  }
 
   return (
     <div>
@@ -77,13 +94,15 @@ const Editor = ({
           onChange(JSON.stringify(blocks, null, 2))
         }}
         > 
+        {/* < ChartCommand /> */}
         <SuggestionMenuController 
           triggerCharacter={"/"}
           getItems={async (query) =>
             filterSuggestionItems(
               [...getDefaultReactSlashMenuItems(editor), 
                 insertChart(editor),
-                insertAlert(editor)
+                insertAlert(editor),
+                linkDocsBlock(editor)
               ],
               query
             )
@@ -97,7 +116,6 @@ const Editor = ({
                 dragHandleMenu={(props) => (
                   <DragHandleMenu {...props}>
                     <RemoveBlockItem {...props}>Delete</RemoveBlockItem>
-                    <BlockColorsItem {...props}>Colors</BlockColorsItem>
                     < MenuCharts editor={editor}/> 
                   </DragHandleMenu>
                 )}

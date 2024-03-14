@@ -3,9 +3,6 @@
 }
 
 .texto{
-    position: relative;
-    display: flex;
-    font-size: 10px;
     font-family: var(--bn-font-family);
     cursor: pointer;
 }

@@ -80,6 +80,7 @@ export const Alert = createReactBlockSpec(
       const alertType = alertTypes.find(
         (a) => a.value === props.block.props.type
       )!;
+      console.log(alertType)
       const Icon = alertType.icon;
       return (
         <div className={"alert"} data-alert-type={props.block.props.type}>

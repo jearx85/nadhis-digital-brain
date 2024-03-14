@@ -24,34 +24,84 @@ import { Item } from "@/app/(main)/_components/item";
 import { Search } from "lucide-react";
 import { SearchCommand } from "../../search-command";
 
-// const DocLinkBlock = createReactBlockSpec(
-//   {
-//     type: "docLink",
-//     propSchema: {
-//       ...defaultProps
-//     },
-//     content: "inline",
-//   },
-//   {
-//     render: ({ block, contentRef }) => {
-//       const style = {
-//         backgroundColor: block.props.backgroundColor,
-//         textColor: block.props.textColor,
-//       };
+export const DocLinkBlock = createReactBlockSpec(
+  {
+    type: "docLink",
+    propSchema: {
+      ...defaultProps
+    },
+    content: "inline",
+  },
+  {
+    render: ({ block, contentRef }) => {
+      const style = {
+        backgroundColor: block.props.backgroundColor,
+        textColor: block.props.textColor,
+      };
 
-//       return (
-//         <>
-//           <p ref={contentRef} style={style} />
-//         </>
-//       );
-//     },
-//     toExternalHTML: ({ contentRef }) => <p ref={contentRef} />
-//   }
-// );
+      return (
+        <>
+          <p ref={contentRef} style={style} />
+        </>
+      );
+    },
+    toExternalHTML: ({ contentRef }) => <p ref={contentRef} />
+  }
+);
+
+const schema = BlockNoteSchema.create({
+  blockSpecs: {
+    // Adds all default blocks.
+    ...defaultBlockSpecs,
+    docLink: DocLinkBlock,
+  },
+});
 
 
-// export const linkDocsBlock: ReactSlashMenuItem<typeof blockSchema> = {
+export const linkDocsBlock= (editor: typeof schema.BlockNoteEditor) => ({
 
+  title: "docLink",
+  onItemClick: () => {
+    insertOrUpdateBlock(editor, {
+      type: "docLink",
+      props: {
+        backgroundColor: "gray",
+        textColor: "default",
+      },
+      content: [
+        {
+          type: "text",
+          text: "🔗" + `Documento relacionado\n`,
+          styles: {
+            bold: true
+          }
+        },
+        {
+          type: "link",
+          href: `http://localhost:3000/documents/titulo`,
+          content:[
+            {
+              type: "text",
+              text: `titulo`,
+              styles: {
+                textColor: "blue"
+              }
+            }
+          ]
+
+        }
+      ]
+    });
+    editor.getTextCursorPosition().block,
+    "after"
+  },
+  aliases: [
+    "docLink",
+    "grafics"
+  ],
+  group: "Other",
+  icon: <TbCirclesRelation />,
+});
 //   name: "Documento relacionado",
 //   execute: (editor: any) => {
 //     // const title = prompt("Documento relacionado: ")
@@ -96,5 +146,5 @@ import { SearchCommand } from "../../search-command";
 //   aliases: ["doclink"],
 //   group: "Other",
 //   icon: <TbCirclesRelation />,
-// };
+// });
 
