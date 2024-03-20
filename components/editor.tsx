@@ -23,15 +23,11 @@ import "@blocknote/react/style.css";
 import { useEdgeStore } from "@/lib/edgestore";
 import { insertAlert, Alert } from './myTypeBlocks/alert/Alert';
 import { ChartBlock } from "./myTypeBlocks/charts/chartType";
-// import MenuCharts from './dragHandleMenu/menuCharts/menuCharts';
 import MenuCharts from './dragHandleMenu/menuCharts/menuPruebas';
+// import MenuCharts from './dragHandleMenu/menuCharts/menuCharts';
 import {DocLinkBlock, linkDocsBlock} from './myTypeBlocks/linkDocs/linkdocsType'
-import { ChartCommand } from "./chart-command";
-import { useState } from "react";
-import { DataParser } from "./parser/dataParser";
 import { Mention } from "./myInlineContent/Mention";
 import { Charts } from "./myInlineContent/Charts";
-// import { insertFontParagraph, FontParagraphBlock } from "./myTypeBlocks/font";
 
 
 const schema = BlockNoteSchema.create({
@@ -104,20 +100,6 @@ const Editor = ({
       uploadFile: handleUpload
   });
 
-  // function getCurrentBlock(){
-  //   editor.document.map((block: any) => {
-  //       if(block.type === "chart"){
-  //         console.log("is chart")
-  //         const currentBlock = editor.getBlock(block.id);
-  //         // editor.insertBlocks([{type: "chart", text: "Hello World"}], currentBlock, "after")
-  //         console.log("currentBlock: ", currentBlock)
-  //         return currentBlock;
-  //       };
-  //     });
-  // }
-
-  // DataParser(initialContent, editor);
-
   return (
     <div>
       <BlockNoteView 
@@ -132,13 +114,11 @@ const Editor = ({
           onChange(JSON.stringify(blocks, null, 2))
         }}
         > 
-        {/* < ChartCommand /> */}
         <SuggestionMenuController 
           triggerCharacter={"/"}
           getItems={async (query) =>
             filterSuggestionItems(
               [...getDefaultReactSlashMenuItems(editor), 
-                // insertChart(editor),
                 insertAlert(editor),
                 linkDocsBlock(editor)
               ],

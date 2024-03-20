@@ -65,13 +65,13 @@ export const Charts = createReactInlineContentSpec(
 
         return (
           <div>
-            @{props.inlineContent.props.type}
             {props.inlineContent.props.type === "Area" && (
               <AreaChart
                 h={500}
                 data={chartData}
                 dataKey={chartDataKey}
                 withLegend
+                tooltipAnimationDuration={200}
                 textColor={textcolor}
                 yAxisProps={{ tickMargin: 10, orientation: "left" }}
                 xAxisProps={{ tickMargin: 10, orientation: "bottom" }}
@@ -80,11 +80,14 @@ export const Charts = createReactInlineContentSpec(
               />
             )}
             {props.inlineContent.props.type === "Line" && (
+              <>
+              
               <LineChart
                 h={500}
                 data={chartData}
                 dataKey={chartDataKey}
                 withLegend
+                tooltipAnimationDuration={200}
                 textColor={textcolor}
                 yAxisProps={{
                   tickMargin: 10,
@@ -96,6 +99,9 @@ export const Charts = createReactInlineContentSpec(
                 curveType="linear"
                 connectNulls
               />
+              {/* <br />
+              <div className="border-solid border-2 border-sky-500 h-24">Opciones</div> */}
+              </>
             )}
             {props.inlineContent.props.type === "Bar" && (
               <BarChart
@@ -103,6 +109,7 @@ export const Charts = createReactInlineContentSpec(
                 data={chartData}
                 dataKey={chartDataKey}
                 withLegend
+                tooltipAnimationDuration={200}
                 textColor={textcolor}
                 series={chartSeries}
               />

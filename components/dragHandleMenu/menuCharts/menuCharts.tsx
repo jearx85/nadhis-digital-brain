@@ -1,57 +1,31 @@
 "use Client";
-import React, { useEffect, useState } from "react";
-import './menuCharts.css';
-import '@mantine/charts/styles.css';
-import { LineChart , PieChart, BarChartBig, Radar, AreaChart } from "lucide-react";
+import React, { useState } from "react";
+import { useTheme } from "next-themes";
+import "./menuCharts.css";
+import {
+  LineChart as Line,
+  PieChart as Pie,
+  BarChartBig,
+  Radar,
+  AreaChart as Area,
+} from "lucide-react";
 import { Menu } from "@mantine/core";
 
-export let arrObj: any = [];
-export let chartType = ""
+export let chartType = "";
+export let textFormat = "";
 
-export default function MenuCharts({editor}: any) {
+
+export default function MenuCharts({ editor }: any) {
+  
+  const { resolvedTheme } = useTheme();
+  const [selectedChartType, setSelectedChartType] = useState("");
 
   const chartTypes = [
-    {
-      title: "Area",
-      value: "Area",
-      icon: AreaChart ,
-      color: "#e69819",
-      backgroundColor: {
-        light: "#fff6e6",
-        dark: "#805d20",
-      },
-    },
-    {
-      title: "Line",
-      value: "Line",
-      icon: LineChart ,
-      color: "#e69819",
-      backgroundColor: {
-        light: "#fff6e6",
-        dark: "#805d20",
-      },
-    },
-    {
-      title: "Bar",
-      value: "Bar",
-      icon: BarChartBig,
-      color: "#d80d0d",
-      backgroundColor: {
-        light: "#ffe6e6",
-        dark: "#802020",
-      },
-    },
-    {
-      title: "RadarChart",
-      value: "RadarChart",
-      icon: Radar,
-      color: "#0bc10b",
-      backgroundColor: {
-        light: "#e6ffe6",
-        dark: "#208020",
-      },
-    },
-  ] as const;
+    { title: "Area", value: "Area", icon: Area },
+    { title: "Line", value: "Line", icon: Line },
+    { title: "Bar", value: "Bar", icon: BarChartBig },
+    { title: "RadarChart", value: "RadarChart", icon: Radar },
+  ];
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -63,10 +37,29 @@ export default function MenuCharts({editor}: any) {
     setIsDropdownOpen(false);
   };
 
-  
+  let series: any = [];
+  let textcolor = "";
+  let arrObj: any = [];
+  let dataKey = "";
+
+  if (resolvedTheme == "light") {
+    textcolor = "black";
+  } else {
+    textcolor = "white";
+  }
+
+  const handleChartTypeSelect = (type: string) => {
+    setSelectedChartType(type);
+  };
+
   return (
-    <div >
-      <div className={"alert"} data-alert-type={"Line"} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <>
+        <div
+          className={"chart"}
+          data-chart-type={selectedChartType}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           <Menu withinPortal={false} zIndex={999999} opened={isDropdownOpen}>
             <Menu.Target>
               <p className="texto">Add chart</p>
@@ -82,37 +75,59 @@ export default function MenuCharts({editor}: any) {
                     key={type.value}
                     leftSection={
                       <ItemIcon
-                        className={"alert-icon"}
-                        data-alert-icon-type={type.value}
+                        className={"chart-icon"}
+                        data-chart-icon-type={type.value}
                       />
                     }
-                    onClick={() =>{
+                    onClick={() => {
                       chartType = type.value;
-                      let series: any = [];
+                      handleChartTypeSelect(type.value);
 
                       editor.document.map((block: any) => {
-                        if(block.type === "table"){
+                        if (block.type === "table") {
                           const currentBlock = editor.getBlock(block.id);
                           const rows = currentBlock.content.rows;
                           const columns = rows[0].cells;
 
                           arrObj = [];
-                          for(let i = 0; i < rows.length; i++){
+                          for (let i = 0; i < rows.length; i++) {
                             let objFormat: any = {};
-                            for(let j = 0; j < columns.length; j++){
-                              objFormat[columns[j][0].text] = rows[i].cells[j][0].text;
-                            } 
-                            if(i > 0){
+                            for (let j = 0; j < columns.length; j++) {
+                              objFormat[columns[j][0].text] =
+                                rows[i].cells[j][0].text;
+                            }
+                            if (i > 0) {
                               arrObj.push(objFormat);
                             }
                           }
 
                           if (arrObj.length > 0) {
-                            const keys = Object.keys(arrObj[0]).slice(1, arrObj[0].length);
-                            const colors = ["indigo.6", "blue.6", "teal.6", "orange.6", "lime.6"];
-                    
+                            dataKey = Object.keys(arrObj[0])[0];
+
+                            const keys = Object.keys(arrObj[0]).slice(
+                              1,
+                              arrObj[0].length
+                            );
+                            const colors = [
+                              "dark.6",
+                              "gray.6",
+                              "red.6",
+                              "red.6",
+                              "grape.6",
+                              "violet.6",
+                              "indigo.6",
+                              "blue.6",
+                              "teal.6",
+                              "green.6",
+                              "lime.6",
+                              "yellow.6",
+                              "orange.6",
+                            ];
+
                             series = keys.map((item) => {
-                              const colorRandom = Math.floor(Math.random() * colors.length);
+                              const colorRandom = Math.floor(
+                                Math.random() * colors.length
+                              );
                               return {
                                 name: item,
                                 color: colors[colorRandom],
@@ -120,29 +135,63 @@ export default function MenuCharts({editor}: any) {
                             });
                           }
 
-                          const typeChartFotmat = "```chart\n type: " + type.value + "\n"
-                          editor.insertBlocks([
-                          {
-                            type: "chart", 
-                            props: {
-                              textColor: "default",
-                              backgroundColor: "default"
-                            },
-                            content: [
+
+                          const typeChartFotmat = "type: " + type.value + "\n";
+                          textFormat = `${typeChartFotmat} data: ${JSON.stringify(
+                            arrObj
+                          )} \n series: ${JSON.stringify(series)}`;
+
+                          editor.insertBlocks(
+                            [
                               {
-                                type: "text",
-                                text: `${typeChartFotmat} ${JSON.stringify(arrObj)} \n series: \n ${JSON.stringify(series)}`+"\n```",
-                                styles: {
-                                }
-                              }
+                                type: "chart",
+                                props: {
+                                  textColor: "default",
+                                  backgroundColor: "default",
+                                },
+                                content: [
+                                  {
+                                    type: "chartContent",
+                                    props:{
+                                      data: JSON.stringify(arrObj),
+                                      type: chartType,
+                                      series: JSON.stringify(series),
+                                      dataKey
+                                    },
+                                    text: textFormat,
+                                    styles: {},
+                                  }
+                                ],
+                                children: [],
+                              },
                             ],
-                            children: []
-                          }
-                        ], currentBlock, "after")
-                        };
+                            currentBlock,
+                            "after"
+                          );
+                          editor.insertBlocks(
+                            [
+                              {
+                                type: "paragraph",
+                                props: {
+                                  textColor: "default",
+                                  backgroundColor: "default",
+                                },
+                                content: [
+                                  {
+                                    type: "text",
+                                    text: "",
+                                    styles: {},
+                                  },
+                                ],
+                                children: [],
+                              },
+                            ],
+                            currentBlock,
+                            "after"
+                          );
+                        }
                       });
-                    }
-                    }
+                    }}
                   >
                     {type.title}
                   </Menu.Item>
@@ -150,7 +199,7 @@ export default function MenuCharts({editor}: any) {
               })}
             </Menu.Dropdown>
           </Menu>
-        </div>
-    </div>
+      </div>
+    </>
   );
 }
