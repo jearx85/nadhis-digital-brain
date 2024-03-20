@@ -2,6 +2,7 @@
 import { useTheme } from "next-themes";
 import {
   defaultBlockSpecs,
+  defaultInlineContentSpecs,
   BlockNoteSchema,
   filterSuggestionItems
 } from "@blocknote/core";
@@ -15,19 +16,32 @@ import {
   DragHandleMenu,
   RemoveBlockItem,
   BlockColorsItem,
+  DefaultReactSuggestionItem,
 } from "@blocknote/react";
 import "@blocknote/react/style.css";
 
 import { useEdgeStore } from "@/lib/edgestore";
 import { insertAlert, Alert } from './myTypeBlocks/alert/Alert';
-import { ChartBlock, insertChart } from "./myTypeBlocks/charts/chartType";
-import MenuCharts from './dragHandleMenu/menuCharts/menuCharts';
+import { ChartBlock } from "./myTypeBlocks/charts/chartType";
+// import MenuCharts from './dragHandleMenu/menuCharts/menuCharts';
+import MenuCharts from './dragHandleMenu/menuCharts/menuPruebas';
 import {DocLinkBlock, linkDocsBlock} from './myTypeBlocks/linkDocs/linkdocsType'
 import { ChartCommand } from "./chart-command";
 import { useState } from "react";
+import { DataParser } from "./parser/dataParser";
+import { Mention } from "./myInlineContent/Mention";
+import { Charts } from "./myInlineContent/Charts";
 // import { insertFontParagraph, FontParagraphBlock } from "./myTypeBlocks/font";
 
+
 const schema = BlockNoteSchema.create({
+  inlineContentSpecs: {
+    // Adds all default inline content.
+    ...defaultInlineContentSpecs,
+    // Adds the mention tag.
+    mention: Mention,
+    chartContent: Charts,
+  },
   blockSpecs: {
     ...defaultBlockSpecs,
     alert: Alert,
@@ -36,11 +50,35 @@ const schema = BlockNoteSchema.create({
   },
 });
 
+// Function which gets all users for the mentions menu.
+const getMentionMenuItems = (
+  editor: typeof schema.BlockNoteEditor
+): DefaultReactSuggestionItem[] => {
+  const users = ["Steve", "Bob", "Joe", "Mike"];
+ 
+  return users.map((user) => ({
+    title: user,
+    onItemClick: () => {
+      editor.insertInlineContent([
+        {
+          type: "mention",
+          props: {
+            user,
+          },
+        },
+        " ", // add a space after the mention
+      ]);
+    },
+  }));
+};
+
 interface EditorProps {
   onChange: (value: string) => void;
   initialContent?: string;
   editable?: boolean;
 };
+
+
 
 const Editor = ({
   onChange,
@@ -49,7 +87,6 @@ const Editor = ({
 }: EditorProps) => {
   const { resolvedTheme } = useTheme();
   const { edgestore } = useEdgeStore();
-  
   const handleUpload = async (file: File) => {
     const response = await edgestore.publicFiles.upload({ 
       file
@@ -67,18 +104,19 @@ const Editor = ({
       uploadFile: handleUpload
   });
 
-  function getCurrentBlock(){
-    console.log(editor.document)
-    editor.document.map((block: any) => {
-        if(block.type === "table"){
-          console.log("is table")
-          const currentBlock = editor.getBlock(block.id);
-          // editor.insertBlocks([{type: "chart", text: "Hello World"}], currentBlock, "after")
-          // console.log("currentBlock: ", currentBlock)
-          return currentBlock;
-        };
-      });
-  }
+  // function getCurrentBlock(){
+  //   editor.document.map((block: any) => {
+  //       if(block.type === "chart"){
+  //         console.log("is chart")
+  //         const currentBlock = editor.getBlock(block.id);
+  //         // editor.insertBlocks([{type: "chart", text: "Hello World"}], currentBlock, "after")
+  //         console.log("currentBlock: ", currentBlock)
+  //         return currentBlock;
+  //       };
+  //     });
+  // }
+
+  // DataParser(initialContent, editor);
 
   return (
     <div>
@@ -100,12 +138,19 @@ const Editor = ({
           getItems={async (query) =>
             filterSuggestionItems(
               [...getDefaultReactSlashMenuItems(editor), 
-                insertChart(editor),
+                // insertChart(editor),
                 insertAlert(editor),
                 linkDocsBlock(editor)
               ],
               query
             )
+          }
+        />
+        <SuggestionMenuController
+          triggerCharacter={"@"}
+          getItems={async (query) =>
+            // Gets the mentions menu items
+            filterSuggestionItems(getMentionMenuItems(editor), query)
           }
         />
          <SideMenuController

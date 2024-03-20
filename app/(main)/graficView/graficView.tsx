@@ -138,7 +138,9 @@ export default function GraficView() {
   };
 try{
   return (
-    <>{data.nodes.length > 0 && <Graph graph={data} options={options} />}</>
+    <>
+     {data.nodes.length > 0 && <Graph graph={data} options={options} />}
+    </>
   );
 }catch(e: any){
   console.log(e.message);

@@ -8,6 +8,7 @@ import { api } from '@/convex/_generated/api';
 import { generateUUID } from './noteUtils';
 import { useRouter } from 'next/navigation';
 
+
 const ElasticDPruebas = () => {
 
   const router = useRouter();
@@ -19,7 +20,7 @@ const ElasticDPruebas = () => {
   const [filteredTitles, setFilteredTitles] = useState<string[]>([]); 
   const [inputValue, setInputValue] = useState<string>('');
 
-  const documents = useQuery(api.documents.getAllDocuments);
+  const documents: any = useQuery(api.documents.getAllDocuments);
 
   useEffect(() => {
     async function loadCategories() {
@@ -313,7 +314,7 @@ const ElasticDPruebas = () => {
 const titulos: string[] = [];
 async function createNotePlugin(titulo: string) {
   const selected = titulo;
-  documents?.forEach((document) => {
+  documents?.forEach((document: any) => {
     titulos.push(document.title);
   });
   if (!titulos.includes(selected)) {

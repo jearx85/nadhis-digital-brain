@@ -1,23 +1,30 @@
 "use Client";
 import React, { useEffect, useState } from "react";
 import './menuCharts.css';
-import { AreaChart } from '@mantine/charts';
 import '@mantine/charts/styles.css';
-import { Item } from "@/app/(main)/_components/item";
-import { useChartType } from "@/hooks/use-chart";
-import { LineChart , PieChart, BarChartBig } from "lucide-react";
+import { LineChart , PieChart, BarChartBig, Radar, AreaChart } from "lucide-react";
 import { Menu } from "@mantine/core";
 
 export let arrObj: any = [];
+export let chartType = ""
 
 export default function MenuCharts({editor}: any) {
-// const chartType = useChartType();
 
   const chartTypes = [
     {
+      title: "Area",
+      value: "Area",
+      icon: AreaChart ,
+      color: "#e69819",
+      backgroundColor: {
+        light: "#fff6e6",
+        dark: "#805d20",
+      },
+    },
+    {
       title: "Line",
       value: "Line",
-      icon: LineChart,
+      icon: LineChart ,
       color: "#e69819",
       backgroundColor: {
         light: "#fff6e6",
@@ -35,9 +42,9 @@ export default function MenuCharts({editor}: any) {
       },
     },
     {
-      title: "Doughnut",
-      value: "Doughnut",
-      icon: PieChart,
+      title: "RadarChart",
+      value: "RadarChart",
+      icon: Radar,
       color: "#0bc10b",
       backgroundColor: {
         light: "#e6ffe6",
@@ -59,13 +66,6 @@ export default function MenuCharts({editor}: any) {
   
   return (
     <div >
-      {/* <Item
-        label="Add chart"
-        icon={BarChartBig }
-        isChart
-        onClick={chartType.onOpen}
-      /> */}
-
       <div className={"alert"} data-alert-type={"Line"} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
           <Menu withinPortal={false} zIndex={999999} opened={isDropdownOpen}>
             <Menu.Target>
@@ -87,8 +87,9 @@ export default function MenuCharts({editor}: any) {
                       />
                     }
                     onClick={() =>{
-                      console.log(type.value);
-                      
+                      chartType = type.value;
+                      let series: any = [];
+
                       editor.document.map((block: any) => {
                         if(block.type === "table"){
                           const currentBlock = editor.getBlock(block.id);
@@ -106,6 +107,18 @@ export default function MenuCharts({editor}: any) {
                             }
                           }
 
+                          if (arrObj.length > 0) {
+                            const keys = Object.keys(arrObj[0]).slice(1, arrObj[0].length);
+                            const colors = ["indigo.6", "blue.6", "teal.6", "orange.6", "lime.6"];
+                    
+                            series = keys.map((item) => {
+                              const colorRandom = Math.floor(Math.random() * colors.length);
+                              return {
+                                name: item,
+                                color: colors[colorRandom],
+                              };
+                            });
+                          }
 
                           const typeChartFotmat = "```chart\n type: " + type.value + "\n"
                           editor.insertBlocks([
@@ -118,7 +131,7 @@ export default function MenuCharts({editor}: any) {
                             content: [
                               {
                                 type: "text",
-                                text: `${typeChartFotmat} ${JSON.stringify(arrObj)}`+"\n ```",
+                                text: `${typeChartFotmat} ${JSON.stringify(arrObj)} \n series: \n ${JSON.stringify(series)}`+"\n```",
                                 styles: {
                                 }
                               }
@@ -137,17 +150,6 @@ export default function MenuCharts({editor}: any) {
               })}
             </Menu.Dropdown>
           </Menu>
-          {/* <AreaChart
-            h={300}
-            data={arrObj}
-            dataKey="text"
-            series={[
-              { name: 'text', color: 'indigo.6' },
-              { name: 'text', color: 'blue.6' },
-              { name: 'text', color: 'teal.6' },
-            ]}
-            curveType="linear"
-          /> */}
         </div>
     </div>
   );

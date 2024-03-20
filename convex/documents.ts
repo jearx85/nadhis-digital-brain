@@ -456,3 +456,40 @@ export const getTitleId = mutation({
 
 });
 
+export const getIdTitle = mutation({
+  args: { id: v.id("documents")},
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthenticated");
+    }
+
+    const userId = identity.subject;
+
+    const documents = await ctx.db
+      .query("documents")
+      .withIndex("by_user_parent", (q) =>
+        q
+          .eq("userId", userId)
+      )
+      .filter((q) =>
+        q.eq(q.field("_id"), args.id)
+      )
+      .order("desc")
+      .first();
+
+    return documents?.title;
+  }
+
+});
+
+export const getDocument = query(
+  {args: 
+    {documentsId: v.id("documents")},
+    handler: async(ctx, args) => {
+        const doc = await ctx.db.get(args.documentsId);
+        return doc
+    },
+  }
+);
