@@ -23,8 +23,7 @@ import "@blocknote/react/style.css";
 import { useEdgeStore } from "@/lib/edgestore";
 import { insertAlert, Alert } from './myTypeBlocks/alert/Alert';
 import { ChartBlock } from "./myTypeBlocks/charts/chartType";
-import MenuCharts from './dragHandleMenu/menuCharts/menuPruebas';
-// import MenuCharts from './dragHandleMenu/menuCharts/menuCharts';
+import MenuCharts from './dragHandleMenu/menuCharts/menuCharts';
 import {DocLinkBlock, linkDocsBlock} from './myTypeBlocks/linkDocs/linkdocsType'
 import { Mention } from "./myInlineContent/Mention";
 import { Charts } from "./myInlineContent/Charts";
