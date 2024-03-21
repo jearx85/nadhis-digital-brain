@@ -26,7 +26,7 @@ for(let i = 0; i <10; i++){
 }
 
 
-export var edges = [
+export var edgesP = [
     { from: 1, to: 2 },
     { from: 2, to: 3 },
     { from: 4, to: 5 },

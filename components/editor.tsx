@@ -139,11 +139,11 @@ const Editor = ({
           },
           {
             type: "link",
-            href: `http://localhost:3000/documents/j577nr9ep9pp7tdn6bb6s5p6w16mxmrh`,
+            href: `http://localhost:3000/documents/j57dqwpadqjq7x8nrj4cjzndk56nqhj7`,
             content:[
               {
                 type: "text",
-                text: `Gráficas`,
+                text: `Untitled`,
                 styles: {
                   textColor: "blue"
                 }
