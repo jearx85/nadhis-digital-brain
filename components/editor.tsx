@@ -4,7 +4,8 @@ import {
   defaultBlockSpecs,
   defaultInlineContentSpecs,
   BlockNoteSchema,
-  filterSuggestionItems
+  filterSuggestionItems,
+  insertOrUpdateBlock
 } from "@blocknote/core";
 import {
   BlockNoteView,
@@ -19,15 +20,16 @@ import {
   DefaultReactSuggestionItem,
 } from "@blocknote/react";
 import "@blocknote/react/style.css";
+import { RiAlertFill } from "react-icons/ri";
 
 import { useEdgeStore } from "@/lib/edgestore";
-import { insertAlert, Alert } from './myTypeBlocks/alert/Alert';
+import { Alert } from './myTypeBlocks/alert/Alert';
 import { ChartBlock } from "./myTypeBlocks/charts/chartType";
 import MenuCharts from './dragHandleMenu/menuCharts/menuCharts';
-import {DocLinkBlock, linkDocsBlock} from './myTypeBlocks/linkDocs/linkdocsType'
+import {DocLinkBlock} from './myTypeBlocks/linkDocs/linkdocsType'
 import { Mention } from "./myInlineContent/Mention";
 import { Charts } from "./myInlineContent/Charts";
-
+import { TbCirclesRelation } from "react-icons/tb";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -73,8 +75,6 @@ interface EditorProps {
   editable?: boolean;
 };
 
-
-
 const Editor = ({
   onChange,
   initialContent,
@@ -97,6 +97,71 @@ const Editor = ({
       ? JSON.parse(initialContent)
       : undefined,
       uploadFile: handleUpload
+  });
+
+  const insertAlert = (editor: typeof schema.BlockNoteEditor) => ({
+      title: "alert",
+      onItemClick: () => {
+        insertOrUpdateBlock(editor, {
+          type: "alert",
+        });
+      },
+      aliases: [
+        "alert",
+        "notification",
+        "emphasize",
+        "warning",
+        "error",
+        "info",
+        "success",
+      ],
+      group: "Other",
+      icon: <RiAlertFill />,
+    });
+
+  const linkDocsBlock= (editor: typeof schema.BlockNoteEditor) => ({
+
+    title: "docLink",
+    onItemClick: () => {
+      insertOrUpdateBlock(editor, {
+        type: "docLink",
+        props: {
+          backgroundColor: "gray",
+          textColor: "default",
+        },
+        content: [
+          {
+            type: "text",
+            text: "🔗" + `Documento relacionado\n`,
+            styles: {
+              bold: true
+            }
+          },
+          {
+            type: "link",
+            href: `http://localhost:3000/documents/titulo`,
+            content:[
+              {
+                type: "text",
+                text: `titulo`,
+                styles: {
+                  textColor: "blue"
+                }
+              }
+            ]
+  
+          }
+        ]
+      });
+      editor.getTextCursorPosition().block,
+      "after"
+    },
+    aliases: [
+      "docLink",
+      "grafics"
+    ],
+    group: "Other",
+    icon: <TbCirclesRelation />,
   });
 
   return (
