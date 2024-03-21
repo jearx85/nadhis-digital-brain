@@ -23,7 +23,7 @@ export const DocLinkBlock = createReactBlockSpec(
   },
   {
     render: ({ block, contentRef }) => {
-      const chart = useChartType();
+      // const chart = useChartType();
       const style = {
         backgroundColor: block.props.backgroundColor,
         textColor: block.props.textColor,
