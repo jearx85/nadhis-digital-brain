@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 import Graph from "react-vis-network-graph";
-// import { docs, edgesP } from "./data";
+import { docs, edgesP } from "./data";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -30,39 +30,44 @@ export default function GraficView() {
   const router = useRouter();
   const documents = useQuery(api.documents.getAllDocuments);
   // const [data, setData] = useState<ObjetoProps>({ nodes: [], edges: [] });
-  const edgesDocs: EdgeProps[] = [];
+  // const edgesDocs: EdgeProps[] = [];
+  const [edgesDocs, setEdgesDocs] = useState<EdgeProps[]>([]);
 
   useEffect(() => {
-    documents?.map((doc) => {
-      if (doc.content) {
-        const arrContent = JSON.parse(doc.content);
-
-        arrContent.map((item: any) => {
-          if (item.type !== "docLink") {
-            return;
-          } else {
-            let currentId = doc._id;
-            let arrItemContent = item.content;
-
-            const linkElement = arrItemContent.filter((item: any) => {
-              return item.type === "link";
-            });
-
-            linkElement.map((item: any) => {
-                let link = item.href;
-                let dataSplit = link.split("/");
-                let edgeFormat = {
+     const newEdgesDocs: EdgeProps[] = [];
+     documents?.map((doc) => {
+       if (doc.content) {
+         const arrContent = JSON.parse(doc.content);
+ 
+         arrContent.map((item: any) => {
+           if (item.type !== "docLink") {
+             return;
+           } else {
+             let currentId = doc._id;
+             let arrItemContent = item.content;
+ 
+             const linkElement = arrItemContent.filter((item: any) => {
+               return item.type === "link";
+             });
+ 
+             linkElement.map((item: any) => {
+                 let link = item.href;
+                 let dataSplit = link.split("/");
+                 let edgeFormat = {
                   from: currentId,
                   to: dataSplit[dataSplit.length - 1],
                   id: generateUUID()
-                };
-                edgesDocs.push(edgeFormat);
-            })
-          }
-        });
-      }
-    });
-  });
+                 };
+                 // Añade el nuevo edge al array newEdgesDocs
+                 newEdgesDocs.push(edgeFormat);
+             })
+           }
+         });
+       }
+     });
+     // Actualiza el estado de edgesDocs con el nuevo array de edges
+     setEdgesDocs(newEdgesDocs);
+  }, [documents]); 
 
   //============ Nodes =============================
 
@@ -78,91 +83,91 @@ export default function GraficView() {
 
   //================================================
 
+  // const data: ObjetoProps = { nodes: docs, edges: edgesP };
   const data: ObjetoProps = { nodes: nodes, edges: edgesDocs };
-  
+
   let themeNodes = {
-       shape: "dot",
-       // color: "#363534",
-       scaling: {
-         label: true,
-       },
-       // chosen: true,
-       color: {
-         border: "",
-         background: "",
-         highlight: {
-           border: "",
-           background: "",
-         },
-         hover: {
-           border: "",
-           background: "",
-         },
-       },
-       opacity: 1,
-       fixed: {
-         x: false,
-         y: false,
-       },
-       font: {
-         size: 12,
-         face: "Tahoma",
-         color: ""
-       },
-     }
-   let themeEdges = {
-       width: 0.15,
-       color: {
-         color: "#0f0e0e",
-         highlight: "#0f0e0e",
-         hover: "#0f0e0e9",
-         opacity: 1.0,
-       },
-       arrows: {
-         from: { enabled: false },
-         to: { enabled: false },
-       },
-       smooth: {
-         type: "continuous",
-         roundness: 0,
-       },
-   }
- 
-   if(resolvedTheme === "light"){
-   
-     themeNodes.color.border = "#0f0e0e";
-     themeNodes.color.background = "#0f0e0e";
-     themeNodes.color.highlight.border = "#737070";
-     themeNodes.color.highlight.background = "#737070";
-     themeNodes.color.hover.border = "#737070";
-     themeNodes.color.hover.background = "#737070";
-     themeNodes.font.color = "#2E2E2E";
- 
+    shape: "dot",
+    // color: "#363534",
+    scaling: {
+      label: true,
+    },
+    // chosen: true,
+    color: {
+      border: "",
+      background: "",
+      highlight: {
+        border: "",
+        background: "",
+      },
+      hover: {
+        border: "",
+        background: "",
+      },
+    },
+    opacity: 1,
+    fixed: {
+      x: false,
+      y: false,
+    },
+    font: {
+      size: 12,
+      face: "Tahoma",
+      color: "",
+    },
+  };
+  let themeEdges = {
+    width: 0.15,
+    color: {
+      color: "red",
+      highlight: "red",
+      hover: "red",
+      opacity: 1.0,
+    },
+    arrows: {
+      from: { enabled: false },
+      to: { enabled: false },
+    },
+    smooth: {
+      type: "continuous",
+      roundness: 0,
+    },
+  };
+
+  if (resolvedTheme === "light") {
+    themeNodes.color.border = "#0f0e0e";
+    themeNodes.color.background = "#0f0e0e";
+    themeNodes.color.highlight.border = "#737070";
+    themeNodes.color.highlight.background = "#737070";
+    themeNodes.color.hover.border = "#737070";
+    themeNodes.color.hover.background = "#737070";
+    themeNodes.font.color = "#2E2E2E";
+
      themeEdges.color.color = "#0f0e0e";
      themeEdges.color.highlight = "#0f0e0e";
      themeEdges.color.hover = "#0f0e0e";
- 
-   }else if(resolvedTheme === "dark"){
-     themeNodes.color.border = "#CED4DA";
-     themeNodes.color.background = "#CED4DA";
-     themeNodes.color.highlight.border = "#D5DAFC";
-     themeNodes.color.highlight.background = "#D5DAFC";
-     themeNodes.color.hover.border = "#A9B1F1";
-     themeNodes.color.hover.background = "#A9B1F1";
-     themeNodes.font.color = "#dadce6";
- 
+
+  } else if (resolvedTheme === "dark") {
+    themeNodes.color.border = "#CED4DA";
+    themeNodes.color.background = "#CED4DA";
+    themeNodes.color.highlight.border = "#D5DAFC";
+    themeNodes.color.highlight.background = "#D5DAFC";
+    themeNodes.color.hover.border = "#A9B1F1";
+    themeNodes.color.hover.background = "#A9B1F1";
+    themeNodes.font.color = "#dadce6";
+
      themeEdges.color.color = "#CED4DA";
      themeEdges.color.highlight = "#CED4DA";
      themeEdges.color.hover = "#CED4DA";
-   }
+  }
 
   const options = {
     autoResize: true,
     nodes: {
-      ...themeNodes
+      ...themeNodes,
     },
     edges: {
-      ...themeEdges
+      ...themeEdges,
     },
     interaction: {
       hover: true,

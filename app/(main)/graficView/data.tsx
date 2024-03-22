@@ -34,6 +34,7 @@ export var edgesP = [
     { from: 7, to: 8 },
     { from: 8, to: 9 },
     { from: 9, to: 10 },
+    { from: 8, to: 2 },
     
 ]
 
