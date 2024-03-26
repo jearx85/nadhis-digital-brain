@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider'
 import { ConvexClientProvider } from '@/components/providers/convex-provider'
 import { ModalProvider } from "@/components/providers/modal-provider";
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import { MantineProvider } from '@mantine/core';
 
 import './globals.css'
 
@@ -40,6 +41,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={inter.className}>
+      <MantineProvider>
         <ConvexClientProvider>
           <EdgeStoreProvider>
             <ThemeProvider
@@ -55,6 +57,7 @@ export default function RootLayout({
             </ThemeProvider>
           </EdgeStoreProvider>
         </ConvexClientProvider>
+      </MantineProvider>
       </body>
     </html>
   )

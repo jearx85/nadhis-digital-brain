@@ -5,11 +5,11 @@ import {
   defaultInlineContentSpecs,
   BlockNoteSchema,
   filterSuggestionItems,
-  insertOrUpdateBlock
+  insertOrUpdateBlock,
 } from "@blocknote/core";
 import {
   BlockNoteView,
-  useCreateBlockNote ,
+  useCreateBlockNote,
   getDefaultReactSlashMenuItems,
   SuggestionMenuController,
   SideMenuController,
@@ -23,13 +23,15 @@ import "@blocknote/react/style.css";
 import { RiAlertFill } from "react-icons/ri";
 
 import { useEdgeStore } from "@/lib/edgestore";
-import { Alert } from './myTypeBlocks/alert/Alert';
+import { Alert } from "./myTypeBlocks/alert/Alert";
 import { ChartBlock } from "./myTypeBlocks/charts/chartType";
-import MenuCharts from './dragHandleMenu/menuCharts/menuCharts';
-import {DocLinkBlock} from './myTypeBlocks/linkDocs/linkdocsType'
+import MenuCharts from "./dragHandleMenu/menuCharts/menuCharts";
+import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
 import { Mention } from "./myInlineContent/Mention";
 import { Charts } from "./myInlineContent/Charts";
 import { TbCirclesRelation } from "react-icons/tb";
+
+import "./styles.css";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -43,7 +45,7 @@ const schema = BlockNoteSchema.create({
     ...defaultBlockSpecs,
     alert: Alert,
     chart: ChartBlock,
-    docLink: DocLinkBlock
+    docLink: DocLinkBlock,
   },
 });
 
@@ -52,7 +54,7 @@ const getMentionMenuItems = (
   editor: typeof schema.BlockNoteEditor
 ): DefaultReactSuggestionItem[] => {
   const users = ["Steve", "Bob", "Joe", "Mike"];
- 
+
   return users.map((user) => ({
     title: user,
     onItemClick: () => {
@@ -73,60 +75,52 @@ interface EditorProps {
   onChange: (value: string) => void;
   initialContent?: string;
   editable?: boolean;
-};
+}
 
-const Editor = ({
-  onChange,
-  initialContent,
-  editable
-}: EditorProps) => {
+const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const { resolvedTheme } = useTheme();
   const { edgestore } = useEdgeStore();
   const handleUpload = async (file: File) => {
-    const response = await edgestore.publicFiles.upload({ 
-      file
+    const response = await edgestore.publicFiles.upload({
+      file,
     });
 
     return response.url;
-  }
+  };
 
   const editor = useCreateBlockNote({
     schema,
-    initialContent: 
-      initialContent 
-      ? JSON.parse(initialContent)
-      : undefined,
-      uploadFile: handleUpload
+    initialContent: initialContent ? JSON.parse(initialContent) : undefined,
+    uploadFile: handleUpload,
   });
 
   const insertAlert = (editor: typeof schema.BlockNoteEditor) => ({
-      title: "alert",
-      onItemClick: () => {
-        insertOrUpdateBlock(editor, {
-          type: "alert",
-        });
-      },
-      aliases: [
-        "alert",
-        "notification",
-        "emphasize",
-        "warning",
-        "error",
-        "info",
-        "success",
-      ],
-      group: "Other",
-      icon: <RiAlertFill />,
-    });
+    title: "alert",
+    onItemClick: () => {
+      insertOrUpdateBlock(editor, {
+        type: "alert",
+      });
+    },
+    aliases: [
+      "alert",
+      "notification",
+      "emphasize",
+      "warning",
+      "error",
+      "info",
+      "success",
+    ],
+    group: "Other",
+    icon: <RiAlertFill />,
+  });
 
-  const linkDocsBlock= (editor: typeof schema.BlockNoteEditor) => ({
-
+  const linkDocsBlock = (editor: typeof schema.BlockNoteEditor) => ({
     title: "docLink",
     onItemClick: () => {
       insertOrUpdateBlock(editor, {
         type: "docLink",
         props: {
-          backgroundColor: "gray",
+          backgroundColor: "green",
           textColor: "default",
         },
         content: [
@@ -134,39 +128,50 @@ const Editor = ({
             type: "text",
             text: "🔗" + `Documento relacionado\n`,
             styles: {
-              bold: true
-            }
+              bold: true,
+            },
           },
           {
             type: "link",
             href: `http://localhost:3000/documents/j57dqwpadqjq7x8nrj4cjzndk56nqhj7`,
-            content:[
+            content: [
               {
                 type: "text",
                 text: `Untitled`,
                 styles: {
-                  textColor: "blue"
-                }
-              }
-            ]
-  
-          }
-        ]
+                  textColor: "blue",
+                },
+              },
+            ],
+          },
+        ],
       });
-      editor.getTextCursorPosition().block,
-      "after"
+      editor.getTextCursorPosition().block, "after";
+      insertOrUpdateBlock(editor, 
+          {
+            type: "paragraph",
+            props: {
+              textColor: "default",
+              backgroundColor: "default",
+            },
+            content: [
+              {
+                type: "text",
+                text: "",
+                styles: {},
+              },
+            ],
+          });
+        editor.getTextCursorPosition().block, "after"
     },
-    aliases: [
-      "docLink",
-      "grafics"
-    ],
+    aliases: ["docLink"],
     group: "Other",
     icon: <TbCirclesRelation />,
   });
 
   return (
     <div>
-      <BlockNoteView 
+      <BlockNoteView
         editor={editor}
         theme={resolvedTheme === "dark" ? "dark" : "light"}
         editable={editable}
@@ -175,16 +180,17 @@ const Editor = ({
         onChange={() => {
           // Saves the document JSON to state.
           const blocks = editor.document;
-          onChange(JSON.stringify(blocks, null, 2))
+          onChange(JSON.stringify(blocks, null, 2));
         }}
-        > 
-        <SuggestionMenuController 
+      >
+        <SuggestionMenuController
           triggerCharacter={"/"}
           getItems={async (query) =>
             filterSuggestionItems(
-              [...getDefaultReactSlashMenuItems(editor), 
+              [
+                ...getDefaultReactSlashMenuItems(editor),
                 insertAlert(editor),
-                linkDocsBlock(editor)
+                linkDocsBlock(editor),
               ],
               query
             )
@@ -197,7 +203,7 @@ const Editor = ({
             filterSuggestionItems(getMentionMenuItems(editor), query)
           }
         />
-         <SideMenuController
+        <SideMenuController
           sideMenu={(props) => {
             return props.block.type === "table" ? (
               <SideMenu
@@ -205,24 +211,26 @@ const Editor = ({
                 dragHandleMenu={(props) => (
                   <DragHandleMenu {...props}>
                     <RemoveBlockItem {...props}>Delete</RemoveBlockItem>
-                    < MenuCharts editor={editor}/> 
+                    <MenuCharts editor={editor} />
                   </DragHandleMenu>
                 )}
               />
-            ): <SideMenu
-            {...props}
-            dragHandleMenu={(props) => (
-              <DragHandleMenu {...props}>
-                <RemoveBlockItem {...props}>Delete</RemoveBlockItem>
-                <BlockColorsItem {...props}>Colors</BlockColorsItem>
-              </DragHandleMenu>
-            )}
-          />
-        }}
-      />
+            ) : (
+              <SideMenu
+                {...props}
+                dragHandleMenu={(props) => (
+                  <DragHandleMenu {...props}>
+                    <RemoveBlockItem {...props}>Delete</RemoveBlockItem>
+                    <BlockColorsItem {...props}>Colors</BlockColorsItem>
+                  </DragHandleMenu>
+                )}
+              />
+            );
+          }}
+        />
       </BlockNoteView>
     </div>
-  )
-}
+  );
+};
 
 export default Editor;

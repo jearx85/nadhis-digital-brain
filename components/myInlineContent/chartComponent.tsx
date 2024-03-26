@@ -52,7 +52,7 @@ export default function ChartComponent({props}: any) {
                 withLegend
                 tooltipAnimationDuration={200}
                 textColor={textcolor}
-                yAxisProps={{ tickMargin: 10, orientation: "left" }}
+                yAxisProps={{ tickMargin: 10, orientation: "left", domain: [0, 70] }}
                 xAxisProps={{ tickMargin: 10, orientation: "bottom" }}
                 series={chartSeries}
                 curveType="natural"
@@ -91,6 +91,7 @@ export default function ChartComponent({props}: any) {
                 tooltipAnimationDuration={200}
                 textColor={textcolor}
                 series={chartSeries}
+                yAxisProps={{ tickMargin: 10, orientation: "left", domain: [0, 70] }}
               />
             )}
             {props.inlineContent.props.type === "RadarChart" && (
@@ -98,7 +99,11 @@ export default function ChartComponent({props}: any) {
                 h={500}
                 data={chartData}
                 dataKey={chartDataKey}
+                textColor={textcolor}
+                withPolarGrid
+                withPolarAngleAxis
                 withPolarRadiusAxis
+                polarRadiusAxisProps={{ angle: 90, domain:[0, 70] }}
                 series={chartSeries}
               />
             )}

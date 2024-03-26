@@ -17,7 +17,7 @@ interface Node {
 }
 interface ObjetoProps {
   nodes: any[];
-  edges?: any[];
+  edges: any[];
 }
 
 interface EdgeProps {
@@ -25,12 +25,32 @@ interface EdgeProps {
   to: string;
 }
 
+
 export default function GraficView() {
   const { resolvedTheme } = useTheme();
   const router = useRouter();
   const documents = useQuery(api.documents.getAllDocuments);
   const [edgesDocs, setEdgesDocs] = useState<EdgeProps[]>([]);
   const [nodes, setNodes] = useState<Node[]>([]);
+  const [data, setData] = useState<ObjetoProps>({ nodes: [], edges: [] });
+
+  const addNewNodeAndEdges = (newNode: any, newEdges: any) => {
+    // Verificar si el ID del nuevo nodo ya existe
+    const nodeExists = data.nodes.some(node => node.id === newNode.id);
+   
+    if (!nodeExists) {
+       // Si el ID es único, agregar el nuevo nodo y las aristas
+       setData(prevData => ({
+         ...prevData,
+         nodes: [...prevData.nodes, newNode],
+         edges: [...prevData.edges, ...newEdges] // Añadir las nuevas aristas
+       }));
+    } else {
+       // Manejar el caso en que el ID ya existe
+       console.error(`El ID ${newNode.id} ya existe.`);
+    }
+   };
+
 
   useEffect(() => {
 
@@ -78,8 +98,16 @@ export default function GraficView() {
      setEdgesDocs(newEdgesDocs);
   },[documents]); 
 
+
+
   // const data: ObjetoProps = { nodes: docs, edges: edgesP };
-  const data: ObjetoProps = { nodes: nodes, edges: edgesDocs };
+  useEffect(() => {
+    if(nodes.length > 0 && edgesDocs.length > 0) {
+       const datos: ObjetoProps = { nodes: nodes, edges: edgesDocs };
+       addNewNodeAndEdges(datos.nodes, datos.edges)
+      //  setData(datos);
+    }
+   }, [nodes, edgesDocs]); // Añade nodes y edgesDocs como dependencias
 
   let themeNodes = {
     shape: "dot",
@@ -176,8 +204,14 @@ export default function GraficView() {
     height: "100%",
   };
 
+  console.log(data)
+
+
     return (
-      <>{data.nodes.length > 0 && <Graph graph={data} options={options} />}</>
+      // <>{data.nodes.length > 0  && <Graph graph={data} options={options} />}</>
+      <>
+      <>{data.nodes.length > 0 && data.edges.length > 0 && <Graph graph={data} options={options} />}</>
+      </>
     );
 
 }
