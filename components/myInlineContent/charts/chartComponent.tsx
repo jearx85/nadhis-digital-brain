@@ -44,6 +44,14 @@ export default function ChartComponent({ props }: any) {
     textcolor = "white";
   }
 
+  const arrValores: any[] = [];
+  chartData.forEach((valor) => {
+      arrValores.push(...Object.values(valor).slice(1, valor.length));
+  })
+
+  const maxValor = Math.max(...arrValores);
+  const minValor = Math.min(...arrValores);
+
   const chartHeight = isMobile ? 300 : 500;
 
   if (chartData.length > 0) {
@@ -61,7 +69,7 @@ export default function ChartComponent({ props }: any) {
               yAxisProps={{
                 tickMargin: 10,
                 orientation: "left",
-                domain: [0, 100],
+                domain: [minValor, maxValor],
               }}
               xAxisProps={{ tickMargin: 10, orientation: "bottom" }}
               series={chartSeries}
@@ -81,7 +89,7 @@ export default function ChartComponent({ props }: any) {
               yAxisProps={{
                 tickMargin: 10,
                 orientation: "left",
-                domain: [0, 100],
+                domain: [minValor, maxValor],
               }}
               xAxisProps={{ tickMargin: 10, orientation: "bottom" }}
               series={chartSeries}
@@ -105,7 +113,7 @@ export default function ChartComponent({ props }: any) {
               yAxisProps={{
                 tickMargin: 10,
                 orientation: "left",
-                domain: [0, 70],
+                domain: [minValor, maxValor],
               }}
             />
           </div>
@@ -120,7 +128,7 @@ export default function ChartComponent({ props }: any) {
               withPolarGrid
               withPolarAngleAxis
               withPolarRadiusAxis
-              polarRadiusAxisProps={{ angle: 90, domain: [0, 70] }}
+              polarRadiusAxisProps={{ angle: 90, domain: [minValor, maxValor] }}
               series={chartSeries}
             />
           </div>
