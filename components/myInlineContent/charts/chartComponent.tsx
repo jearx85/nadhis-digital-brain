@@ -12,7 +12,7 @@ import "@mantine/charts/styles.css";
 import { useTheme } from "next-themes";
 import { useBlockNoteEditor } from "@blocknote/react";
 import { useMediaQuery } from "usehooks-ts";
-// import "./charts.css";
+import "./charts.css";
 
 export default function ChartComponent({ props }: any) {
   const isMobile = useMediaQuery("(max-width: 768px)");
