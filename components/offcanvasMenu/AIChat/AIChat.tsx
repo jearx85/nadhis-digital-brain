@@ -96,7 +96,7 @@ export default function AIChat() {
         />
       </div>
       <button 
-        className="border-solid border-2 border-gray-400 mt-10 rounded-lg px-2 py-2 hover:bg-neutral-200" 
+        className="border-solid border-2 border-gray-400 mt-5 rounded-lg px-2 py-2 hover:bg-neutral-200" 
         onClick={handleSendClick}
       >
         Enviar

@@ -36,7 +36,7 @@ const OffcanvasMenu = () => {
           ></div>
 
           {/* Contenedor del offcanvas */}
-          <div className="fixed inset-y-0 right-0 mb-6 mt-1 mr-2 max-w-xs w-full bg-white z-50 shadow-lg rounded-lg h-screen">
+          <div className="fixed inset-y-0 right-0 mb-6 mt-2 mr-2 max-w-xs w-full bg-white z-50 shadow-lg rounded-lg overflow-hidden">
             {/* Cabecera del offcanvas */}
             <div className="flex justify-between items-center bg-neutral-100 px-4 py-3 ">
             <button

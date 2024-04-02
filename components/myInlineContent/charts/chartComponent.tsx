@@ -46,8 +46,8 @@ export default function ChartComponent({ props }: any) {
 
   const arrValores: any[] = [];
   chartData.forEach((valor) => {
-      arrValores.push(...Object.values(valor).slice(1, valor.length));
-  })
+    arrValores.push(...Object.values(valor).slice(1, valor.length));
+  });
 
   const maxValor = Math.max(...arrValores);
   const minValor = Math.min(...arrValores);
