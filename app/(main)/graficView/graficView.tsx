@@ -33,7 +33,6 @@ export default function GraficView() {
   const [nodes, setNodes] = useState<Node[]>([]);
 
   useEffect(() => {
-
     const newNodes: Node[] = [];
     documents?.map((doc) => {
       let nodeFormat = {
@@ -45,38 +44,38 @@ export default function GraficView() {
     });
     setNodes(newNodes);
 
-     const newEdgesDocs: EdgeProps[] = [];
-     documents?.map((doc) => {
-       if (doc.content) {
-         const arrContent = JSON.parse(doc.content);
- 
-         arrContent.map((item: any) => {
-           if (item.type !== "docLink") {
-             return;
-           } else {
-             let currentId = doc._id;
-             let arrItemContent = item.content;
- 
-             const linkElement = arrItemContent.filter((item: any) => {
-               return item.type === "link";
-             });
- 
-             linkElement.map((item: any) => {
-                 let link = item.href;
-                 let dataSplit = link.split("/");
-                 let edgeFormat = {
-                  from: currentId,
-                  to: dataSplit[dataSplit.length - 1],
-                  id: generateUUID()
-                 };
-                 newEdgesDocs.push(edgeFormat);
-             })
-           }
-         });
-       }
-     });
-     setEdgesDocs(newEdgesDocs);
-  },[documents]); 
+    const newEdgesDocs: EdgeProps[] = [];
+    documents?.map((doc) => {
+      if (doc.content) {
+        const arrContent = JSON.parse(doc.content);
+
+        arrContent.map((item: any) => {
+          if (item.type !== "docLink") {
+            return;
+          } else {
+            let currentId = doc._id;
+            let arrItemContent = item.content;
+
+            const linkElement = arrItemContent.filter((item: any) => {
+              return item.type === "link";
+            });
+
+            linkElement.map((item: any) => {
+              let link = item.href;
+              let dataSplit = link.split("/");
+              let edgeFormat = {
+                from: currentId,
+                to: dataSplit[dataSplit.length - 1],
+                id: generateUUID(),
+              };
+              newEdgesDocs.push(edgeFormat);
+            });
+          }
+        });
+      }
+    });
+    setEdgesDocs(newEdgesDocs);
+  }, [documents]);
 
   // const data: ObjetoProps = { nodes: docs, edges: edgesP };
   const data: ObjetoProps = { nodes: nodes, edges: edgesDocs };
@@ -138,10 +137,9 @@ export default function GraficView() {
     themeNodes.color.hover.background = "#737070";
     themeNodes.font.color = "#2E2E2E";
 
-     themeEdges.color.color = "#0f0e0e";
-     themeEdges.color.highlight = "#0f0e0e";
-     themeEdges.color.hover = "#0f0e0e";
-
+    themeEdges.color.color = "#0f0e0e";
+    themeEdges.color.highlight = "#0f0e0e";
+    themeEdges.color.hover = "#0f0e0e";
   } else if (resolvedTheme === "dark") {
     themeNodes.color.border = "#CED4DA";
     themeNodes.color.background = "#CED4DA";
@@ -151,9 +149,9 @@ export default function GraficView() {
     themeNodes.color.hover.background = "#A9B1F1";
     themeNodes.font.color = "#dadce6";
 
-     themeEdges.color.color = "#CED4DA";
-     themeEdges.color.highlight = "#CED4DA";
-     themeEdges.color.hover = "#CED4DA";
+    themeEdges.color.color = "#CED4DA";
+    themeEdges.color.highlight = "#CED4DA";
+    themeEdges.color.hover = "#CED4DA";
   }
 
   const options = {
@@ -167,7 +165,6 @@ export default function GraficView() {
     interaction: {
       hover: true,
       hoverConnectedEdges: true,
-      // navigationButtons: true,
       tooltipDelay: 200,
       hideEdgesOnDrag: true,
       hideEdgesOnZoom: true,
@@ -176,8 +173,23 @@ export default function GraficView() {
     height: "100%",
   };
 
-    return (
-      <>{data.nodes.length > 0 && <Graph graph={data} options={options} />}</>
-    );
-
+  return (
+    <>
+      {data.nodes.length > 0 && (
+        <Graph
+          graph={data}
+          options={options}
+          events={{
+            selectNode: function (event: any) {
+              const { nodes } = event;
+              if (nodes.length === 1) {
+                const nodeId = nodes[0];
+                router.push(`/documents/${nodeId}`);
+              }
+            },
+          }}
+        />
+      )}
+    </>
+  );
 }

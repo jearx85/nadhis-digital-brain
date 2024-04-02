@@ -19,6 +19,7 @@ import {
   BlockColorsItem,
   DefaultReactSuggestionItem,
 } from "@blocknote/react";
+import "@blocknote/core/fonts/inter.css";
 import "@blocknote/react/style.css";
 import { RiAlertFill } from "react-icons/ri";
 
@@ -28,7 +29,7 @@ import { ChartBlock } from "./myTypeBlocks/charts/chartType";
 import MenuCharts from "./dragHandleMenu/menuCharts/menuCharts";
 import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
 import { Mention } from "./myInlineContent/Mention";
-import { Charts } from "./myInlineContent/Charts";
+import { Charts } from "./myInlineContent/charts/Charts";
 import { TbCirclesRelation } from "react-icons/tb";
 
 import "./styles.css";
@@ -133,11 +134,11 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           },
           {
             type: "link",
-            href: `http://localhost:3000/documents/j57dqwpadqjq7x8nrj4cjzndk56nqhj7`,
+            href: `http://localhost:3000/documents/j577nr9ep9pp7tdn6bb6s5p6w16mxmrh`,
             content: [
               {
                 type: "text",
-                text: `Untitled`,
+                text: `Gráficas`,
                 styles: {
                   textColor: "blue",
                 },
@@ -147,7 +148,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
         ],
       });
       editor.getTextCursorPosition().block, "after";
-      insertOrUpdateBlock(editor, 
+      insertOrUpdateBlock(editor,
           {
             type: "paragraph",
             props: {

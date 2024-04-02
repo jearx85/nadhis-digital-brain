@@ -6,10 +6,12 @@ import {
     LineChart,
     PieChart,
     RadarChart,
+    getFilteredChartTooltipPayload 
   } from "@mantine/charts";
   import "@mantine/charts/styles.css";
   import { useTheme } from "next-themes";
-import { useBlockNoteEditor } from "@blocknote/react";
+  import { useBlockNoteEditor } from "@blocknote/react";
+  import './charts.css';
 
 
 export default function ChartComponent({props}: any) {
@@ -47,12 +49,13 @@ export default function ChartComponent({props}: any) {
             {props.inlineContent.props.type === "Area" && (
               <AreaChart
                 h={500}
+                // w={800}
                 data={chartData}
                 dataKey={chartDataKey}
                 withLegend
-                tooltipAnimationDuration={200}
+                tooltipAnimationDuration={100}
                 textColor={textcolor}
-                yAxisProps={{ tickMargin: 10, orientation: "left", domain: [0, 70] }}
+                yAxisProps={{ tickMargin: 10, orientation: "left", domain: [0, 100] }}
                 xAxisProps={{ tickMargin: 10, orientation: "bottom" }}
                 series={chartSeries}
                 curveType="natural"
@@ -60,7 +63,6 @@ export default function ChartComponent({props}: any) {
             )}
             {props.inlineContent.props.type === "Line" && (
               <>
-              
               <LineChart
                 h={500}
                 data={chartData}
