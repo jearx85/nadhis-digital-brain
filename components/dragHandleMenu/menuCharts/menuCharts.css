@@ -5,6 +5,8 @@
 .texto{
     font-family: var(--bn-font-family);
     cursor: pointer;
+    font-size: small;
+    margin-left: 10px;
 }
 
 .MenuContent{
