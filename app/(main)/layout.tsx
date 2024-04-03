@@ -8,11 +8,7 @@ import { SearchCommand } from "@/components/search-command";
 
 import { Navigation } from "./_components/navigation";
 
-const MainLayout = ({
-  children
-}: {
-  children: React.ReactNode;
-}) => {
+const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useConvexAuth();
 
   if (isLoading) {
@@ -27,7 +23,7 @@ const MainLayout = ({
     return redirect("/");
   }
 
-  return ( 
+  return (
     <div className="h-full flex dark:bg-[#1F1F1F]">
       <Navigation />
       <main className="flex-1 h-full overflow-y-auto">
@@ -35,7 +31,7 @@ const MainLayout = ({
         {children}
       </main>
     </div>
-   );
-}
- 
+  );
+};
+
 export default MainLayout;

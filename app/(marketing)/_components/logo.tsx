@@ -12,15 +12,15 @@ export const Logo = () => {
   return (
     <div className="hidden md:flex items-center gap-x-2">
       <Image
-        src="/logo.svg"
-        height="40"
+        src="/icon-512x512.png"
+        height="30"
         width="40"
         alt="Logo"
         className="dark:hidden"
       />
       <Image
-        src="/logo-dark.svg"
-        height="40"
+        src="/icon-512x512-dark.png"
+        height="30"
         width="40"
         alt="Logo"
         className="hidden dark:block"

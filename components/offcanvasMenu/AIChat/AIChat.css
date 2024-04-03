@@ -1,0 +1,49 @@
+
+.chat-header {
+  border-radius: 10px;
+  height: 8%;
+  width: 100%;
+}
+
+.chat-header-icon {
+  border: none;
+  background-color: inherit;
+  border-radius: 50px;
+}
+
+.chat-header-icon:hover {
+  cursor: pointer;
+  background-color: lightgray;
+}
+
+.sendBtn {
+  margin-top: 10px;
+}
+
+.user-message {
+  background-color: lightgray;
+  padding: 10px;
+  border-radius: 10px;
+  display: inline-block;
+  max-width: 200px;
+  overflow: hidden;
+  word-wrap: break-word;
+  white-space: normal; /* Agrega esta propiedad para forzar el salto de línea */
+}
+
+.response-area {
+  padding: 10px;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  overflow-y: auto;
+}
+
+.request-chat-area {
+  border: 1px solid lightgray;
+  border-radius: 10px;
+}
+
+.main-chat {
+  padding: 10px;
+  height: auto;
+}

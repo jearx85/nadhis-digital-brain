@@ -1,0 +1,23 @@
+.labelChart {
+    @mixin light {
+      --chart-grid-color: alpha(var(--mantine-color-black), 0.15);
+      --chart-text-color: var(--mantine-color-black);
+    }
+  
+    @mixin dark {
+      --chart-grid-color: alpha(var(--mantine-color-white), 0.15);
+      --chart-text-color: var(--mantine-color-white);
+    }
+}
+
+/* @media(prefers-color-scheme:dark){
+  .labelChart{
+    --chart-text-color: blue;
+    opacity: 0.9;
+  }
+}
+@media(prefers-color-scheme:light){
+  .labelChart{
+    --chart-text-color: black;
+  }
+} */

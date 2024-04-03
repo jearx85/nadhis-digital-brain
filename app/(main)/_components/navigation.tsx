@@ -7,10 +7,12 @@ import {
   PlusCircle,
   Search,
   Settings,
-  Trash
+  Trash,
+  Globe,
+  BrainCircuit 
 } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { ElementRef, useEffect, useRef, useState } from "react";
+import { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
@@ -30,7 +32,8 @@ import { Item } from "./item";
 import { DocumentList } from "./document-list";
 import { TrashBox } from "./trash-box";
 import { Navbar } from "./navbar";
-
+import OffcanvasMenu from "@/components/offcanvasMenu/OffcanvasMenu";
+ 
 export const Navigation = () => {
   const router = useRouter();
   const settings = useSettings();
@@ -46,19 +49,7 @@ export const Navigation = () => {
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
-  useEffect(() => {
-    if (isMobile) {
-      collapse();
-    } else {
-      resetWidth();
-    }
-  }, [isMobile]);
-
-  useEffect(() => {
-    if (isMobile) {
-      collapse();
-    }
-  }, [pathname, isMobile]);
+  
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -91,7 +82,7 @@ export const Navigation = () => {
     document.removeEventListener("mouseup", handleMouseUp);
   };
 
-  const resetWidth = () => {
+  const resetWidth = useCallback(() => {
     if (sidebarRef.current && navbarRef.current) {
       setIsCollapsed(false);
       setIsResetting(true);
@@ -107,7 +98,21 @@ export const Navigation = () => {
       );
       setTimeout(() => setIsResetting(false), 300);
     }
-  };
+  },[isMobile]);
+
+  useEffect(() => {
+    if (isMobile) {
+      collapse();
+    } else {
+      resetWidth();
+    }
+  }, [isMobile, resetWidth]);
+
+  useEffect(() => {
+    if (isMobile) {
+      collapse();
+    }
+  }, [pathname, isMobile, resetWidth]);
 
   const collapse = () => {
     if (sidebarRef.current && navbarRef.current) {
@@ -132,6 +137,14 @@ export const Navigation = () => {
     });
   };
 
+    const handleGraficView = () => {
+      router.push('/graficView');
+    };
+
+    const handleAppSearch  = () =>{
+    router.push('/appsearch');
+  }
+
   return (
     <>
       <aside
@@ -154,42 +167,68 @@ export const Navigation = () => {
         </div>
         <div>
           <UserItem />
+          <hr className="mt-2 mb-5 border-b-2"/>
+          
           <Item
+            label="App Search"
+            icon={Globe}
+            onClick={handleAppSearch} 
+            />
+
+          <OffcanvasMenu />
+
+          <Item
+            label="Vista gráfica"
+            icon={BrainCircuit}
+            onClick={handleGraficView} 
+            />
+
+          <hr className="mt-2 mb-5 border-b-2"/>
+         
+        </div>
+        <Item
             label="Search"
             icon={Search}
             isSearch
             onClick={search.onOpen}
           />
-          <Item
-            label="Settings"
-            icon={Settings}
-            onClick={settings.onOpen}
-          />
-          <Item
+          
+        <div className="mt-4">
+        
+        <Item
             onClick={handleCreate}
             label="New page"
             icon={PlusCircle}
           />
-        </div>
-        <div className="mt-4">
           <DocumentList />
           <Item
             onClick={handleCreate}
             icon={Plus}
             label="Add a page"
-          />
-          <Popover>
-            <PopoverTrigger className="w-full mt-4">
-              <Item label="Trash" icon={Trash} />
-            </PopoverTrigger>
-            <PopoverContent
-              className="p-0 w-72"
-              side={isMobile ? "bottom" : "right"}
-            >
-              <TrashBox />
-            </PopoverContent>
-          </Popover>
-        </div>
+            />
+
+            <Popover>
+              <PopoverTrigger className="w-full mt-4">
+                <Item label="Trash" icon={Trash} />
+              </PopoverTrigger>
+              <PopoverContent
+                className="p-0 w-72"
+                side={isMobile ? "bottom" : "right"}
+              >
+                <TrashBox />
+              </PopoverContent>
+            </Popover>  
+          </div>
+          
+          <hr className="mt-5 mb-5 border-b-2"/>
+              
+          <div className="mt-auto mb-4">
+            <Item
+              label="Settings"
+              icon={Settings}
+              onClick={settings.onOpen}
+            />
+          </div>
         <div
           onMouseDown={handleMouseDown}
           onClick={resetWidth}
@@ -199,16 +238,12 @@ export const Navigation = () => {
       <div
         ref={navbarRef}
         className={cn(
-          "absolute top-0 z-[99999] left-60 w-[calc(100%-240px)]",
+          "absolute top-0 z-[10] left-60 w-[calc(100%-240px)]",
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "left-0 w-full"
         )}
       >
-        <nav className="bg-transparent px-1 py-2 w-full">
-            {isCollapsed && <MenuIcon onClick={resetWidth} role="button" className="h-6 w-6 text-muted-foreground" />}
-        </nav>
-      
-        {/* {!!params.documentId ? (
+        {!!params.documentId ? (
           <Navbar
             isCollapsed={isCollapsed}
             onResetWidth={resetWidth}
@@ -217,7 +252,7 @@ export const Navigation = () => {
           <nav className="bg-transparent px-3 py-2 w-full">
             {isCollapsed && <MenuIcon onClick={resetWidth} role="button" className="h-6 w-6 text-muted-foreground" />}
           </nav>
-        )} */}
+        )}
       </div>
     </>
   )

@@ -82,6 +82,34 @@ export const getSidebar = query({
     return documents;
   },
 });
+//-----------------------------
+export const getAllDocuments = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const userId = identity.subject;
+
+    const documents = await ctx.db
+      .query("documents")
+      .withIndex("by_user", (q) =>
+        q
+          .eq("userId", userId)
+      )
+      .filter((q) =>
+        q.eq(q.field("isArchived"), false)
+      )
+      .order("desc")
+      .collect();
+
+    return documents;
+  },
+});
+
+//-----------------------------
 
 export const create = mutation({
   args: {
@@ -108,6 +136,38 @@ export const create = mutation({
     return document;
   }
 });
+//-----------------
+export const createNote = mutation({
+  args: {
+    title: v.string(),
+    content: v.optional(v.string()), 
+    parentDocument: v.optional(v.id("documents"))
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const userId = identity.subject;
+
+    const document = await ctx.db.insert("documents", {
+      title: args.title,
+      content: args.content,
+      parentDocument: args.parentDocument,
+      userId,
+      isArchived: false,
+      isPublished: false,
+    });
+
+    return document;
+  }
+});
+
+
+//-----------------
+
 
 export const getTrash = query({
   handler: async (ctx) => {
@@ -365,3 +425,71 @@ export const removeCoverImage = mutation({
     return document;
   }
 });
+
+
+
+export const getTitleId = mutation({
+  args: { title: v.optional(v.string())},
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthenticated");
+    }
+
+    const userId = identity.subject;
+
+    const documents = await ctx.db
+      .query("documents")
+      .withIndex("by_user_parent", (q) =>
+        q
+          .eq("userId", userId)
+      )
+      .filter((q) =>
+        q.eq(q.field("title"), args.title)
+      )
+      .order("desc")
+      .first();
+
+    return documents?._id;
+  }
+
+});
+
+export const getIdTitle = mutation({
+  args: { id: v.id("documents")},
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthenticated");
+    }
+
+    const userId = identity.subject;
+
+    const documents = await ctx.db
+      .query("documents")
+      .withIndex("by_user_parent", (q) =>
+        q
+          .eq("userId", userId)
+      )
+      .filter((q) =>
+        q.eq(q.field("_id"), args.id)
+      )
+      .order("desc")
+      .first();
+
+    return documents?.title;
+  }
+
+});
+
+export const getDocument = query(
+  {args: 
+    {documentsId: v.id("documents")},
+    handler: async(ctx, args) => {
+        const doc = await ctx.db.get(args.documentsId);
+        return doc
+    },
+  }
+);
