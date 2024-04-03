@@ -31,8 +31,10 @@ import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
 import { Mention } from "./myInlineContent/Mention";
 import { Charts } from "./myInlineContent/charts/Charts";
 import { TbCirclesRelation } from "react-icons/tb";
+import { CiViewTable } from "react-icons/ci";
 
 import "./styles.css";
+import { Atable } from "./myTypeBlocks/advanceTables/AdvanceTables";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -47,6 +49,7 @@ const schema = BlockNoteSchema.create({
     alert: Alert,
     chart: ChartBlock,
     docLink: DocLinkBlock,
+    aTable: Atable
   },
 });
 
@@ -170,6 +173,18 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     icon: <TbCirclesRelation />,
   });
 
+  const insertAtable = (editor: typeof schema.BlockNoteEditor) => ({
+    title: "aTable",
+    onItemClick: () => {
+      insertOrUpdateBlock(editor, {
+        type: "aTable",
+      });
+    },
+    aliases: ["aTable"],
+    group: "Other",
+    icon: <CiViewTable />,
+  });
+
   return (
     <div>
       <BlockNoteView
@@ -192,6 +207,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
                 ...getDefaultReactSlashMenuItems(editor),
                 insertAlert(editor),
                 linkDocsBlock(editor),
+                insertAtable(editor)
               ],
               query
             )
