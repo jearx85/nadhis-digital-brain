@@ -71,7 +71,7 @@ export default function ChartComponent({ props }: any) {
                 orientation: "left",
                 domain: [minValor, maxValor],
               }}
-              xAxisProps={{ tickMargin: 10, orientation: "bottom" }}
+              xAxisProps={{ tickMargin: 5, orientation: "bottom" }}
               series={chartSeries}
               curveType="natural"
             />
@@ -91,7 +91,7 @@ export default function ChartComponent({ props }: any) {
                 orientation: "left",
                 domain: [minValor, maxValor],
               }}
-              xAxisProps={{ tickMargin: 10, orientation: "bottom" }}
+              xAxisProps={{ tickMargin: 5, orientation: "bottom" }}
               series={chartSeries}
               curveType="linear"
               connectNulls

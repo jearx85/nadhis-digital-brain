@@ -17,7 +17,7 @@
     "@elastic/elasticsearch": "^8.13.0",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
-    "@mantine/charts": "^7.6.2",
+    "@mantine/charts": "^7.7.1",
     "@mantine/core": "^7.6.2",
     "@mantine/hooks": "^7.6.2",
     "@preline/overlay": "^2.0.2",
@@ -46,7 +46,7 @@
     "react-textarea-autosize": "^8.5.3",
     "react-tooltip": "^5.26.2",
     "react-vis-network-graph": "^3.0.1",
-    "recharts": "^2.12.2",
+    "recharts": "^2.12.4",
     "sharp": "^0.33.2",
     "sonner": "^1.0.3",
     "tailwind-merge": "^1.14.0",
@@ -58,7 +58,6 @@
     "zustand": "^4.4.3"
   },
   "devDependencies": {
-    "@types/markdown-it": "^13.0.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

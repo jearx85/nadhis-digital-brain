@@ -1,7 +1,7 @@
-/* .bn-container[data-color-scheme='dark']
+.bn-container[data-color-scheme='dark']
 .bn-block-content[data-content-type="docLink"] {
-    color: black;
-} */
+    color: #31373b;
+}
 
 .bn-container[data-color-scheme='dark']
 .bn-block-content[data-content-type="docLink"] span[data-text-color="blue"] {
