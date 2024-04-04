@@ -1,3 +1,26 @@
-.chart-item{
-    font-size: small;
+.chart-item {
+    font-size: medium; 
 }
+
+@media only screen and (max-width: 767px) {
+    .chart-item {
+        font-size: x-small; 
+    }
+}
+
+.paper{
+    background-color: white;
+    border: 1px solid rgb(187, 218, 222);
+    border-radius: 10px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+.label{
+    color: #2d2e2d;
+}
+
+.circle {
+    width: 8px; 
+    height: 8px; 
+    border-radius: 50%; 
+    display: inline-block; 
+  }
