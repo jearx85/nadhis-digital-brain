@@ -12,7 +12,14 @@ import "@mantine/charts/styles.css";
 import { useTheme } from "next-themes";
 import { useBlockNoteEditor } from "@blocknote/react";
 import { useMediaQuery } from "usehooks-ts";
+import { Paper, Text } from '@mantine/core';
 import "./charts.css";
+
+
+interface ChartTooltipProps {
+  label: string;
+  payload: Record<string, any>[] | undefined;
+}
 
 export default function ChartComponent({ props }: any) {
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -54,6 +61,28 @@ export default function ChartComponent({ props }: any) {
 
   const chartHeight = isMobile ? 300 : 500;
 
+  function ChartTooltip({ label, payload }: ChartTooltipProps) {
+    if (!payload) return null;
+  
+    return (
+      <div className="paper">
+        <Paper px="md" py="sm" withBorder shadow="md" radius="md">
+          <Text className="label" fw={500} mb={5}>
+            {label}
+            <hr />
+          </Text>
+          {getFilteredChartTooltipPayload(payload).map((item: any) => (
+            <Text key={item.name} c={item.color} fz="sm">
+              <span className="circle" style={{ backgroundColor: item.color }}></span>
+              {' '}
+              {item.name}: {item.value}
+          </Text>
+          ))}
+        </Paper>
+      </div>
+    );
+  }
+
   if (chartData.length > 0) {
     return (
       <div className="chart-container">
@@ -65,6 +94,9 @@ export default function ChartComponent({ props }: any) {
               dataKey={chartDataKey}
               withLegend
               tooltipAnimationDuration={100}
+              tooltipProps={{
+                content: ({ label, payload }) => <ChartTooltip label={label} payload={payload} />,
+              }}
               textColor={textcolor}
               yAxisProps={{
                 tickMargin: 10,
@@ -85,6 +117,9 @@ export default function ChartComponent({ props }: any) {
               dataKey={chartDataKey}
               withLegend
               tooltipAnimationDuration={200}
+              tooltipProps={{
+                content: ({ label, payload }) => <ChartTooltip label={label} payload={payload} />,
+              }}
               textColor={textcolor}
               yAxisProps={{
                 tickMargin: 10,
@@ -108,6 +143,9 @@ export default function ChartComponent({ props }: any) {
               dataKey={chartDataKey}
               withLegend
               tooltipAnimationDuration={200}
+              tooltipProps={{
+                content: ({ label, payload }) => <ChartTooltip label={label} payload={payload} />,
+              }}
               textColor={textcolor}
               series={chartSeries}
               yAxisProps={{
