@@ -124,7 +124,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
       insertOrUpdateBlock(editor, {
         type: "docLink",
         props: {
-          backgroundColor: "green",
+          backgroundColor: "#99ad9b",
           textColor: "default",
         },
         content: [

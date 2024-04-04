@@ -93,7 +93,7 @@ export default function ChartComponent({ props }: any) {
               data={chartData}
               dataKey={chartDataKey}
               withLegend
-              tooltipAnimationDuration={100}
+              tooltipAnimationDuration={200}
               tooltipProps={{
                 content: ({ label, payload }) => <ChartTooltip label={label} payload={payload} />,
               }}

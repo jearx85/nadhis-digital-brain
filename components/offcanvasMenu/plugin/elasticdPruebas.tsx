@@ -186,8 +186,8 @@ const ElasticDPruebas = () => {
               id: generateUUID(),
               type: "docLink",
               props: {
-                // textColor: "black",
-                backgroundColor: "green",
+                textColor: "default",
+                backgroundColor: "#99ad9b",
                 textAlignment: "default",
               },
               content: [
@@ -221,8 +221,8 @@ const ElasticDPruebas = () => {
               id: generateUUID(),
               type: "docLink",
               props: {
-                // textColor: "black",
-                backgroundColor: "green",
+                textColor: "default",
+                backgroundColor: "#99ad9b",
                 textAlignment: "left",
               },
               content: [
