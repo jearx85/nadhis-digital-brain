@@ -37,9 +37,10 @@ export default function ChartComponent({ props }: any) {
     if (doc.content[0]) {
       const arrContent = doc.content[0].props;
       if (arrContent) {
-        chartData = JSON.parse(doc.content[0].props.data);
+        // chartData = JSON.parse(doc.content[0].props.data);
+        chartData = doc.content[0].props.data ? JSON.parse(doc.content[0].props.data) : "";
         chartDataKey = doc.content[0].props.dataKey;
-        chartSeries = JSON.parse(doc.content[0].props.series);
+        chartSeries = doc.content[0].props.series ? JSON.parse(doc.content[0].props.series) : "";
         typeChart = doc.content[0].props.type;
       }
     }
