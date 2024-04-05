@@ -7,9 +7,8 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { generateUUID } from "./noteUtils";
 import { useRouter } from "next/navigation";
-import {useThemeContext} from '@/app/_contextos/currentTheme';
 
-const PluginElastic = () => {
+const PluginElastic  = () => {
 
   const router = useRouter();
   const [options, setOptions] = useState<string[]>([]);
@@ -184,10 +183,10 @@ const PluginElastic = () => {
           if (docId) {
             const formatLinkDoc = {
               id: generateUUID(),
-              type: "docLink",
+              type: "paragraph",
               props: {
-                // textColor: "black",
-                backgroundColor: "green",
+                textColor: "default",
+                backgroundColor: "default",
                 textAlignment: "default",
               },
               content: [
@@ -200,17 +199,11 @@ const PluginElastic = () => {
                   },
                 },
                 {
-                  type: "link",
-                  href: `http://localhost:3000/documents/${docId}`,
-                  content: [
-                    {
-                      type: "text",
-                      text: linkText,
-                      styles: {
-                        textColor: "blue",
-                      },
-                    },
-                  ],
+                  type: "docLinks",
+                  props: {
+                    docId: docId, 
+                    docTitle: linkText, 
+                  },
                 },
               ],
               children: [],
@@ -221,8 +214,8 @@ const PluginElastic = () => {
               id: generateUUID(),
               type: "docLink",
               props: {
-                // textColor: "black",
-                backgroundColor: "green",
+                textColor: "default",
+                backgroundColor: "#99ad9b",
                 textAlignment: "left",
               },
               content: [

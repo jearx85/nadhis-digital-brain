@@ -48,29 +48,48 @@ export default function GraficView() {
     documents?.map((doc) => {
       if (doc.content) {
         const arrContent = JSON.parse(doc.content);
-
+        let currentId = doc._id;
         arrContent.map((item: any) => {
-          if (item.type !== "docLink") {
-            return;
-          } else {
-            let currentId = doc._id;
-            let arrItemContent = item.content;
-
-            const linkElement = arrItemContent.filter((item: any) => {
-              return item.type === "link";
-            });
-
-            linkElement.map((item: any) => {
-              let link = item.href;
-              let dataSplit = link.split("/");
-              let edgeFormat = {
-                from: currentId,
-                to: dataSplit[dataSplit.length - 1],
-                id: generateUUID(),
-              };
-              newEdgesDocs.push(edgeFormat);
-            });
+          if(item.type === 'paragraph') {
+            const paragraphContent = item.content;
+            if(paragraphContent.length > 0){
+              paragraphContent.map((paragraph: any) => {
+                if(paragraph.type === 'docLinks'){
+                  const docId = paragraph.props.docId;
+                  const docTitle = paragraph.props.docTitle;
+                  let edgeFormat = {
+                    from: currentId,
+                    to: docId,
+                    id: generateUUID(),
+                  };
+                  newEdgesDocs.push(edgeFormat);
+                }
+              })
+            }
           }
+          // if (item.type !== "docLinks") {
+          //   return;
+          // } else {
+          //   let currentId = doc._id;
+          //   let arrItemContent = item.content;
+
+          //   // console.log(arrItemContent)
+
+          //   // const linkElement = arrItemContent.filter((item: any) => {
+          //   //   return item.type === "link";
+          //   // });
+
+          //   // linkElement.map((item: any) => {
+          //   //   let link = item.href;
+          //   //   let dataSplit = link.split("/");
+          //   //   let edgeFormat = {
+          //   //     from: currentId,
+          //   //     to: dataSplit[dataSplit.length - 1],
+          //   //     id: generateUUID(),
+          //   //   };
+          //   //   newEdgesDocs.push(edgeFormat);
+          //   // });
+          // }
         });
       }
     });
