@@ -56,7 +56,7 @@ export default function GraficView() {
               paragraphContent.map((paragraph: any) => {
                 if(paragraph.type === 'docLinks'){
                   const docId = paragraph.props.docId;
-                  const docTitle = paragraph.props.docTitle;
+                  // const docTitle = paragraph.props.docTitle;
                   let edgeFormat = {
                     from: currentId,
                     to: docId,

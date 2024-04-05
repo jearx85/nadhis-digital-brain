@@ -36,6 +36,8 @@ import { CiViewTable } from "react-icons/ci";
 import "./styles.css";
 
 import { DocLink } from "./myInlineContent/doclinks/DocLink";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -76,32 +78,6 @@ const getMentionMenuItems = (
   }));
 };
 
-const getTitleDocs = (
-  editor: typeof schema.BlockNoteEditor
-): DefaultReactSuggestionItem[] => {
-  const docs = [
-    { id: "j57d66czcxy5nva4ddyegmp9gh6phyy0", title: "Pruebas" },
-    { id: "j577nr9ep9pp7tdn6bb6s5p6w16mxmrh", title: "Gráficas" },
-    { id: "j57dqwpadqjq7x8nrj4cjzndk56nqhj7", title: "Informes" },
-  ];
-
-  return docs.map(({ id, title }) => ({
-    title: title, 
-    onItemClick: () => {
-      editor.insertInlineContent([
-        {
-          type: "docLinks",
-          props: {
-            docId: id, 
-            docTitle: title, 
-          },
-        },
-        " ",
-      ]);
-    },
-  }));
-};
-
 interface EditorProps {
   onChange: (value: string) => void;
   initialContent?: string;
@@ -111,12 +87,42 @@ interface EditorProps {
 const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const { resolvedTheme } = useTheme();
   const { edgestore } = useEdgeStore();
+  const docs = useQuery(api.documents.getAllDocuments);
+
   const handleUpload = async (file: File) => {
     const response = await edgestore.publicFiles.upload({
       file,
     });
 
     return response.url;
+  };
+
+  const getTitleDocs = (
+    editor: typeof schema.BlockNoteEditor
+  ): DefaultReactSuggestionItem[] => {
+    let uniqueDocs: any[] = [];
+    if(docs){
+       uniqueDocs = docs.filter(
+        (doc, index, self) =>
+          index === self.findIndex((d) => d.title === doc.title)
+      );
+    }
+
+    return uniqueDocs.map(({ _id, title }) => ({
+      title: `📄 ${title}`,
+      onItemClick: () => {
+        editor.insertInlineContent([
+          {
+            type: "docLinks",
+            props: {
+              docId: _id, 
+              docTitle: title, 
+            },
+          },
+          " ",
+        ]);
+      },
+    }));
   };
 
   const editor = useCreateBlockNote({
