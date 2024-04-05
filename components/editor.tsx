@@ -35,6 +35,7 @@ import { CiViewTable } from "react-icons/ci";
 
 import "./styles.css";
 import { Atable } from "./myTypeBlocks/advanceTables/AdvanceTables";
+import { DocLink } from "./myInlineContent/doclinks/DocLink";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -43,13 +44,14 @@ const schema = BlockNoteSchema.create({
     // Adds the mention tag.
     mention: Mention,
     chartContent: Charts,
+    docLinks: DocLink,
   },
   blockSpecs: {
     ...defaultBlockSpecs,
     alert: Alert,
     chart: ChartBlock,
     docLink: DocLinkBlock,
-    aTable: Atable
+    aTable: Atable,
   },
 });
 
@@ -70,6 +72,32 @@ const getMentionMenuItems = (
           },
         },
         " ", // add a space after the mention
+      ]);
+    },
+  }));
+};
+
+const getTitleDocs = (
+  editor: typeof schema.BlockNoteEditor
+): DefaultReactSuggestionItem[] => {
+  const docs = [
+    { id: "j57d66czcxy5nva4ddyegmp9gh6phyy0", title: "Pruebas" },
+    { id: "j577nr9ep9pp7tdn6bb6s5p6w16mxmrh", title: "Gráficas" },
+    { id: "j57dqwpadqjq7x8nrj4cjzndk56nqhj7", title: "Informes" },
+  ];
+
+  return docs.map(({ id, title }) => ({
+    title: title, 
+    onItemClick: () => {
+      editor.insertInlineContent([
+        {
+          type: "docLinks",
+          props: {
+            docId: id, 
+            docTitle: title, 
+          },
+        },
+        " ",
       ]);
     },
   }));
@@ -118,60 +146,6 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     icon: <RiAlertFill />,
   });
 
-  const linkDocsBlock = (editor: typeof schema.BlockNoteEditor) => ({
-    title: "docLink",
-    onItemClick: () => {
-      insertOrUpdateBlock(editor, {
-        type: "docLink",
-        props: {
-          backgroundColor: "#99ad9b",
-          textColor: "default",
-        },
-        content: [
-          {
-            type: "text",
-            text: "🔗" + `Documento relacionado\n`,
-            styles: {
-              bold: true,
-            },
-          },
-          {
-            type: "link",
-            href: `http://localhost:3000/documents/j577nr9ep9pp7tdn6bb6s5p6w16mxmrh`,
-            content: [
-              {
-                type: "text",
-                text: `Gráficas`,
-                styles: {
-                  textColor: "blue",
-                },
-              },
-            ],
-          },
-        ],
-      });
-      editor.getTextCursorPosition().block, "after";
-      insertOrUpdateBlock(editor,
-          {
-            type: "paragraph",
-            props: {
-              textColor: "default",
-              backgroundColor: "default",
-            },
-            content: [
-              {
-                type: "text",
-                text: "",
-                styles: {},
-              },
-            ],
-          });
-        editor.getTextCursorPosition().block, "after"
-    },
-    aliases: ["docLink"],
-    group: "Other",
-    icon: <TbCirclesRelation />,
-  });
 
   const insertAtable = (editor: typeof schema.BlockNoteEditor) => ({
     title: "aTable",
@@ -206,8 +180,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
               [
                 ...getDefaultReactSlashMenuItems(editor),
                 insertAlert(editor),
-                linkDocsBlock(editor),
-                insertAtable(editor)
+                insertAtable(editor),
               ],
               query
             )
@@ -218,6 +191,13 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           getItems={async (query) =>
             // Gets the mentions menu items
             filterSuggestionItems(getMentionMenuItems(editor), query)
+          }
+        />
+        <SuggestionMenuController
+          triggerCharacter={"["}
+          getItems={async (query) =>
+            // Gets the mentions menu items
+            filterSuggestionItems(getTitleDocs(editor), query)
           }
         />
         <SideMenuController

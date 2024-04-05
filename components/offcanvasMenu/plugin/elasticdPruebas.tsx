@@ -184,33 +184,19 @@ const ElasticDPruebas = () => {
           if (docId) {
             const formatLinkDoc = {
               id: generateUUID(),
-              type: "docLink",
+              type: "paragraph",
               props: {
                 textColor: "default",
-                backgroundColor: "#99ad9b",
+                backgroundColor: "default",
                 textAlignment: "default",
               },
               content: [
                 {
-                  type: "text",
-                  text: "🔗" + "Documentos relacionados\n",
-                  styles: {
-                    bold: true,
-                    textColor: "black"
+                  type: "docLinks",
+                  props: {
+                    docId: docId, 
+                    docTitle: linkText, 
                   },
-                },
-                {
-                  type: "link",
-                  href: `http://localhost:3000/documents/${docId}`,
-                  content: [
-                    {
-                      type: "text",
-                      text: linkText,
-                      styles: {
-                        textColor: "blue",
-                      },
-                    },
-                  ],
                 },
               ],
               children: [],

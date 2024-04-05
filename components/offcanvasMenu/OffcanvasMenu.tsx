@@ -100,8 +100,8 @@ const OffcanvasMenu = () => {
                   )}
                   {activeComponent === 'plugin' && (
                     <>
-                      {/* <PluginElastic /> */}
-                      < ElasticDPruebas /> 
+                      <PluginElastic />
+                      {/* < ElasticDPruebas />  */}
                     </>
                   )}
               </div>
