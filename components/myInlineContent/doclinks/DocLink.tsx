@@ -1,8 +1,5 @@
 import { createReactInlineContentSpec } from "@blocknote/react";
-import './DocLink.css';
-import { useRouter } from "next/navigation";
-
-
+import DocLinkComponent from "./DocLinkComponent";
 
 
 export const DocLink = createReactInlineContentSpec(
@@ -20,20 +17,9 @@ export const DocLink = createReactInlineContentSpec(
   },
   {
     render: (props) => {
-      const router = useRouter();
-      const onRedirect = (documentId: string) => {
-        router.push(`/documents/${documentId}`);
-      };
+     
       return (
-        // <div style={{ backgroundColor: "#99ad9b" }}>
-        <div className="docLinkContainer">
-          <span>
-            <p><b>🔗 Documento relacionado</b></p>
-            <div className = "linkText" onClick={() => onRedirect(props.inlineContent.props.docId)}>
-              📄{props.inlineContent.props.docTitle}
-            </div>
-          </span>
-        </div>
+       < DocLinkComponent props = {props}/>
       );
     },
   }
