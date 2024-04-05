@@ -34,14 +34,6 @@ export const DocLink = createReactInlineContentSpec(
             </div>
           </span>
         </div>
-        // <div className="docLinkContainer">
-        //   <span>
-        //     <p><b>🔗 Documento relacionado</b></p>
-        //     <a className = "linkText" href={props.inlineContent.props.docId} rel="noreferrer">
-        //       📄{props.inlineContent.props.docTitle}
-        //     </a>
-        //   </span>
-        // </div>
       );
     },
   }
