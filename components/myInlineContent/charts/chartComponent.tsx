@@ -133,7 +133,8 @@ export default function ChartComponent({ props }: any) {
               connectNulls
             />
             {/* <br />
-              <div className="border-solid border-2 border-sky-500 h-24">Opciones</div> */}
+              <div className="border-solid border-2 border-sky-500 h-24">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos perferendis animi ea quidem pariatur eius deserunt sapiente nisi excepturi, harum in. Sit esse voluptatibus sint! Deserunt non commodi excepturi minus.</div>
+              <input type="text" /> */}
           </div>
         )}
         {props.inlineContent.props.type === "Bar" && (

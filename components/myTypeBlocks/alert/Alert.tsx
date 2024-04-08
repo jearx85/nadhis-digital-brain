@@ -1,6 +1,9 @@
 import React from "react";
 import {
+  BlockNoteSchema,
+  defaultBlockSpecs,
   defaultProps,
+  insertOrUpdateBlock
 } from "@blocknote/core";
 import {
   createReactBlockSpec,
@@ -9,6 +12,8 @@ import "@blocknote/react/style.css";
 
 import "./styles.css";
 import AlertComponent from "./AlertComponent";
+import { RiAlertFill } from "react-icons/ri";
+
 
 export const Alert = createReactBlockSpec(
   {
@@ -31,3 +36,31 @@ export const Alert = createReactBlockSpec(
     },
   }
 );
+
+const schema = BlockNoteSchema.create({
+  blockSpecs: {
+    ...defaultBlockSpecs,
+    alert: Alert,
+  },
+});
+
+
+export const insertAlert = (editor: typeof schema.BlockNoteEditor) => ({
+  title: "alert",
+  onItemClick: () => {
+    insertOrUpdateBlock(editor, {
+      type: "alert",
+    });
+  },
+  aliases: [
+    "alert",
+    "notification",
+    "emphasize",
+    "warning",
+    "error",
+    "info",
+    "success",
+  ],
+  group: "Other",
+  icon: <RiAlertFill />,
+});
