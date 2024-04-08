@@ -5,7 +5,6 @@ import {
   defaultInlineContentSpecs,
   BlockNoteSchema,
   filterSuggestionItems,
-  insertOrUpdateBlock,
 } from "@blocknote/core";
 import {
   BlockNoteView,
@@ -17,67 +16,37 @@ import {
   DragHandleMenu,
   RemoveBlockItem,
   BlockColorsItem,
-  DefaultReactSuggestionItem,
 } from "@blocknote/react";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/react/style.css";
-import { RiAlertFill } from "react-icons/ri";
 
 import { useEdgeStore } from "@/lib/edgestore";
-import { Alert } from "./myTypeBlocks/alert/Alert";
 import { ChartBlock } from "./myTypeBlocks/charts/chartType";
 import MenuCharts from "./dragHandleMenu/menuCharts/menuCharts";
-import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
-import { Mention } from "./myInlineContent/Mention";
 import { Charts } from "./myInlineContent/charts/Charts";
-import { TbCirclesRelation } from "react-icons/tb";
-import { CiViewTable } from "react-icons/ci";
 
 import "./styles.css";
 import { Atable } from "./myTypeBlocks/advanceTables/AdvanceTables";
 import { DocLink } from "./myInlineContent/doclinks/DocLink";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { getTitleDocs } from "../components/myInlineContent/doclinks/DocLink";
+import { insertAtable } from "../components/myTypeBlocks/advanceTables/AdvanceTables";
+import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
-    // Adds all default inline content.
     ...defaultInlineContentSpecs,
-    // Adds the mention tag.
-    mention: Mention,
     chartContent: Charts,
     docLinks: DocLink,
   },
   blockSpecs: {
     ...defaultBlockSpecs,
-    alert: Alert,
     chart: ChartBlock,
     docLink: DocLinkBlock,
     aTable: Atable,
   },
 });
-
-// Function which gets all users for the mentions menu.
-const getMentionMenuItems = (
-  editor: typeof schema.BlockNoteEditor
-): DefaultReactSuggestionItem[] => {
-  const users = ["Steve", "Bob", "Joe", "Mike"];
-
-  return users.map((user) => ({
-    title: user,
-    onItemClick: () => {
-      editor.insertInlineContent([
-        {
-          type: "mention",
-          props: {
-            user,
-          },
-        },
-        " ", // add a space after the mention
-      ]);
-    },
-  }));
-};
 
 interface EditorProps {
   onChange: (value: string) => void;
@@ -98,71 +67,10 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     return response.url;
   };
 
-  const getTitleDocs = (
-    editor: typeof schema.BlockNoteEditor
-  ): DefaultReactSuggestionItem[] => {
-    let uniqueDocs: any[] = [];
-    if(docs){
-       uniqueDocs = docs.filter(
-        (doc, index, self) =>
-          index === self.findIndex((d) => d.title === doc.title)
-      );
-    }
-
-    return uniqueDocs.map(({ _id, title }) => ({
-      title: `📄 ${title}`,
-      onItemClick: () => {
-        editor.insertInlineContent([
-          {
-            type: "docLinks",
-            props: {
-              docId: _id, 
-              docTitle: title, 
-            },
-          },
-          " ",
-        ]);
-      },
-    }));
-  };
-
   const editor = useCreateBlockNote({
     schema,
     initialContent: initialContent ? JSON.parse(initialContent) : undefined,
     uploadFile: handleUpload,
-  });
-
-  const insertAlert = (editor: typeof schema.BlockNoteEditor) => ({
-    title: "alert",
-    onItemClick: () => {
-      insertOrUpdateBlock(editor, {
-        type: "alert",
-      });
-    },
-    aliases: [
-      "alert",
-      "notification",
-      "emphasize",
-      "warning",
-      "error",
-      "info",
-      "success",
-    ],
-    group: "Other",
-    icon: <RiAlertFill />,
-  });
-
-
-  const insertAtable = (editor: typeof schema.BlockNoteEditor) => ({
-    title: "aTable",
-    onItemClick: () => {
-      insertOrUpdateBlock(editor, {
-        type: "aTable",
-      });
-    },
-    aliases: ["aTable"],
-    group: "Other",
-    icon: <CiViewTable />,
   });
 
   return (
@@ -185,7 +93,6 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
             filterSuggestionItems(
               [
                 ...getDefaultReactSlashMenuItems(editor),
-                insertAlert(editor),
                 insertAtable(editor),
               ],
               query
@@ -196,14 +103,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           triggerCharacter={"@"}
           getItems={async (query) =>
             // Gets the mentions menu items
-            filterSuggestionItems(getMentionMenuItems(editor), query)
-          }
-        />
-        <SuggestionMenuController
-          triggerCharacter={"["}
-          getItems={async (query) =>
-            // Gets the mentions menu items
-            filterSuggestionItems(getTitleDocs(editor), query)
+            filterSuggestionItems(getTitleDocs(editor, docs), query)
           }
         />
         <SideMenuController

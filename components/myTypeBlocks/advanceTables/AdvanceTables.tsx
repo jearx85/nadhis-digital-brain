@@ -1,6 +1,14 @@
 import React from "react";
-import { defaultProps } from "@blocknote/core";
+import {
+  BlockNoteSchema,
+  defaultBlockSpecs,
+  defaultInlineContentSpecs,
+  defaultProps,
+  insertOrUpdateBlock,
+} from "@blocknote/core";
 import { createReactBlockSpec } from "@blocknote/react";
+import { CiViewTable } from "react-icons/ci";
+
 import "@blocknote/react/style.css";
 
 // import "./styles.css";
@@ -18,8 +26,27 @@ export const Atable = createReactBlockSpec(
   },
   {
     render: (props) => {
-    //   return <h1>hola</h1>
+      //   return <h1>hola</h1>
       return <AdvanceTableComponent />;
     },
   }
 );
+
+const schema = BlockNoteSchema.create({
+  blockSpecs: {
+    ...defaultBlockSpecs,
+    aTable: Atable,
+  },
+});
+
+export const insertAtable = (editor: any) => ({
+  title: "aTable",
+  onItemClick: () => {
+    insertOrUpdateBlock(editor, {
+      type: "aTable",
+    });
+  },
+  aliases: ["aTable"],
+  group: "Other",
+  icon: <CiViewTable />,
+});
