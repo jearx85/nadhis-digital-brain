@@ -1,6 +1,5 @@
 import { DefaultReactSuggestionItem, createReactInlineContentSpec } from "@blocknote/react";
 import DocLinkComponent from "./DocLinkComponent";
-import { BlockNoteSchema, defaultInlineContentSpecs } from "@blocknote/core";
 
 export const DocLink = createReactInlineContentSpec(
   {
@@ -24,13 +23,6 @@ export const DocLink = createReactInlineContentSpec(
     },
   }
 );
-
-const schema = BlockNoteSchema.create({
-  inlineContentSpecs: {
-    ...defaultInlineContentSpecs,
-    docLinks: DocLink,
-  }
-});
 
 export const getTitleDocs = (
   editor: any,
