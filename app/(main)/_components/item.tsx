@@ -39,6 +39,8 @@ interface ItemProps {
   icon: LucideIcon;
 };
 
+export let idDeleteDoc = "";
+
 export const Item = ({
   id,
   label,
@@ -65,6 +67,8 @@ export const Item = ({
     const promise = archive({ id })
       .then(() => router.push("/documents"))
 
+      idDeleteDoc = id
+    
     toast.promise(promise, {
       loading: "Moving to trash...",
       success: "Note moved to trash!",

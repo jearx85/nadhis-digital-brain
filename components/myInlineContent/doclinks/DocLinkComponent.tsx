@@ -1,10 +1,11 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "./DocLink.css";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useBlockNoteEditor } from "@blocknote/react";
-
+import { idDeleteDoc } from "@/app/(main)/_components/item";
 
 export default function DocLinkComponent({ props }: any) {
   const router = useRouter();
@@ -12,30 +13,45 @@ export default function DocLinkComponent({ props }: any) {
   const editor = useBlockNoteEditor();
 
   const idsGlobal: string[] = [];
+  let idBlockToUpdate: string[] = [];
   let blockId: string = "";
 
-  docs?.map((doc: any) => {
+  let uniqueDocs: any[] = [];
+  if (docs) {
+    uniqueDocs = docs.filter(
+      (doc: { title: any }, index: any, self: any[]) =>
+        index === self.findIndex((d) => d.title === doc.title)
+    );
+  }
+
+  uniqueDocs?.map((doc: any) => {
     if (doc.content) {
       idsGlobal.push(doc._id);
       const arrContent = JSON.parse(doc.content);
       arrContent.map((item: any) => {
         if (item.type === "paragraph") {
+          blockId = item.id;
           const paragraphContent = item.content;
           if (paragraphContent.length > 0) {
             paragraphContent.map((paragraph: any) => {
               if (paragraph.type === "docLinks") {
-                if (!idsGlobal.includes(paragraph.props.docId)) {
-                  blockId = item.id;
-                  editor.updateBlock(blockId, {
-                    type: "paragraph",
-                    props: {
-                      textColor: "default",
-                      backgroundColor: "default",
-                      textAlignment: "left",
-                    },
-                    content: [],
-                    children: [],
-                  });
+                if (idDeleteDoc === paragraph.props.docId) {
+                  if (!idsGlobal.includes(idDeleteDoc)) {
+                    try{
+                      editor.updateBlock(blockId, {
+                        type: "paragraph",
+                        props: {
+                          textColor: "default",
+                          backgroundColor: "default",
+                          textAlignment: "left",
+                        },
+                        content: [],
+                        children: [],
+                      });
+                    }catch(e: any) {
+                      console.log(e.message)
+                    }
+                  }
                 }
               }
             });
