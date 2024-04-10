@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from "react";
 import {
   AreaChart,
@@ -32,9 +33,9 @@ export default function ChartComponent({ props }: any) {
 
   const { resolvedTheme } = useTheme();
   let textcolor = "";
-
+  
   editor.document.map((doc: any) => {
-    if (doc.content[0]) {
+    if (doc.content[0] && (doc.type === "chart")) {
       const arrContent = doc.content[0].props;
       if (arrContent) {
         // chartData = JSON.parse(doc.content[0].props.data);
@@ -55,7 +56,7 @@ export default function ChartComponent({ props }: any) {
   const arrValores: any[] = [];
   try{
     chartData.forEach((valor) => {
-      arrValores.push(...Object.values(valor).slice(1, valor.length));
+    arrValores.push(...Object.values(valor).slice(1, valor.length));
     });
 
   }catch(e: any){

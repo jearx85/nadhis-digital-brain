@@ -13,7 +13,6 @@ export default function DocLinkComponent({ props }: any) {
   const editor = useBlockNoteEditor();
 
   const idsGlobal: string[] = [];
-  let idBlockToUpdate: string[] = [];
   let blockId: string = "";
 
   let uniqueDocs: any[] = [];
