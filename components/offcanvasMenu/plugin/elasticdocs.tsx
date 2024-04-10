@@ -346,6 +346,8 @@ const PluginElastic  = () => {
       } catch (error) {
         console.log(error);
       }
+    }else{
+      toast('ℹ️ El documento seleccionado ya existe')
     }
   }
   //=====================================================================
