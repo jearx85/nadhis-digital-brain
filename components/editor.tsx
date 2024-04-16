@@ -27,18 +27,19 @@ import { Charts } from "./myInlineContent/charts/Charts";
 
 import "./styles.css";
 import { Atable } from "./myTypeBlocks/advanceTables/AdvanceTables";
-import { DocLink } from "./myInlineContent/doclinks/DocLink";
+import { DocLink, getTitleDocs } from "./myInlineContent/doclinks/DocLink";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { getTitleDocs } from "../components/myInlineContent/doclinks/DocLink";
 import { insertAtable } from "../components/myTypeBlocks/advanceTables/AdvanceTables";
 import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
+import { SideToSideBlock, setColumns } from "./myInlineContent/sideToSideContent/SideToSideContent";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
     ...defaultInlineContentSpecs,
     chartContent: Charts,
     docLinks: DocLink,
+    sideToSide: SideToSideBlock,
   },
   blockSpecs: {
     ...defaultBlockSpecs,
@@ -104,6 +105,13 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           getItems={async (query) =>
             // Gets the mentions menu items
             filterSuggestionItems(getTitleDocs(editor, docs), query)
+          }
+        />
+        <SuggestionMenuController
+          triggerCharacter={"["}
+          getItems={async (query) =>
+            // Gets the mentions menu items
+            filterSuggestionItems(setColumns(editor), query)
           }
         />
         <SideMenuController

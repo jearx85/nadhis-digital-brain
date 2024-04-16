@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    width: 100%; /* Asegúrate de que el contenedor tenga un ancho definido */
+}
+
+.visual, .imagen {
+    flex: 1; /* Esto hace que ambos elementos tengan el mismo ancho */
+    height: 100%; /* Asegúrate de que ambos elementos tengan la misma altura */
+    border: 2px solid black; /* Solo para .visual, puedes ajustarlo según necesites */
+}
+
+.imagen {
+    object-fit: cover; /* Asegura que la imagen se ajuste al contenedor sin distorsionarse */
+    width: 100%; /* Asegúrate de que la imagen ocupe todo el ancho disponible */
+    height: 100%; /* Asegúrate de que la imagen ocupe todo el alto disponible */
+}
