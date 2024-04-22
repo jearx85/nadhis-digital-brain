@@ -26,7 +26,7 @@ import MenuCharts from "./dragHandleMenu/menuCharts/menuCharts";
 import { Charts } from "./myInlineContent/charts/Charts";
 
 import "./styles.css";
-import { Atable } from "./myTypeBlocks/advanceTables/AdvanceTables";
+// import { Atable } from "./myTypeBlocks/advanceTables/AdvanceTables";
 import { DocLink } from "./myInlineContent/doclinks/DocLink";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
