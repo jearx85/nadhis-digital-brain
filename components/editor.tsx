@@ -32,7 +32,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { getTitleDocs } from "../components/myInlineContent/doclinks/DocLink";
 import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
-import { SideToSideBlock, setColumns } from "./myInlineContent/sideToSideContent/SideToSideContent";
+// import { SideToSideBlock, setColumns } from "./myInlineContent/sideToSideContent/SideToSideContent";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -105,13 +105,13 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
             filterSuggestionItems(getTitleDocs(editor, docs), query)
           }
         />
-        <SuggestionMenuController
+        {/* <SuggestionMenuController
           triggerCharacter={"["}
           getItems={async (query) =>
             // Gets the mentions menu items
             filterSuggestionItems(setColumns(editor), query)
           }
-        />
+        /> */}
         <SideMenuController
           sideMenu={(props) => {
             return props.block.type === "table" ? (
