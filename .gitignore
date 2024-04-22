@@ -37,4 +37,4 @@ next-env.d.ts
 
 .env.local
 
-/app/api/elasticsearch/Connection.ts
+# /app/api/elasticsearch/Connection.ts
