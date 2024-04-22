@@ -39,7 +39,7 @@ const schema = BlockNoteSchema.create({
     ...defaultInlineContentSpecs,
     chartContent: Charts,
     docLinks: DocLink,
-    sideToSide: SideToSideBlock,
+    // sideToSide: SideToSideBlock,
   },
   blockSpecs: {
     ...defaultBlockSpecs,
