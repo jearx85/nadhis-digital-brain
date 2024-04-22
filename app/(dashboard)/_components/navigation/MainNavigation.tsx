@@ -1,56 +1,27 @@
 "use client";
 
-import {
-  ChevronsLeft,
-  MenuIcon,
-  Plus,
-  PlusCircle,
-  Search,
-  Settings,
-  Trash,
-  Globe,
-  BrainCircuit,
-  Home
-} from "lucide-react";
+import { ChevronsLeft, Settings, MenuIcon, NotebookPen, CircleParking, Home } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
-import { useMutation } from "convex/react";
-import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
-import { api } from "@/convex/_generated/api";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { useSearch } from "@/hooks/use-search";
 import { useSettings } from "@/hooks/use-settings";
 
-import { UserItem } from "./user-item";
-import { Item } from "./item";
-import { DocumentList } from "./document-list";
-import { TrashBox } from "./trash-box";
-import { Navbar } from "./navbar";
-import OffcanvasMenu from "@/components/offcanvasMenu/OffcanvasMenu";
- 
-export const Navigation = () => {
+import { UserItem } from "../../../(main)/_components/user-item";
+import { Item } from "../../../(main)/_components/item";
+
+export const MainNavigation = () => {
   const router = useRouter();
   const settings = useSettings();
-  const search = useSearch();
-  const params = useParams();
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const create = useMutation(api.documents.create);
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
-
-  
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -73,7 +44,10 @@ export const Navigation = () => {
     if (sidebarRef.current && navbarRef.current) {
       sidebarRef.current.style.width = `${newWidth}px`;
       navbarRef.current.style.setProperty("left", `${newWidth}px`);
-      navbarRef.current.style.setProperty("width", `calc(100% - ${newWidth}px)`);
+      navbarRef.current.style.setProperty(
+        "width",
+        `calc(100% - ${newWidth}px)`
+      );
     }
   };
 
@@ -93,13 +67,10 @@ export const Navigation = () => {
         "width",
         isMobile ? "0" : "calc(100% - 240px)"
       );
-      navbarRef.current.style.setProperty(
-        "left",
-        isMobile ? "100%" : "240px"
-      );
+      navbarRef.current.style.setProperty("left", isMobile ? "100%" : "240px");
       setTimeout(() => setIsResetting(false), 300);
     }
-  },[isMobile]);
+  }, [isMobile]);
 
   useEffect(() => {
     if (isMobile) {
@@ -125,36 +96,24 @@ export const Navigation = () => {
       navbarRef.current.style.setProperty("left", "0");
       setTimeout(() => setIsResetting(false), 300);
     }
-  }
-
-  const handleCreate = () => {
-    const promise = create({ title: "Untitled" })
-      .then((documentId) => router.push(`/documents/${documentId}`))
-
-    toast.promise(promise, {
-      loading: "Creating a new note...",
-      success: "New note created!",
-      error: "Failed to create a new note."
-    });
   };
 
-    const handleGraficView = () => {
-      router.push('/graficView');
-    };
-
-    const handleAppSearch  = () =>{
-    router.push('/appsearch');
-  }
-    const handleGoHome  = () =>{
+  const handleGoHome  = () =>{
     router.push('/dashboard');
   }
+  const handleEditorView = () => {
+    router.push("/documents");
+  };
+  const handleTrafficView = () => {
+    router.push("/semaforos");
+  };
 
   return (
     <>
       <aside
         ref={sidebarRef}
         className={cn(
-          "group/sidebar h-full bg-secondary overflow-y-auto relative flex w-60 flex-col z-[99999]",
+          "group/sidebar h-screen bg-secondary overflow-y-auto relative flex w-60 flex-col z-[99999]",
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "w-0"
         )}
@@ -170,75 +129,36 @@ export const Navigation = () => {
           <ChevronsLeft className="h-6 w-6" />
         </div>
         <div>
-          <UserItem />
-          <hr className="mt-2 mb-5 border-b-2"/>
-          
-          <Item
-            label="Dashboard"
-            icon={Home}
-            onClick={handleGoHome} 
-            />
-
-          <Item
-            label="App Search"
-            icon={Globe}
-            onClick={handleAppSearch} 
-            />
-
-          <OffcanvasMenu />
-
-          <Item
-            label="Vista gráfica"
-            icon={BrainCircuit}
-            onClick={handleGraficView} 
-            />
-
-          <hr className="mt-2 mb-5 border-b-2"/>
-         
-        </div>
-        <Item
-            label="Search"
-            icon={Search}
-            isSearch
-            onClick={search.onOpen}
-          />
-          
-        <div className="mt-4">
-        
-        <Item
-            onClick={handleCreate}
-            label="New page"
-            icon={PlusCircle}
-          />
-          <DocumentList />
-          <Item
-            onClick={handleCreate}
-            icon={Plus}
-            label="Add a page"
-            />
-
-            <Popover>
-              <PopoverTrigger className="w-full mt-4">
-                <Item label="Trash" icon={Trash} />
-              </PopoverTrigger>
-              <PopoverContent
-                className="p-0 w-72"
-                side={isMobile ? "bottom" : "right"}
-              >
-                <TrashBox />
-              </PopoverContent>
-            </Popover>  
+          <div className="shadow rounded-lg mb-10">
+           <UserItem />
           </div>
-          
-          <hr className="mt-5 mb-5 border-b-2"/>
-              
-          <div className="mt-auto mb-4">
+
+          <div className="rounded-xl border shadow mb-2 mx-2"> 
             <Item
-              label="Settings"
-              icon={Settings}
-              onClick={settings.onOpen}
-            />
+              label="Dashboard"
+              icon={Home}
+              onClick={handleGoHome} 
+              />
+
           </div>
+          <div className="rounded-xl border shadow mb-2 mx-2"> 
+          <Item
+            label="Informes"
+            icon={NotebookPen}
+            onClick={handleEditorView}
+          />
+          </div>
+          <div className="rounded-xl border shadow mb-2 mx-2"> 
+          <Item
+            label="Semaforos"
+            icon={CircleParking }
+            onClick={handleTrafficView}
+          />
+          </div>
+        </div>
+        <div className="mt-auto mb-4">
+          <Item label="Settings" icon={Settings} onClick={settings.onOpen} />
+        </div>
         <div
           onMouseDown={handleMouseDown}
           onClick={resetWidth}
@@ -250,20 +170,19 @@ export const Navigation = () => {
         className={cn(
           "absolute top-0 z-[10] left-60 w-[calc(100%-240px)]",
           isResetting && "transition-all ease-in-out duration-300",
-          isMobile && "left-0 w-full"
+          isMobile && "left-0 w-full h-screen"
         )}
       >
-        {!!params.documentId ? (
-          <Navbar
-            isCollapsed={isCollapsed}
-            onResetWidth={resetWidth}
-          />
-        ) : (
-          <nav className="bg-transparent px-3 py-2 w-full">
-            {isCollapsed && <MenuIcon onClick={resetWidth} role="button" className="h-6 w-6 text-muted-foreground" />}
-          </nav>
-        )}
+        <nav className="bg-transparent px-3 py-2 w-full z-auto">
+          {isCollapsed && (
+            <MenuIcon
+              onClick={resetWidth}
+              role="button"
+              className="h-6 w-6 text-muted-foreground"
+            />
+          )}
+        </nav>
       </div>
     </>
-  )
-}
+  );
+};

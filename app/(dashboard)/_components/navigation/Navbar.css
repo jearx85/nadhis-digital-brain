@@ -1,0 +1,7 @@
+.navbar{
+    background-color: whitesmoke;
+}
+
+.dark .navbar {
+    background-color: #24303f;
+}

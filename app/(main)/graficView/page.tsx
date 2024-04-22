@@ -1,7 +1,10 @@
-"use client";
-
 import GraficView from "./graficView";
 
+
+export const metadata = {
+ title: 'Vista Gráfica',
+ description: 'Vista Gráfica',
+};
 
 export default function graficViewPage(){
 
