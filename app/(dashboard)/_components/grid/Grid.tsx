@@ -26,38 +26,42 @@ export default function Grid() {
   return (
     <>
       <h1 className="text-xl mt-10">{`Indice: ${indexName}`}</h1>
-      <div className="grid grid-rows-6 grid-flow-col gap-4 mt-7 overflow-auto">
+      <div className="flex flex-wrap p-2 justify-center">
         {events.map((event: any, index) => (
           <>
-            <div className="card rounded-xl shadow p-5 mt-10">
-              <div>
-                <h1 className="mt-5 text-black font-bold  dark:text-blue-300">
-                  Calle
+            <div className="card shadow-lg p-3 sm:min-w-[25%] min-w-full gap-4 rounded-2xl border-1 border-gray-50 mx-2 m-2">
+              <div className="flex flex-col">
+                <div>
+                  <h1 className="mt-5 text-black font-bold  dark:text-blue-300">
+                    Calle
+                  </h1>
+                  <span className="mb-5">{event.calle}</span>
+                  <hr />
+                </div>
+                <h1 className="text-black font-bold dark:text-blue-300 mt-2">
+                  Dia
                 </h1>
-                <span className="mb-5">{event.calle}</span>
-                <hr />
-              </div>
-              <h1 className="text-black font-bold dark:text-blue-300 mt-2">Dia</h1>
-              <span key={index}>{event.dia}</span>
-              <h1 className="mt-5 text-black font-bold dark:text-blue-300">
-                Tipo alerta
-              </h1>
-              <span>{event.tipoalerta}</span>
-              <div className="mt-5 flex flex-col">
-                <h1 className="text-black font-bold dark:text-blue-300">
-                  Coordenadas
+                <span key={index}>{event.dia}</span>
+                <h1 className="mt-5 text-black font-bold dark:text-blue-300">
+                  Tipo alerta
                 </h1>
-                <span>Lon {event.location[0]}</span>
-                <span>Lat {event.location[1]}</span>
+                <span>{event.tipoalerta}</span>
+                <div className="mt-5 flex flex-col">
+                  <h1 className="text-black font-bold dark:text-blue-300">
+                    Coordenadas
+                  </h1>
+                  <span>Lon {event.location[0]}</span>
+                  <span>Lat {event.location[1]}</span>
+                </div>
+                <h1 className="mt-5 text-black font-bold dark:text-blue-300">
+                  Orientacion
+                </h1>
+                <span>{event.orientacion}</span>
+                <h1 className="mt-5 text-black font-bold dark:text-blue-300">
+                  Pais
+                </h1>
+                <span>{event.pais}</span>
               </div>
-              <h1 className="mt-5 text-black font-bold dark:text-blue-300">
-                Orientacion
-              </h1>
-              <span>{event.orientacion}</span>
-              <h1 className="mt-5 text-black font-bold dark:text-blue-300">
-                Pais
-              </h1>
-              <span>{event.pais}</span>
             </div>
           </>
         ))}
