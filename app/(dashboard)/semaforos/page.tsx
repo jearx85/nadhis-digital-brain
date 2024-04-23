@@ -1,6 +1,10 @@
-"use client";
+import Semaforos from "./components/SemaforosMain";
 
-import Semaforos from "./Semaforos";
+
+export const metadata = {
+ title: 'Semaforos',
+ description: 'Semaforos',
+};
 
 export default function semaforosViewPage(){
 

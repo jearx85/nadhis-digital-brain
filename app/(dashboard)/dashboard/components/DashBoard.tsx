@@ -1,8 +1,8 @@
 import React from "react";
-import Grid from "../_components/grid/Grid";
+import Grid from "../../_components/grid/Grid";
 
 import "./Dashboard.css";
-import Navbar from "../_components/navigation/Navbar";
+import Navbar from "../../_components/navigation/Navbar";
 
 export default async function Dashboard() {
 
