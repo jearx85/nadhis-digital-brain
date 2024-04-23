@@ -5,7 +5,7 @@ import { Eye, Bike, Car } from "lucide-react";
 
 import "./Grid.css";
 
-const getApiCounter = async () => {
+const getApiInfo = async () => {
   const data = await fetch(`/api/elasticsearch`).then((res) => res.json());
   return data;
 };
@@ -15,7 +15,7 @@ export default function Grid() {
   const [indexName, setIndexName] = useState("");
 
   useEffect(() => {
-    getApiCounter().then((d) => {
+    getApiInfo().then((d) => {
       setIndexName(d.message[0]._index);
       const extractedEvents = d.message.map((msg: any) => msg._source);
       // console.log(extractedEvents);
@@ -47,8 +47,8 @@ export default function Grid() {
                 <h1 className="text-black font-bold dark:text-blue-300">
                   Coordenadas
                 </h1>
-                <span>Lat {event.location[0]}</span>
-                <span>Lon {event.location[1]}</span>
+                <span>Lon {event.location[0]}</span>
+                <span>Lat {event.location[1]}</span>
               </div>
               <h1 className="mt-5 text-black font-bold dark:text-blue-300">
                 Orientacion
