@@ -12,7 +12,6 @@ import { TriStateCheckbox, TriStateCheckboxChangeEvent } from 'primereact/trista
 import { CustomerService } from './service/CustomerService';
 import './index.css';
 import './flags.css';
-import { conn } from './service/ElasticData';
 
 interface Representative {
   name: string;

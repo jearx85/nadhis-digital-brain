@@ -5,34 +5,107 @@ import { Eye, Bike, Car } from "lucide-react";
 
 import "./Grid.css";
 
-const getApiInfo = async () => {
-  const data = await fetch(`/api/elasticsearch`).then((res) => res.json());
-  return data;
-};
-
 export default function Grid() {
   const [events, setEvents] = useState([]);
   const [indexName, setIndexName] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
+  const [startDateTime, setStartDate] = useState("");
+  const [endDateTime, setEndDate] = useState("");
 
-  useEffect(() => {
-    getApiInfo().then((d) => {
-      setIndexName(d.message[0]._index);
-      const extractedEvents = d.message.map((msg: any) => msg._source);
-      // console.log(extractedEvents);
+  const handleStartDateChange = (event: any) => {
+    setStartDate(event.target.value);
+  };
+
+  const handleEndDateChange = (event: any) => {
+    setEndDate(event.target.value);
+  };
+
+  const getApiInfo = async () => {
+    const data = await fetch(
+      `/api/elasticsearch/?startDateTime=${startDateTime}&endDateTime=${endDateTime}`
+    ).then((res) => res.json());
+    return data;
+  };
+
+  // useEffect(() => {
+  //   getApiInfo().then((d) => {
+  //     setIndexName(d.message[0]._index);
+  //     const extractedEvents = d.message.map((msg: any) => msg._source);
+  //     setEvents(extractedEvents);
+  //   });
+  // }, []);
+
+  const setQuery = () => {
+    getApiInfo().then((data) => {
+      console.log(data.message)
+      setIndexName(data.message[0]._index);//Nombre del indice
+      const extractedEvents = data.message.map((msg: any) => msg._source);
       setEvents(extractedEvents);
     });
-  }, []);
+  };
+
+  const handleSelectChange = (event: any) => {
+    const selectedOption = event.target.value;
+    setSelectedValue(selectedOption);
+  };
 
   return (
     <>
-      <h1 className="text-xl mt-10">{`Indice: ${indexName}`}</h1>
-      <div className="flex flex-wrap p-2 justify-center">
+      <div className="flex  border p-3  items-center shadow-3 rounded-xl justify-between">
+        <label className="" htmlFor="startDate">
+          Fecha de inicio:
+        </label>
+        <input
+          className="w-60 border p-3 rounded-lg"
+          type="datetime-local"
+          id="startDate"
+          name="startDate"
+          value={startDateTime}
+          onChange={handleStartDateChange}
+        />
+
+        <label className="" htmlFor="endDate">
+          Fecha fin:
+        </label>
+        <input
+          className="w-60 border p-3 rounded-lg "
+          type="datetime-local"
+          id="endDate"
+          name="endDate"
+          value={endDateTime}
+          onChange={handleEndDateChange}
+        />
+        <button
+          className="bg-blue-300 border w-60 p-3 rounded-lg hover:bg-gray-400"
+          onClick={setQuery}
+        >
+          Consultar
+        </button>
+      </div>
+
+      <select
+        name="select"
+        id="select"
+        className="w-40 border rounded my-5 p-2"
+        value={selectedValue}
+        onChange={handleSelectChange}
+      >
+        {[...Array(16)].map((_, index) => (
+          <option key={index} value={index + 1}>
+            {index + 1}
+          </option>
+        ))}
+      </select>
+      <h1 className="text-xl mt-2">{`Indice: ${indexName}`}</h1>
+      {selectedValue && <p>{`Seleccionado ${selectedValue}`}</p>}
+      <hr />
+      <div className="flex flex-wrap p-2 justify-center gap-4 overflow-y-auto">
         {events.map((event: any, index) => (
           <>
-            <div className="card shadow-lg p-3 sm:min-w-[25%] min-w-full gap-4 rounded-2xl border-1 border-gray-50 mx-2 m-2">
+            <div className="card shadow-lg p-4 sm:min-w-[25%] min-w-full gap-4 rounded-2xl border-1 border-gray-50 mx-2 m-2">
               <div className="flex flex-col">
                 <div>
-                  <h1 className="mt-5 text-black font-bold  dark:text-blue-300">
+                  <h1 className="text-black font-bold  dark:text-blue-300">
                     Calle
                   </h1>
                   <span className="mb-5">{event.calle}</span>
