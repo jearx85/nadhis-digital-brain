@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Eye, Bike, Car } from "lucide-react";
 // import { DragDropContext } from "react-beautiful-dnd";
 
@@ -11,6 +11,7 @@ export default function Grid() {
   const [selectedValue, setSelectedValue] = useState("");
   const [startDateTime, setStartDate] = useState("");
   const [endDateTime, setEndDate] = useState("");
+  const [click, setClick] = useState(false);
 
   const handleStartDateChange = (event: any) => {
     setStartDate(event.target.value);
@@ -21,26 +22,23 @@ export default function Grid() {
   };
 
   const getApiInfo = async () => {
-    const data = await fetch(
-      `/api/elasticsearch/?startDateTime=${startDateTime}&endDateTime=${endDateTime}`
-    ).then((res) => res.json());
-    return data;
+    if (startDateTime && endDateTime) {
+      const data = await fetch(
+        `/api/elasticsearch/?startDateTime=${startDateTime}&endDateTime=${endDateTime}`
+      ).then((res) => res.json());
+      return data;
+    }
   };
 
-  // useEffect(() => {
-  //   getApiInfo().then((d) => {
-  //     setIndexName(d.message[0]._index);
-  //     const extractedEvents = d.message.map((msg: any) => msg._source);
-  //     setEvents(extractedEvents);
-  //   });
-  // }, []);
-
   const setQuery = () => {
+    setClick(true);
     getApiInfo().then((data) => {
-      console.log(data.message)
-      setIndexName(data.message[0]._index);//Nombre del indice
-      const extractedEvents = data.message.map((msg: any) => msg._source);
-      setEvents(extractedEvents);
+      // console.log(data.message)
+      if (data) {
+        setIndexName(data.message[0]._index); //Nombre del indice
+        const extractedEvents = data.message.map((msg: any) => msg._source);
+        setEvents(extractedEvents);
+      }
     });
   };
 
@@ -51,32 +49,42 @@ export default function Grid() {
 
   return (
     <>
-      <div className="flex  border p-3  items-center shadow-3 rounded-xl justify-between">
-        <label className="" htmlFor="startDate">
+      <div className="flex border p-3 items-center shadow-3 rounded-xl text-sm lg:w-1/2">
+        <label className="mr-2" htmlFor="startDate">
           Fecha de inicio:
         </label>
-        <input
-          className="w-60 border p-3 rounded-lg"
-          type="datetime-local"
-          id="startDate"
-          name="startDate"
-          value={startDateTime}
-          onChange={handleStartDateChange}
-        />
-
-        <label className="" htmlFor="endDate">
+        <div className="flex flex-col">
+          <input
+            className="w-60 border p-3 rounded-lg"
+            type="datetime-local"
+            id="startDate"
+            name="startDate"
+            value={startDateTime}
+            onChange={handleStartDateChange}
+          />
+          {click && !startDateTime && (
+            <small className="text-red-500">Campo requerido</small>
+          )}
+        </div>
+        <label className="ml-5 mr-2" htmlFor="endDate">
           Fecha fin:
         </label>
-        <input
-          className="w-60 border p-3 rounded-lg "
-          type="datetime-local"
-          id="endDate"
-          name="endDate"
-          value={endDateTime}
-          onChange={handleEndDateChange}
-        />
+        <div className="flex flex-col">
+          <input
+            className="w-60 border p-3 rounded-lg "
+            type="datetime-local"
+            id="endDate"
+            name="endDate"
+            value={endDateTime}
+            onChange={handleEndDateChange}
+          />
+          {click && !endDateTime && (
+            <small className="text-red-500">Campo requerido</small>
+          )}
+        </div>
+        
         <button
-          className="bg-blue-300 border w-60 p-3 rounded-lg hover:bg-gray-400"
+          className="bg-blue-300 border w-60 p-3 rounded-lg hover:bg-gray-400 ml-5"
           onClick={setQuery}
         >
           Consultar
