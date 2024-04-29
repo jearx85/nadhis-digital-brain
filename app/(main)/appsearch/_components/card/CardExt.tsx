@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Card({ uniqueData, handleFilterChange, resultados, offcanvas = "", setSelectedExtensions, selectedExtensions, setselectedCategory }) {
+export default function Card({ uniqueData, handleFilterChange, resultados, offcanvas = "", setSelectedExtensions, selectedExtensions, setselectedCategory }: any) {
 
 
 //   function handleCheck(extension){
@@ -12,7 +12,7 @@ export default function Card({ uniqueData, handleFilterChange, resultados, offca
 //     }
 // }
 
-function handleCheck(extension) {
+function handleCheck(extension: any) {
   if (selectedExtensions === extension) {
     setSelectedExtensions(null);
     setselectedCategory(null); // Limpiar la categoría cuando se deselecciona la extensión
@@ -25,9 +25,9 @@ function handleCheck(extension) {
 }
 
 // Función para obtener la categoría correspondiente a una extensión
-function obtenerCategoriaParaExtension(extension) {
+function obtenerCategoriaParaExtension(extension: any) {
   // Lógica para encontrar la categoría correspondiente a la extensión
-  const categoria = uniqueData.find(item => item.Extensión === extension)?.Categorias;
+  const categoria = uniqueData.find((item: { Extensión: any; }) => item.Extensión === extension)?.Categorias;
   return categoria || null; // Devuelve null si no se encuentra una categoría
 }
 
@@ -35,7 +35,7 @@ const filteredExtensions = selectedExtensions ? [selectedExtensions] : uniqueDat
 
   return (
     <div>
-        {filteredExtensions.map((item, index) => (
+        {filteredExtensions.map((item: any, index: any) => (
         <div className="form-check" key={index}>
           <input
             className="form-check-input"
