@@ -7,8 +7,12 @@ import ShowResults from '../_components/results/ShowResults';
 import Filtros from '../_components/filters/Filtros';
 // import { useNavigate } from 'react-router-dom'
 import './SearchBar.css';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function SearchBar() {
+  const router = useRouter();
   const [showResults, setShowResults] = useState(false);
   const [ dataNadhis, setDataNadhis] = useState([]);
   const [, setSelectedFilters] = useState({});
@@ -59,6 +63,7 @@ export default function SearchBar() {
     // if (valorHome) {
       resetFilters();
       const urlNdhis = `http://192.168.50.230:8087/query2/informes`;
+      // const urlNdhis = `http://192.168.50.230:8087/query2/${valorHome}`;
     fetch(urlNdhis)
       .then((response) => {
         if (!response.ok) {
@@ -103,7 +108,7 @@ const handleSearch = (event) => {
     resetFilters();
     const urlNdhis = `http://192.168.50.230:8087/query2/${valorBusqueda}`;
       
-      navigate(`/main?search=${valorBusqueda}`);
+      router.push(`/appsearch/searchBar?search=${valorBusqueda}`);
       fetch(urlNdhis)
         .then((response) => {
           if (!response.ok) {
@@ -139,9 +144,9 @@ const handleSearch = (event) => {
       <nav className="navbar fixed-top bg-body-tertiary">
         <div className="container-fluid search-bar">
           <div className="imagen">
-            <a href="/">
-              {/* <img src={logo} alt="Logo" width="140" height="50" /> */}
-            </a>
+            <Link href="/appsearch">
+              <Image src="/logo_citra.png" alt="Logo" width={140} height={50} />
+            </Link>
           </div>
           <form className="d-flex custom-form" onSubmit={handleSearch}>
             <div className="d-flex busqueda-main">
