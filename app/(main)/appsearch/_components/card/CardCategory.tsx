@@ -3,15 +3,6 @@ import React from 'react'
 export default function CardCategories({ uniqueData, handleFilterChange, resultados, offcanvas = "", setselectedCategory, selectedCategory, setSelectedExtensions }: any) {
 
 
-//   function handleCheck(Category){
-
-//     if(selectedCategory === Category){
-//       setselectedCategory(null)
-//     }else{
-//       setselectedCategory(Category)
-//     }
-// }
-
 function handleCheck(category: string) {
   if (selectedCategory === category) {
     setselectedCategory(null);
@@ -36,7 +27,7 @@ const filteredCategories = selectedCategory ? [selectedCategory] : uniqueData
   return (
     <div>
         {filteredCategories.map((item: any, index: any) => (
-        <div className="form-check" key={index}>
+        <div className="form-check flex gap-3 items-center" key={index}>
           <input
             className="form-check-input"
             type="checkbox"
@@ -51,13 +42,14 @@ const filteredCategories = selectedCategory ? [selectedCategory] : uniqueData
               }
             }
           />
-          <div className="d-flex justify-content-between">
+          <div className="flex justify-between w-full">
             <label
               className="form-check-label"
               htmlFor={item}
             >
               {item}
             </label>
+           
             <label className="check-label" htmlFor={item}>
               {resultados[item]}
             </label>
