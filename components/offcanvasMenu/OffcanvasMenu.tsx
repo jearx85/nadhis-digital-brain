@@ -1,3 +1,4 @@
+"use client";
 import { Fragment, useState } from 'react';
 import PluginElastic from './plugin/elasticdocs';
 import { FileSearch2, MessageSquare, CalendarDays, Bot  } from 'lucide-react';

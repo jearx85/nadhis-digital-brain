@@ -1,5 +1,7 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import "./Filtros.css";
+import { useMediaQuery } from "usehooks-ts";
 
 import Card from "../card/CardExt";
 import CardCategories from "../card/CardCategory";
@@ -12,6 +14,8 @@ export default function Filtros({
   selectedCategory,
   setselectedCategory,
 }) {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   function obtenerCategoriaParaExtension(extension) {
     const item = data.find((item) => item.Extensión === extension);
     return item ? item.Categorias : null;
@@ -48,11 +52,10 @@ export default function Filtros({
 
   return (
     <>
-      {data.length > 0 && (
+      {data.length > 0 && isMobile && (
         <>
-          {/* <div className="filtros-cont"> */}
-            {/* ========================== Offcanvas =====================================*/}
-            {/* <button
+          <div className="filtros-cont">
+            <button
               className="boton-offcanvas"
               type="button"
               data-bs-toggle="offcanvas"
@@ -61,7 +64,7 @@ export default function Filtros({
             >
               Filtrar
             </button>
-            <div
+            {/* <div
               className="offcanvas offcanvas-start"
               data-bs-scroll="true"
               data-bs-backdrop="true"
@@ -114,39 +117,40 @@ export default function Filtros({
                 </div>
               </div>
             </div> */}
-          {/* </div> */}
-
-          {/* ======================================================================================= */}
-          <div className="filtros-cont h-full">
-            <h3 className="card-title text-lg text-center">Filtros</h3>
-            <hr className="mb-2"/>
-            <div className="cardExt">
-              <div className="form-text">Filtrar por extensión</div>
-              <Card
-                uniqueData={datos[0]}
-                handleFilterChange={handleFilterChangeWrapper}
-                resultados={datos[1]}
-                setSelectedExtensions={setSelectedExtensions}
-                selectedExtensions={selectedExtensions}
-                setselectedCategory={setselectedCategory}
-                selectedCategory={selectedCategory}
-              />
-            </div>
-            <hr className="mb-2 mt-2"/>
-            <div className="cardCat">
-              <div className="form-text">Filtrar por categorías</div>
-              <CardCategories
-                uniqueData={datosCat[0]}
-                handleFilterChange={handleFilterChangeWrapper}
-                resultados={datosCat[1]}
-                setselectedCategory={setselectedCategory}
-                selectedCategory={selectedCategory}
-                setSelectedExtensions={setSelectedExtensions}
-                selectedExtensions={selectedExtensions}
-              />
-            </div>
           </div>
         </>
+      )}
+
+      {data.length > 0 && !isMobile && (
+        <div className="filtros-cont h-full">
+          <h3 className="card-title text-xl font-bold">Filtros</h3>
+          <hr className="mb-2" />
+          <div className="cardExt">
+            <div className="form-text">Filtrar por extensión</div>
+            <Card
+              uniqueData={datos[0]}
+              handleFilterChange={handleFilterChangeWrapper}
+              resultados={datos[1]}
+              setSelectedExtensions={setSelectedExtensions}
+              selectedExtensions={selectedExtensions}
+              setselectedCategory={setselectedCategory}
+              selectedCategory={selectedCategory}
+            />
+          </div>
+          <hr className="mb-2 mt-2" />
+          <div className="cardCat">
+            <div className="form-text">Filtrar por categorías</div>
+            <CardCategories
+              uniqueData={datosCat[0]}
+              handleFilterChange={handleFilterChangeWrapper}
+              resultados={datosCat[1]}
+              setselectedCategory={setselectedCategory}
+              selectedCategory={selectedCategory}
+              setSelectedExtensions={setSelectedExtensions}
+              selectedExtensions={selectedExtensions}
+            />
+          </div>
+        </div>
       )}
     </>
   );

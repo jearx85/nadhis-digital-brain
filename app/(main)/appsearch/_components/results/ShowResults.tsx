@@ -33,8 +33,8 @@ export default function ShowResults({ data, onNewSearch }: any) {
       <div className="cont-card">
         {currentDocuments.map(
           ({ id, Title, Content, Path, TitleH, ContentH, Categorias }: any) => (
-            <div className="card border p-4 rounded-xl " key={id}>
-              <h5 className="card-header bg-gray-100 dark:bg-gray-800 text-xl p-5 rounded-xl text-wrap">
+            <div className="card border p-4 rounded-xl" key={id}>
+              <h5 className="card-header bg-gray-100 dark:bg-gray-800 text-xl p-5 rounded-xl truncate">
                 <b>{TitleH ? parse(TitleH) : Title}</b>
               </h5>
               <div className="card-body mt-4">

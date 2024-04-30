@@ -175,7 +175,7 @@ export default function SearchBar() {
           </form>
         </div>
       </nav>
-      <div className="container flex flex-1">
+      <div className="flex flex-col">
         <Filtros
           data={dataNadhis}
           handleFilterChange={handleFilterChange}
