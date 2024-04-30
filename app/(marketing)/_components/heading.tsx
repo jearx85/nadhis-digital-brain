@@ -25,16 +25,16 @@ export const Heading = () => {
               layout="fill"
               objectFit="cover"
             />
-            <div className="absolute inset-0 flex items-center justify-center px-20 bg-gray-900 bg-opacity-40">
-              <div>
-                <h2 className="text-8xl font-bold text-white">Smart City</h2>
-                <h2 className="text-6xl font-bold text-white text-center mt-8">Medellin</h2>
-                <p className="max-w-xl mt-8 text-gray-300">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. In
-                  autem ipsa, nulla laboriosam dolores, repellendus perferendis
-                  libero suscipit nam temporibus molestiae
-                </p>
-              </div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center px-20 bg-gray-900 bg-opacity-40">
+              <h2 className="text-8xl font-bold text-white">Smart City</h2>
+              <h2 className="text-6xl font-bold text-white text-center mt-8">
+                Medellin
+              </h2>
+              <p className="max-w-xl mt-8 text-gray-300">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. In
+                autem ipsa, nulla laboriosam dolores, repellendus perferendis
+                libero suscipit nam temporibus molestiae
+              </p>
             </div>
           </div>
         </div>
@@ -56,9 +56,9 @@ export const Heading = () => {
                 )}
                 {isAuthenticated && !isLoading && (
                   <div className=" items-center flex justify-center">
-                      <Link href="/documents" className="mr-2">
-                        <UserLogin />
-                      </Link>
+                    <Link href="/dashboard" className="mr-2">
+                      <UserLogin />
+                    </Link>
                   </div>
                 )}
                 {!isAuthenticated && !isLoading && (

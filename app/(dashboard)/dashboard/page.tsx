@@ -1,5 +1,10 @@
-import DashBoard from "./DashBoard";
+import DashBoard from "./components/DashBoard";
 
+
+export const metadata = {
+ title: 'Dashboard',
+ description: 'Dashboard',
+};
 
 export default function dashboardViewPage(){
 

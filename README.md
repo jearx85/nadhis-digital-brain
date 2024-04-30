@@ -1,4 +1,4 @@
-# Fullstack Notion Clone: Next.js 13, React, Convex, Tailwind 
+# Nadhis digital brain-app integradora
 
 
 ### Prerequisites

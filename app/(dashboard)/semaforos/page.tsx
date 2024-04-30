@@ -1,12 +1,17 @@
-"use client";
+import Semaforos from "./components/SemaforosMain";
+import "leaflet/dist/leaflet.css";
 
-import Semaforos from "./Semaforos";
+
+export const metadata = {
+ title: 'Semaforos',
+ description: 'Semaforos',
+};
 
 export default function semaforosViewPage(){
 
   return (
-    <div className="h-screen">
+    // <div className="h-screen">
         < Semaforos />
-    </div>
+    // </div>
   )
 };
