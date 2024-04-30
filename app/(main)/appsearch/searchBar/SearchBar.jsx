@@ -7,8 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import { useMediaQuery } from "usehooks-ts";
 
 export default function SearchBar() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showResults, setShowResults] = useState(false);
@@ -175,7 +177,8 @@ export default function SearchBar() {
           </form>
         </div>
       </nav>
-      <div className="flex flex-col">
+      
+      <div className={isMobile ? "flex flex-col" : "flex ml-10"}>
         <Filtros
           data={dataNadhis}
           handleFilterChange={handleFilterChange}

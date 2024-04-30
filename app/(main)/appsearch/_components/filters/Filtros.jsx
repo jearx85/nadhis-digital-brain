@@ -5,6 +5,7 @@ import { useMediaQuery } from "usehooks-ts";
 
 import Card from "../card/CardExt";
 import CardCategories from "../card/CardCategory";
+import OffCanvasFilters from "./OffCanvasFilters";
 
 export default function Filtros({
   data,
@@ -15,6 +16,11 @@ export default function Filtros({
   setselectedCategory,
 }) {
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const [showOffCanvas, setShowOffCanvas] = useState(false);
+
+  function handleShowOffCanvas() {
+    setShowOffCanvas(!showOffCanvas);
+  }
 
   function obtenerCategoriaParaExtension(extension) {
     const item = data.find((item) => item.Extensión === extension);
@@ -61,62 +67,22 @@ export default function Filtros({
               data-bs-toggle="offcanvas"
               data-bs-target="#offcanvasWithBothOptions"
               aria-controls="offcanvasWithBothOptions"
+              onClick={handleShowOffCanvas}
             >
               Filtrar
             </button>
-            {/* <div
-              className="offcanvas offcanvas-start"
-              data-bs-scroll="true"
-              data-bs-backdrop="true"
-              tabIndex="-1"
-              id="offcanvasWithBothOptions"
-              aria-labelledby="offcanvasWithBothOptionsLabel"
-            >
-              <div className="offcanvas-header text-xl">
-                <h3 className="card-title" id="offcanvasWithBothOptionsLabel">
-                  Filtros
-                </h3>
-                <hr />
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="offcanvas"
-                  aria-label="Close"
-                ></button>
-              </div>
 
-              <div className="offcanvas-filter">
-                <div className="form-text">Filtrar por extensión</div>
-                <hr />
-                <div className="cardExt">
-                  <Card
-                    uniqueData={datos[0]}
-                    handleFilterChange={handleFilterChangeWrapper}
-                    resultados={datos[1]}
-                    offcanvas="offcanvas"
-                    setSelectedExtensions={setSelectedExtensions}
-                    selectedExtensions={selectedExtensions}
-                    setselectedCategory={setselectedCategory}
-                    selectedCategory={selectedCategory}
-                  />
-                </div>
-
-                <div className="form-text">Filtrar por categorías</div>
-                <hr />
-                <div className="cardCat">
-                  <CardCategories
-                    uniqueData={datosCat[0]}
-                    handleFilterChange={handleFilterChangeWrapper}
-                    resultados={datosCat[1]}
-                    offcanvas="offcanvas"
-                    setselectedCategory={setselectedCategory}
-                    selectedCategory={selectedCategory}
-                    setSelectedExtensions={setSelectedExtensions}
-                    selectedExtensions={selectedExtensions}
-                  />
-                </div>
-              </div>
-            </div> */}
+            {showOffCanvas && (
+              <OffCanvasFilters
+                datosCat={datosCat}
+                setSelectedExtensions={setSelectedExtensions}
+                selectedExtensions={selectedExtensions}
+                selectedCategory={selectedCategory}
+                setselectedCategory={setselectedCategory}
+                datos={datos}
+                handleFilterChangeWrapper={handleFilterChangeWrapper}
+              />
+            )}
           </div>
         </>
       )}
