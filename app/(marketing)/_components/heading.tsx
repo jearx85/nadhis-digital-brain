@@ -25,7 +25,7 @@ export const Heading = () => {
               layout="fill"
               objectFit="cover"
             />
-            <div className="absolute inset-0 flex items-center justify-center px-20 bg-gray-900 bg-opacity-40">
+            <div className="absolute inset-0 flex flex-col items-center justify-center px-20 bg-gray-900 bg-opacity-40">
               <h2 className="text-8xl font-bold text-white">Smart City</h2>
               <h2 className="text-6xl font-bold text-white text-center mt-8">
                 Medellin
