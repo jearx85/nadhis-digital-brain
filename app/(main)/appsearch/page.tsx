@@ -7,8 +7,8 @@ export const metadata = {
 };
 export default function appSearch(){
   return (
-    <EmbeddedPage />
-    // < Home />
+    // <EmbeddedPage />
+    < Home />
   )
 };
 

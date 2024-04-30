@@ -2,20 +2,26 @@
 import React, { useState } from "react";
 import "./Home.css";
 import Image from "next/image";
-import router from "next/router";
+import { useRouter, usePathname } from "next/navigation";
 
 
 export default function Home() {
   const [searchValue, setSearchValue] = useState("");
+  const router = useRouter();
 
   const handleClick = (e: any) => {
     if (searchValue.trim() === "") {
       e.preventDefault();
       return;
     } else {
-      console.log(searchValue);
-      router.push(`/searchBar?search=${searchValue}`);
+      router.push(`/appsearch/searchBar/?search=${searchValue}`);
     }
+  };
+
+  const test = () => {
+   
+      router.push(`/appsearch/searchBar`);
+    
   };
 
   return (
@@ -37,6 +43,9 @@ export default function Home() {
           <div className="boton">
             <button type="submit" className="btn-home" onClick={handleClick}>
               Buscar
+            </button>
+            <button type="submit" className="btn-home" onClick={test}>
+              Prueba
             </button>
           </div>
         </form>

@@ -64,7 +64,7 @@ const datosCat = getNameFilter("Categorias")
                 id="offcanvasWithBothOptions" 
                 aria-labelledby="offcanvasWithBothOptionsLabel"
               >
-                <div className="offcanvas-header">
+                <div className="offcanvas-header text-xl">
                   <h3 className="card-title" id="offcanvasWithBothOptionsLabel">Filtros</h3>
                   <hr />
                   <button
@@ -92,7 +92,7 @@ const datosCat = getNameFilter("Categorias")
 
               {/* ======================================================================================= */}
               <div className="filtros">
-                <h3 className="card-title">Filtros</h3>
+                <h3 className="card-title text-lg">Filtros</h3>
                 <hr />
                 <div className="cardExt">
                   <div className="form-text">Filtrar por extensión</div>

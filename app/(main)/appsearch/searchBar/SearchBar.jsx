@@ -1,33 +1,29 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-// import { useLocation } from 'react-router-dom';
-// import logo from '../../img/logo_citra.png';
-// import logo from '../../img/logo-nadhis.png';
-import ShowResults from '../_components/results/ShowResults';
-import Filtros from '../_components/filters/Filtros';
-// import { useNavigate } from 'react-router-dom'
-import './SearchBar.css';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from "react";
+import ShowResults from "../_components/results/ShowResults";
+import Filtros from "../_components/filters/Filtros";
+import "./SearchBar.css";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function SearchBar() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showResults, setShowResults] = useState(false);
-  const [ dataNadhis, setDataNadhis] = useState([]);
+  const [dataNadhis, setDataNadhis] = useState([]);
   const [, setSelectedFilters] = useState({});
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const [filterdocs, setFilterdocs] = useState([]);
   const [, setDataVersion] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
-  // const navigate = useNavigate();
-  // const location = useLocation();
-  // const searchParams = new URLSearchParams(location.search);
-  // const valorHome = searchParams.get('search');
-
 
   const [selectedExtensions, setSelectedExtensions] = useState(null);
   const [selectedCategory, setselectedCategory] = useState(null);
+
+  const params = new URLSearchParams(searchParams);
+  const valorHome = params.get("search");
 
   const handleNewSearch = () => {
     resetFilters();
@@ -43,11 +39,13 @@ export default function SearchBar() {
     setSelectedExtensions(null);
     setselectedCategory(null);
   };
-//======================= Filtros ===========================================
+  //======================= Filtros ===========================================
   const handleFilterChange = (e, filter = "", filtro) => {
-    const docFiltrados = dataNadhis.filter((doc) => doc[filtro] === e.target.value);
+    const docFiltrados = dataNadhis.filter(
+      (doc) => doc[filtro] === e.target.value
+    );
 
-    setIsChecked(e.target.checked)
+    setIsChecked(e.target.checked);
 
     setSelectedFilters((prevFilters) => ({
       ...prevFilters,
@@ -55,19 +53,68 @@ export default function SearchBar() {
     }));
 
     setFilterdocs(docFiltrados);
- 
   };
 
   //=========================== Realiza la búsqueda con el valor de "valorHome" ==================================================
   useEffect(() => {
-    // if (valorHome) {
+    console.log("valorHome", valorHome);
+    if (valorHome) {
       resetFilters();
-      const urlNdhis = `http://192.168.50.230:8087/query2/informes`;
-      // const urlNdhis = `http://192.168.50.230:8087/query2/${valorHome}`;
+      // const urlNdhis = `http://192.168.50.230:8087/query2/informes`;
+      const urlNdhis = `http://192.168.50.230:8087/query2/${valorHome}`;
+      fetch(urlNdhis)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((docsData) => {
+          const results = docsData.hits.map((item) => {
+            const obj = {
+              id: item._id,
+              Title: item._source.Title,
+              Content: item._source.Content,
+              Path: item._source.Path,
+              Categorias: item._source.Categorias.pop(),
+              Extensión: item._source.Extensión,
+              TitleH:
+                item.highlight && item.highlight.Title
+                  ? item.highlight.Title[0]
+                  : null,
+              ContentH:
+                item.highlight && item.highlight.Content
+                  ? item.highlight.Content[0]
+                  : null,
+            };
+
+            return obj;
+          });
+
+          setDataNadhis(results);
+          setShowResults(true);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  }, []);
+
+  //=========================== Hacer petición y setear datos ================================================
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    const valorBusqueda = document.getElementById("search-box").value;
+    if (!valorBusqueda) return; //Validar input vacío.
+
+    resetFilters();
+    const urlNdhis = `http://192.168.50.230:8087/query2/${valorBusqueda}`;
+
+    router.push(`/appsearch/searchBar?search=${valorBusqueda}`);
     fetch(urlNdhis)
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         return response.json();
       })
@@ -80,99 +127,73 @@ export default function SearchBar() {
             Path: item._source.Path,
             Categorias: item._source.Categorias.pop(),
             Extensión: item._source.Extensión,
-            TitleH: item.highlight && item.highlight.Title ? item.highlight.Title[0] : null,
-            ContentH: item.highlight && item.highlight.Content ? item.highlight.Content[0] : null,
+            TitleH:
+              item.highlight && item.highlight.Title
+                ? item.highlight.Title[0]
+                : null,
+            ContentH:
+              item.highlight && item.highlight.Content
+                ? item.highlight.Content[0]
+                : null,
           };
-        
+
           return obj;
         });
-        
         setDataNadhis(results);
         setShowResults(true);
-        
-    })
+      })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
-    // }
-  }, []);    
-
-
-//=========================== Hacer petición y setear datos ================================================
-
-const handleSearch = (event) => {
-    event.preventDefault();
-    const valorBusqueda = document.getElementById("search-box").value
-    if(!valorBusqueda) return;//Validar input vacío.
-    
-    resetFilters();
-    const urlNdhis = `http://192.168.50.230:8087/query2/${valorBusqueda}`;
-      
-      router.push(`/appsearch/searchBar?search=${valorBusqueda}`);
-      fetch(urlNdhis)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then((docsData) => {
-        const results = docsData.hits.map((item) => {
-          const obj = {
-            id: item._id,
-            Title: item._source.Title,
-            Content: item._source.Content,
-            Path: item._source.Path,
-            Categorias: item._source.Categorias.pop(),
-            Extensión: item._source.Extensión,
-            TitleH: item.highlight && item.highlight.Title ? item.highlight.Title[0] : null,
-            ContentH: item.highlight && item.highlight.Content ? item.highlight.Content[0] : null,
-          };
-
-          return obj;
-        });
-          setDataNadhis(results);
-          setShowResults(true);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
   };
 
   return (
     <>
-      <nav className="navbar fixed-top bg-body-tertiary">
-        <div className="container-fluid search-bar">
+      <nav className="navbar fixed w-full">
+        <div className="search-bar  flex justify-between bg-gray-100 dark:bg-gray-800">
           <div className="imagen">
             <Link href="/appsearch">
               <Image src="/logo_citra.png" alt="Logo" width={140} height={50} />
             </Link>
           </div>
-          <form className="d-flex custom-form" onSubmit={handleSearch}>
-            <div className="d-flex busqueda-main">
-              <input
-                id="search-box"
-                className="form-control me-2"
-                type="search"
-                aria-label="Search"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-              />
-              <button className="btn-search" type="button" onClick={handleSearch}>
-                Buscar
-              </button>
-            </div>
+          <form className="custom-form flex p-3" onSubmit={handleSearch}>
+            <input
+              id="search-box"
+              className="form-control me-2 border-gray-200 rounded"
+              type="search"
+              aria-label="Search"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+            <button
+              className="btn-search p-2 ml-5"
+              type="button"
+              onClick={handleSearch}
+            >
+              Buscar
+            </button>
           </form>
         </div>
       </nav>
-      <div className="container">
-        <div className="row">
-          <div className="col-lg-3">
-            <Filtros data={dataNadhis} handleFilterChange={handleFilterChange} onNewSearch={handleNewSearch} setSelectedExtensions={setSelectedExtensions} selectedExtensions={selectedExtensions} selectedCategory={selectedCategory} setselectedCategory={setselectedCategory}/>
-          </div>
-          <div className="col-sm-12 col-lg-9">
-            {isChecked ? <ShowResults data={filterdocs} onNewSearch={handleNewSearch}/> :  showResults && <ShowResults data={dataNadhis} onNewSearch={handleNewSearch}/>} 
-          </div>
+      <div className="container flex flex-1">
+        <Filtros
+          data={dataNadhis}
+          handleFilterChange={handleFilterChange}
+          onNewSearch={handleNewSearch}
+          setSelectedExtensions={setSelectedExtensions}
+          selectedExtensions={selectedExtensions}
+          selectedCategory={selectedCategory}
+          setselectedCategory={setselectedCategory}
+        />
+
+        <div className="col-sm-12 col-lg-9">
+          {isChecked ? (
+            <ShowResults data={filterdocs} onNewSearch={handleNewSearch} />
+          ) : (
+            showResults && (
+              <ShowResults data={dataNadhis} onNewSearch={handleNewSearch} />
+            )
+          )}
         </div>
       </div>
     </>
