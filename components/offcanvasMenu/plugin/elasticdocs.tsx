@@ -397,7 +397,7 @@ const PluginElastic  = () => {
     <>
       <div className="filtro-categorias d-flex">
         <select
-          className="Mydropdown"
+          className="Mydropdown bg-white dark:bg-gray-900"
           name="categories"
           value={selectedCategory || ""}
           onChange={handleCategoryChange}
@@ -414,7 +414,7 @@ const PluginElastic  = () => {
       </div>
 
       <input
-        className="plugin-input"
+        className="plugin-input bg-white dark:bg-gray-900 "
         type="text"
         placeholder="Buscar..."
         id="plugin-input-filter"
@@ -423,7 +423,7 @@ const PluginElastic  = () => {
       />
 
       <textarea
-        className="plugin-text-area"
+        className="plugin-text-area bg-white dark:bg-gray-900"
         placeholder="¿Cuéntame de qué habla el documento que quieres encontrar?"
         cols={40}
         rows={4}
@@ -442,7 +442,7 @@ const PluginElastic  = () => {
         ))}
         {apiTitles.map((title, index) => (
           <h4
-            className="titulos"
+            className="titulos dark:hover:bg-gray-900 hover:bg-gray-100"
             key={index}
             onClick={() => createNotePlugin(title)}
           >
