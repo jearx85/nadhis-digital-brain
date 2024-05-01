@@ -32,6 +32,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { insertAtable } from "../components/myTypeBlocks/advanceTables/AdvanceTables";
 import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
+import { IaChatContent, showArea } from "./myInlineContent/iaChat/IaChat";
 import { SideToSideBlock, setColumns } from "./myInlineContent/sideToSideContent/SideToSideContent";
 
 const schema = BlockNoteSchema.create({
@@ -40,6 +41,7 @@ const schema = BlockNoteSchema.create({
     chartContent: Charts,
     docLinks: DocLink,
     sideToSide: SideToSideBlock,
+    iachat: IaChatContent,
   },
   blockSpecs: {
     ...defaultBlockSpecs,
@@ -112,6 +114,13 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           getItems={async (query) =>
             // Gets the mentions menu items
             filterSuggestionItems(setColumns(editor), query)
+          }
+        />
+        <SuggestionMenuController
+          triggerCharacter={"+"}
+          getItems={async (query) =>
+            // Gets the mentions menu items
+            filterSuggestionItems(showArea(editor), query)
           }
         />
         <SideMenuController
