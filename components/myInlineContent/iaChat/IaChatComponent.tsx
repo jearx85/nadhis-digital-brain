@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useBlockNoteEditor } from "@blocknote/react";
+import { Spinner } from "@/components/spinner";
 import { toast } from "sonner";
 
 export default function IaChatComponent() {
@@ -25,59 +26,10 @@ export default function IaChatComponent() {
     }
   });
 
-  const handleClick = () => {
-    setIsSend(true);
-    console.log(textareaValue);
-    if (textareaValue) {
-      contentToInsert = editor.insertBlocks(
-        [
-          {
-            type: "paragraph",
-            props: {
-              textColor: "default",
-              backgroundColor: "default",
-            },
-            content: [
-              {
-                type: "text",
-                text: "Respuesta de la AI",
-                styles: {},
-              },
-            ],
-            children: [],
-          },
-        ],
-        blockId,
-        "after"
-      );
-    } else {
-      toast("Ingrese una busqueda");
-    }
-  };
-
-  const cleanArea = () => {
-    setTextareaValue("");
-  };
-
-  const handleClose = () => {
-    editor.removeBlocks([blockId]);
-  };
-
   // const handleClick = () => {
   //   setIsSend(true);
-
-  //  const url = ""
-  //   fetch('url', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ question: textareaValue }), // Enviar el valor del textarea a la API
-  //   })
-  //   .then(response => response.json())
-  //   .then(data => {
-  //     setResponseText(data.answer);
-
+  //   console.log(textareaValue);
+  //   if (textareaValue) {
   //     contentToInsert = editor.insertBlocks(
   //       [
   //         {
@@ -89,7 +41,7 @@ export default function IaChatComponent() {
   //           content: [
   //             {
   //               type: "text",
-  //               text: responseText, // Insertar la respuesta de la API
+  //               text: "Respuesta de la AI",
   //               styles: {},
   //             },
   //           ],
@@ -99,9 +51,74 @@ export default function IaChatComponent() {
   //       blockId,
   //       "after"
   //     );
-  //   })
-  //   .catch(error => console.error('Error al realizar la solicitud:', error));
-  // }
+  //   } else {
+  //     toast("Ingrese una busqueda");
+  //   }
+  // };
+
+  const cleanArea = () => {
+    setTextareaValue("");
+  };
+
+  const handleClose = () => {
+    editor.removeBlocks([blockId]);
+  };
+
+  const handleClick = () => {
+    setIsSend(true);
+    if (textareaValue) {
+      const url = `https://pokeapi.co/api/v2/pokemon/${textareaValue}/`;
+      fetch(url, {
+        method: "GET",
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
+        // body: JSON.stringify({ question: textareaValue }), // Enviar el valor del textarea a la API
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // setResponseText(data.sprites.other.dream_world.front_default);
+
+          contentToInsert = editor.insertBlocks(
+            [
+              // {
+              //   type: "paragraph",
+              //   props: {
+              //     textColor: "default",
+              //     backgroundColor: "default",
+              //   },
+              //   content: [
+              //     {
+              //       type: "text",
+              //       text: JSON.stringify(responseText), // Insertar la respuesta de la API
+              //       styles: {},
+              //     },
+              //   ],
+              //   children: [],
+              // },
+              {
+                type: "image",
+                props: {
+                  backgroundColor: "default",
+                  textAlignment: "left",
+                  url: responseText,
+                  caption: "",
+                  width: 250,
+                },
+                children: [],
+              },
+            ],
+            blockId,
+            "after"
+          );
+        })
+        .catch((error) =>
+          console.error("Error al realizar la solicitud:", error)
+        );
+    } else {
+      toast("Ingrese una busqueda");
+    }
+  };
 
   return (
     <div>
@@ -137,6 +154,11 @@ export default function IaChatComponent() {
       </div>
 
       {isSend && <div className="container rounded-xl">{contentToInsert}</div>}
+      {!responseText && !isSend && (
+        <div className="w-full flex items-center justify-center mt-10">
+          <Spinner size="lg" />
+        </div>
+      )}
     </div>
   );
 }
