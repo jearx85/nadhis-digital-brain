@@ -36,28 +36,27 @@ const IaChatComponent: NextPage = () => {
       const data = { question: textareaValue };
       try {
 
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${textareaValue}`, {
-          method: "GET",
+        // const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${textareaValue}`, {
+        //   method: "GET",
 
-        })
+        // })
 
 
-        // const response = await fetch("http://localhost:8000/ask", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify(data),
-        //   mode: "cors", // Asegúrate de que el modo esté configurado correctamente
-        // });
+        const response = await fetch("http://localhost:8000/ask", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+          mode: "cors", // Asegúrate de que el modo esté configurado correctamente
+        });
   
         if (!response.ok) {
           const errorData = await response.json();
           console.error("Error al realizar la solicitud:", errorData.detail[0].msg);
         } else {
           responseData = await response.json();
-          // setResponseText(responseData.answer);
-          setResponseText(responseData);
+          setResponseText(responseData.answer);
   
         contentToInsert = editor.insertBlocks(
           [
@@ -70,7 +69,7 @@ const IaChatComponent: NextPage = () => {
               content: [
                 {
                   type: "text",
-                  text: `id: ${responseData.id}`, // Insertar la respuesta de la API
+                  text: `${responseData.answer}`, // Insertar la respuesta de la API
                   styles: {},
                 },
               ],
@@ -127,7 +126,7 @@ const IaChatComponent: NextPage = () => {
       )}
       {responseText && (
         <div className="container rounded-xl">
-          <p>{responseData}</p>
+          <p>{contentToInsert}</p>
         </div>
       )}
     </div>
