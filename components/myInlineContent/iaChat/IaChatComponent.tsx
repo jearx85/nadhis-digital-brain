@@ -36,20 +36,20 @@ const IaChatComponent: NextPage = () => {
       const data = { question: textareaValue };
       try {
 
-        // const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${textareaValue}`, {
-        //   method: "GET",
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${textareaValue}`, {
+          method: "GET",
 
-        // })
+        })
 
 
-        const response = await fetch("http://localhost:8000/ask", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-          mode: "cors", // Asegúrate de que el modo esté configurado correctamente
-        });
+        // const response = await fetch("http://localhost:8000/ask", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify(data),
+        //   mode: "cors", // Asegúrate de que el modo esté configurado correctamente
+        // });
   
         if (!response.ok) {
           setIsSend(false);
@@ -71,24 +71,24 @@ const IaChatComponent: NextPage = () => {
               content: [
                 {
                   type: "text",
-                  text: `${responseData.answer}`, // Insertar la respuesta de la API
-                  // text: `Nombre: ${responseData.name}`, // Insertar la respuesta de la API
+                  // text: `${responseData.answer}`, // Insertar la respuesta de la API
+                  text: `Nombre: ${responseData.name}`, // Insertar la respuesta de la API
                   styles: {},
                 },
               ],
               children: [],
             },
-            // {
-            //   type: "image",
-            //   props: {
-            //     backgroundColor: "default",
-            //     textAlignment: "left",
-            //     url: `${responseData.sprites.other.dream_world.front_default}`,
-            //     caption: "",
-            //     width: 512,
-            //   },
-            //   children: [],
-            // }
+            {
+              type: "image",
+              props: {
+                backgroundColor: "default",
+                textAlignment: "left",
+                url: `${responseData.sprites.other.dream_world.front_default}`,
+                caption: "",
+                width: 512,
+              },
+              children: [],
+            }
           ],
           blockId,
           "after"

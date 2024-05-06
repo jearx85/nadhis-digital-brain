@@ -62,7 +62,6 @@ export default function SearchBar() {
     console.log("valorHome", valorHome);
     if (valorHome) {
       resetFilters();
-      // const urlNdhis = `http://192.168.50.230:8087/query2/informes`;
       const urlNdhis = `http://192.168.50.230:8087/query2/${valorHome}`;
       fetch(urlNdhis)
         .then((response) => {

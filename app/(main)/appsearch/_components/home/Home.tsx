@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import "./Home.css";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 
 export default function Home() {
@@ -14,14 +14,10 @@ export default function Home() {
       e.preventDefault();
       return;
     } else {
-      router.push(`/appsearch/searchBar/?search=${searchValue}`);
+      const url = `/appsearch/searchBar?search=${searchValue}`;
+    console.log(url);
+    router.push(url); 
     }
-  };
-
-  const test = () => {
-   
-      router.push(`/appsearch/searchBar`);
-    
   };
 
   return (
@@ -41,11 +37,8 @@ export default function Home() {
             autoFocus={true}
           />
           <div className="boton">
-            <button type="submit" className="btn-home" onClick={handleClick}>
+            <button type="button" className="btn-home border bg-gray-300 dark:bg-gray-900 dark:hover:bg-slate-700" onClick={handleClick}>
               Buscar
-            </button>
-            <button type="submit" className="btn-home" onClick={test}>
-              Prueba
             </button>
           </div>
         </form>
