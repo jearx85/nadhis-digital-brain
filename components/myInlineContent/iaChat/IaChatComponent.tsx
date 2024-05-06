@@ -52,11 +52,13 @@ const IaChatComponent: NextPage = () => {
         });
   
         if (!response.ok) {
+          setIsSend(false);
           const errorData = await response.json();
+          toast.error("No es posible la conexión con la IA");
           console.error("Error al realizar la solicitud:", errorData.detail[0].msg);
         } else {
           responseData = await response.json();
-          setResponseText(responseData.answer);
+          setResponseText(responseData.id);
   
         contentToInsert = editor.insertBlocks(
           [
@@ -70,27 +72,40 @@ const IaChatComponent: NextPage = () => {
                 {
                   type: "text",
                   text: `${responseData.answer}`, // Insertar la respuesta de la API
+                  // text: `Nombre: ${responseData.name}`, // Insertar la respuesta de la API
                   styles: {},
                 },
               ],
               children: [],
             },
+            // {
+            //   type: "image",
+            //   props: {
+            //     backgroundColor: "default",
+            //     textAlignment: "left",
+            //     url: `${responseData.sprites.other.dream_world.front_default}`,
+            //     caption: "",
+            //     width: 512,
+            //   },
+            //   children: [],
+            // }
           ],
           blockId,
           "after"
         );
-          console.log(responseText);
         }
   
       } catch (error) {
         console.error("Error al realizar la solicitud:", error);
       }
     } else {
+      setIsSend(false);
       toast("Ingrese una búsqueda");
     }
   };
 
   const cleanArea = () => {
+    setIsSend(false);
     setTextareaValue('');
     setResponseText('');
   };
