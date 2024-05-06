@@ -76,7 +76,7 @@ export default function AIChat() {
 
       <hr className="mb-10 border-b-2 dark:border-slate-900"/>
 
-      <div className="h-96 response-area bg-gray-300 rounded-lg dark:bg-gray-900">
+      <div className="h-96 response-area rounded-lg dark:bg-gray-900">
         <div className="main-chat">
           <div className="textUser">
             {/* <p>hola</p> */}
