@@ -59,7 +59,6 @@ export default function SearchBar() {
 
   //=========================== Realiza la búsqueda con el valor de "valorHome" ==================================================
   useEffect(() => {
-    console.log("valorHome", valorHome);
     if (valorHome) {
       resetFilters();
       const urlNdhis = `http://192.168.50.230:8087/query2/${valorHome}`;
@@ -148,35 +147,40 @@ export default function SearchBar() {
       });
   };
 
+  let classNav = "";
+  if (isMobile) {
+    classNav = "search-bar flex justify-between flex-col bg-gray-100 dark:bg-gray-800  fixed items-center w-full";
+  } else {
+    classNav = "search-bar flex justify-between  bg-gray-100 dark:bg-gray-800 w-full fixed items-center";
+  }
+
   return (
     <>
-      <nav className="navbar fixed w-full">
-        <div className="search-bar  flex justify-between bg-gray-100 dark:bg-gray-800">
-          <div className="imagen">
-            <Link href="/appsearch">
-              <Image src="/logo_citra.png" alt="Logo" width={140} height={50} />
-            </Link>
-          </div>
-          <form className="custom-form flex p-3" onSubmit={handleSearch}>
-            <input
-              id="search-box"
-              className="form-control me-2 border-gray-200 rounded"
-              type="search"
-              aria-label="Search"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-            <button
-              className="btn-search p-2 ml-5"
-              type="button"
-              onClick={handleSearch}
-            >
-              Buscar
-            </button>
-          </form>
+      <div className={classNav}>
+        <div className="imagen">
+          <Link href="/appsearch">
+            <Image src="/logo_citra.png" alt="Logo" width={140} height={50} />
+          </Link>
         </div>
-      </nav>
-      
+        <form className="custom-form flex p-3" onSubmit={handleSearch}>
+          <input
+            id="search-box"
+            className="form-control me-2 border-gray-200 rounded"
+            type="search"
+            aria-label="Search"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+          <button
+            className="btn-search p-2 ml-5 border bg-gray-300 dark:bg-gray-900 dark:hover:bg-slate-700"
+            type="button"
+            onClick={handleSearch}
+          >
+            Buscar
+          </button>
+        </form>
+      </div>
+
       <div className={isMobile ? "flex flex-col" : "flex ml-10"}>
         <Filtros
           data={dataNadhis}
@@ -188,7 +192,7 @@ export default function SearchBar() {
           setselectedCategory={setselectedCategory}
         />
 
-        <div className="col-sm-12 col-lg-9">
+        <div className="">
           {isChecked ? (
             <ShowResults data={filterdocs} onNewSearch={handleNewSearch} />
           ) : (

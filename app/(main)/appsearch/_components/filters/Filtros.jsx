@@ -62,7 +62,7 @@ export default function Filtros({
         <>
           <div className="filtros-cont">
             <button
-              className="boton-offcanvas"
+              className="boton-offcanvas border bg-gray-300 dark:bg-gray-900 dark:hover:bg-slate-700"
               type="button"
               data-bs-toggle="offcanvas"
               data-bs-target="#offcanvasWithBothOptions"

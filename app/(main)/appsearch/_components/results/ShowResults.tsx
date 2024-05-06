@@ -30,10 +30,10 @@ export default function ShowResults({ data, onNewSearch }: any) {
 
   return (
     <div className="container">
-      <div className="cont-card">
+      <div className="cont-card ">
         {currentDocuments.map(
           ({ id, Title, Content, Path, TitleH, ContentH, Categorias }: any) => (
-            <div className="card border p-4 rounded-xl" key={id}>
+            <div className="card border p-4 rounded-xl dark:bg-gray-900" key={id}>
               <h5 className="card-header bg-gray-100 dark:bg-gray-800 text-xl p-5 rounded-xl truncate">
                 <b>{TitleH ? parse(TitleH) : Title}</b>
               </h5>
@@ -47,7 +47,7 @@ export default function ShowResults({ data, onNewSearch }: any) {
                     : `${Content.slice(0, 1000)}...`}
                 </p>
                 <button
-                  className="card-button mt-5 p-2 dark:bg-gray-800"
+                  className="card-button mt-5 p-2 border bg-gray-300 dark:bg-gray-900 dark:hover:bg-slate-700"
                   onClick={() =>
                     window.open(
                       `http://localhost:3008/${Path.replace(
