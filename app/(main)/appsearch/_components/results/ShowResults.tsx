@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from "react";
 import "./ShowResults.css";
 import parse from "html-react-parser";
+import { useMediaQuery } from "usehooks-ts";
 
 export default function ShowResults({ data, onNewSearch }: any) {
   const documentsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [dataVersion] = useState(0);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
@@ -30,18 +32,18 @@ export default function ShowResults({ data, onNewSearch }: any) {
 
   return (
     <div className="container">
-      <div className="cont-card ">
+      <div className={isMobile ? "first:mt-[5px]" : "cont-card flex flex-col first:mt-[70px] last:mt-[80px]"}>
         {currentDocuments.map(
           ({ id, Title, Content, Path, TitleH, ContentH, Categorias }: any) => (
             <div className="card border p-4 rounded-xl dark:bg-gray-900" key={id}>
-              <h5 className="card-header bg-gray-100 dark:bg-gray-800 text-xl p-5 rounded-xl truncate">
+              <h5 className="card-header bg-gray-100 dark:bg-gray-800 text-xl p-5 rounded-xl text-wrap">
                 <b>{TitleH ? parse(TitleH) : Title}</b>
               </h5>
               <div className="card-body mt-4">
                 <h5 className="card-title text-lg font-bold">Categoría: </h5>
                 <p>{Categorias}</p>
-                <h5 className="card-title mt-2 text-lg font-bold text-wrap">Contenido</h5>
-                <p className=" text-wrap">
+                <h5 className="card-title mt-2 text-lg font-bold">Contenido</h5>
+                <p className="content text-wrap ">
                   {ContentH
                     ? parse(`${ContentH.slice(0, 1000)}...`)
                     : `${Content.slice(0, 1000)}...`}

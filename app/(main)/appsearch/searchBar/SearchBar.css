@@ -19,10 +19,6 @@
     width: 60%; 
 }
 
-.search-bar{
-    max-width: 90vw;
-}
-
 .nav-search{
     display: flex;
     gap: calc(4.5vw);

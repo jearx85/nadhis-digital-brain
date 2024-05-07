@@ -4,12 +4,13 @@ import { useBlockNoteEditor } from '@blocknote/react';
 import { Spinner } from '@/components/spinner';
 import { toast } from 'sonner';
 import type { NextPage } from 'next';
+import { useMediaQuery } from "usehooks-ts";
 
 const IaChatComponent: NextPage = () => {
   const [isSend, setIsSend] = useState(false);
   const [textareaValue, setTextareaValue] = useState('');
   const [responseText, setResponseText] = useState('');
-
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const editor = useBlockNoteEditor();
 
   let contentToInsert = null;

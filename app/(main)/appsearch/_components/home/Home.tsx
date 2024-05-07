@@ -4,7 +4,6 @@ import "./Home.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-
 export default function Home() {
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
@@ -15,8 +14,7 @@ export default function Home() {
       return;
     } else {
       const url = `/appsearch/searchBar?search=${searchValue}`;
-    console.log(url);
-    router.push(url); 
+      router.push(url);
     }
   };
 
@@ -29,7 +27,7 @@ export default function Home() {
         <form className="busqueda " onSubmit={handleClick}>
           <input
             id="search-box"
-            className="border border-gray-200 rounded w-full"
+            className="border border-gray-200 rounded-xl w-full p-2 focus:outline-none focus:ring focus:ring-blue-300"
             type="text"
             aria-label="form-control"
             value={searchValue}
@@ -37,7 +35,11 @@ export default function Home() {
             autoFocus={true}
           />
           <div className="boton">
-            <button type="button" className="btn-home border bg-gray-300 dark:bg-gray-900 dark:hover:bg-slate-700" onClick={handleClick}>
+            <button
+              type="button"
+              className="btn-home border bg-gray-300 dark:bg-gray-900 dark:hover:bg-slate-700"
+              onClick={handleClick}
+            >
               Buscar
             </button>
           </div>
