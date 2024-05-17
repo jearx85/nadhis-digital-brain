@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsLeft, Settings, MenuIcon, NotebookPen, CircleParking, Home } from "lucide-react";
+import { ChevronsLeft, Settings, MenuIcon, NotebookPen, CircleParking, Home, MapPinned  } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
@@ -107,6 +107,9 @@ export const MainNavigation = () => {
   const handleTrafficView = () => {
     router.push("/semaforos");
   };
+  const handleMapsView = () => {
+    router.push("/mapas");
+  };
 
   return (
     <>
@@ -153,6 +156,13 @@ export const MainNavigation = () => {
             label="Semaforos"
             icon={CircleParking }
             onClick={handleTrafficView}
+          />
+          </div>
+          <div className="rounded-xl border shadow mb-2 mx-2"> 
+          <Item
+            label="Mapas"
+            icon={MapPinned}
+            onClick={handleMapsView}
           />
           </div>
         </div>
