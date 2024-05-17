@@ -3,6 +3,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import InfoSemaforos from "./Info";
 import Map from "../../_components/map/Map";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 export default function Semaforos() {
   const [showInfo, setShowInfo] = useState(true);
@@ -20,17 +21,21 @@ export default function Semaforos() {
           </div>
         )}
 
-        <div className="relative flex-1">
-          {/* <Image
-            className={`absolute inset-0 w-full h-full object-cover opacity-0 lg:opacity-100`}
-            src="/map.png"
-            alt="Background"
-            width={1000}
-            height={1000}
-          /> */}
-         
+        <div className="relative flex-1">   
             <div className = {!showInfo ? "flex-1": ""}>
-              <Map />
+            <MapContainer
+            className="leaflet-container"
+            center={[6.25184, -75.56359]} zoom={13} scrollWheelZoom={true}>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://www.google.com/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}"
+              />
+              <Marker position={[6.25184,  -75.56359]}>
+                <Popup>
+                  A pretty CSS3 popup. <br /> Easily customizable.
+                </Popup>
+              </Marker>
+              </MapContainer>
             </div>
           
 
