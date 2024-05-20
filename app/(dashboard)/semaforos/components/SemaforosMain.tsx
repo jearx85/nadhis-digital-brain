@@ -1,9 +1,18 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InfoSemaforos from "./Info";
 import Map from "../../_components/map/Map";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import L from "leaflet";
+
+
+const customIcon = new L.Icon({
+  iconUrl: '/marker-icon.png',
+  iconSize: [38, 38], // Ajusta el tamaño según sea necesario
+  iconAnchor: [19, 38], // Para centrar el icono, ajústalo según sea necesario
+  popupAnchor: [0, -38], // Para ajustar la posición del popup
+});
 
 export default function Semaforos() {
   const [showInfo, setShowInfo] = useState(true);
@@ -11,6 +20,15 @@ export default function Semaforos() {
   const toggleInfo = () => {
     setShowInfo(!showInfo);
   };
+
+  useEffect(() => {
+    // Configura las rutas de los iconos predeterminados sin acceder a propiedades privadas
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+      iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+      shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+    });
+  }, []);
 
   return (
     <div className="bg-white dark:bg-gray-900">
@@ -30,7 +48,10 @@ export default function Semaforos() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://www.google.com/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}"
               />
-              <Marker position={[6.25184,  -75.56359]}>
+              <Marker 
+                icon={customIcon}
+                position={[6.25184,  -75.56359]}
+              >
                 <Popup>
                   A pretty CSS3 popup. <br /> Easily customizable.
                 </Popup>

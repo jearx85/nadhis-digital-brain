@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
-import Mapa from "../../../public/map.png";
+// import Mapa from "../../../public/map.png";
 // import "./SideToSide.css";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, Polyline } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from 'leaflet';
+import L, { LatLngExpression } from 'leaflet';
+import puntos from "../../../app/(dashboard)/mapas/puntos.json";
 
+
+type Route = LatLngExpression[];
 
 const customIcon = new L.Icon({
   iconUrl: '/marker-icon.png',
@@ -17,6 +20,10 @@ export default function MapBlockComponent(props: any) {
   function handleClick() {
     alert("Click");
   }
+
+  const routes: Route[] = puntos.coordinates.map((coordinateSet: number[][]) => {
+    return coordinateSet.map((coords: number[]) => [coords[1], coords[0]] as LatLngExpression);
+  });
 
   useEffect(() => {
     // Configura las rutas de los iconos predeterminados sin acceder a propiedades privadas
@@ -58,9 +65,14 @@ export default function MapBlockComponent(props: any) {
             icon={customIcon}
               position={[6.25184, -75.56359]}>
               <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
+                Av Oriental
               </Popup>
             </Marker>
+            <Polyline positions={routes} color="blue" >
+                <Popup>
+                  098 SERVICIO1 SANTA ELENA-MAZO-LAS BRISAS-MEDELLÍN 
+                </Popup>
+            </Polyline>
           </MapContainer>
 
         </div>
