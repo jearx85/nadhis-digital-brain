@@ -33,14 +33,14 @@ import { api } from "@/convex/_generated/api";
 import { insertAtable } from "../components/myTypeBlocks/advanceTables/AdvanceTables";
 import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
 import { IaChatContent, showArea } from "./myInlineContent/iaChat/IaChat";
-import { SideToSideBlock, setColumns } from "./myInlineContent/sideToSideContent/SideToSideContent";
+import { MapBlock, setColumns } from "./myInlineContent/mapBlockContent/MapBlockContent";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
     ...defaultInlineContentSpecs,
     chartContent: Charts,
     docLinks: DocLink,
-    sideToSide: SideToSideBlock,
+    mapBlock: MapBlock,
     iachat: IaChatContent,
   },
   blockSpecs: {

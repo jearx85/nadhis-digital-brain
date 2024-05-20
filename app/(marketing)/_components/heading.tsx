@@ -26,14 +26,12 @@ export const Heading = () => {
               objectFit="cover"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center px-20 bg-gray-900 bg-opacity-40">
-              <h2 className="text-8xl font-bold text-white">Smart City</h2>
-              <h2 className="text-6xl font-bold text-white text-center mt-8">
+              <h2 className="text-8xl font-bold text-white">Smart Governance</h2>
+              {/* <h2 className="text-6xl font-bold text-white text-center mt-8">
                 Medellin
-              </h2>
+              </h2> */}
               <p className="max-w-xl mt-8 text-gray-300">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. In
-                autem ipsa, nulla laboriosam dolores, repellendus perferendis
-                libero suscipit nam temporibus molestiae
+              El uso de los datos para facilitar y apoyar una mejor toma de decisiones y planificación dentro de los órganos de gobierno
               </p>
             </div>
           </div>
