@@ -26,14 +26,12 @@ export const Heading = () => {
               objectFit="cover"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center px-20 bg-gray-900 bg-opacity-40">
-              <h2 className="text-8xl font-bold text-white">Smart City</h2>
-              <h2 className="text-6xl font-bold text-white text-center mt-8">
+              <h2 className="text-8xl font-bold text-white">Smart Governance</h2>
+              {/* <h2 className="text-6xl font-bold text-white text-center mt-8">
                 Medellin
-              </h2>
+              </h2> */}
               <p className="max-w-xl mt-8 text-gray-300">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. In
-                autem ipsa, nulla laboriosam dolores, repellendus perferendis
-                libero suscipit nam temporibus molestiae
+              El uso de los datos para facilitar y apoyar una mejor toma de decisiones y planificación dentro de los órganos de gobierno
               </p>
             </div>
           </div>
@@ -44,11 +42,14 @@ export const Heading = () => {
             <div className="text-center">
               <div className="flex-1 text-center p-5 border rounded-2xl shadow-2xl dark:bg-gray-800">
                 <div className="flex justify-between">
-                  <Logo />
+                  {/* <Logo /> */}
                   <ModeToggle />
                 </div>
-
+                
+                <br />
                 <hr />
+                <br />
+                
                 {isLoading && (
                   <div className="w-full flex items-center justify-center mt-10">
                     <Spinner size="lg" />
@@ -81,13 +82,12 @@ export const Heading = () => {
                 <div className="mt-10">
                   <div className="text-center">
                     <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2">
-                      Your Ideas, Documents, & Plans. Unified. Welcome to{" "}
-                      <span className="underline">Nadhis Digital Brain</span>
+                      Sus ideas, documentos y planes unificado. Bienvenido a{" "}
+                      <span className="underline">Smart Decisions Platform</span>
                     </h2>
                     <h3 className="text-base sm:text-xl md:text-2xl font-medium mt-10">
-                      Nadhis Digital Brain is the connected workspace where{" "}
-                      <br />
-                      better, faster work happens.
+                      Smart Decisions Platform es el espacio de trabajo conectado donde
+                      Se realiza un trabajo mejor y más rápido.
                     </h3>
                   </div>
                 </div>

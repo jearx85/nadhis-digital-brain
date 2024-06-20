@@ -10,7 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { useMediaQuery } from "usehooks-ts";
 
 export default function SearchBar() {
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery("(max-width: 1008px)");
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showResults, setShowResults] = useState(false);
@@ -157,7 +157,7 @@ export default function SearchBar() {
   return (
     <>
       <div className={classNav}>
-        <div className="imagen">
+        <div className="imagen ml-10">
           <Link href="/appsearch">
             <Image src="/logo_citra.png" alt="Logo" width={140} height={50} />
           </Link>
@@ -165,7 +165,7 @@ export default function SearchBar() {
         <form className="custom-form flex p-3" onSubmit={handleSearch}>
           <input
             id="search-box"
-            className="form-control me-2 border-gray-200 rounded"
+            className="border-gray-200 rounded-xl p-2 focus:outline-none focus:ring focus:ring-blue-300"
             type="search"
             aria-label="Search"
             value={searchValue}

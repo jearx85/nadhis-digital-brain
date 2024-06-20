@@ -15,7 +15,7 @@ export default function Filtros({
   selectedCategory,
   setselectedCategory,
 }) {
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery("(max-width: 1008px)");
   const [showOffCanvas, setShowOffCanvas] = useState(false);
 
   function handleShowOffCanvas() {
@@ -88,7 +88,7 @@ export default function Filtros({
       )}
 
       {data.length > 0 && !isMobile && (
-        <div className="filtros-cont h-full">
+        <div className="filtros-cont h-full flex flex-col border rounded-xl mt-5 p-2">
           <h3 className="card-title text-xl font-bold">Filtros</h3>
           <hr className="mb-2" />
           <div className="cardExt">

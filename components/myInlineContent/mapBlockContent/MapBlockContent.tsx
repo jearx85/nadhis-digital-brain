@@ -2,11 +2,11 @@ import {
   DefaultReactSuggestionItem,
   createReactInlineContentSpec,
 } from "@blocknote/react";
-import SideToSideComponent from "./SideToSideComponent";
+import MapBlockComponent from "./MapBlockComponent";
 
-export const SideToSideBlock = createReactInlineContentSpec(
+export const MapBlock = createReactInlineContentSpec(
   {
-    type: "sideToSide",
+    type: "mapBlock",
     propSchema: {
       column: {
         default: "Unknown",
@@ -16,7 +16,7 @@ export const SideToSideBlock = createReactInlineContentSpec(
   },
   {
     render: (props) => {
-      return <SideToSideComponent props={props} />;
+      return <MapBlockComponent props={props} />;
     },
   }
 );
@@ -24,14 +24,14 @@ export const SideToSideBlock = createReactInlineContentSpec(
 export const setColumns = (
   editor: any
 ): DefaultReactSuggestionItem[] => {
-  const columns = ["1", "2", "3", "4"];
+  const columns = ["Mapa"];
 
   return columns.map((column) => ({
     title: column,
     onItemClick: () => {
       editor.insertInlineContent([
         {
-          type: "sideToSide",
+          type: "mapBlock",
           props: {
             column,
           },

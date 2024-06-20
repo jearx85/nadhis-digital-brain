@@ -13,8 +13,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Nadhis Digital Brain',
-  description: 'The connected workspace where better, faster work happens.',
+  title: 'Smart Decisions Platform',
+  description: 'El espacio de trabajo conectado donde Se realiza un trabajo mejor y más rápido..',
   manifest: "/manifest.json",
   icons: {
     apple: "/icon.png",
@@ -49,7 +49,7 @@ export default function RootLayout({
               defaultTheme="system"
               enableSystem
               disableTransitionOnChange
-              storageKey="Nadhis Digital Brain-theme-2"
+              storageKey="Smart Decisions Platform-theme-2"
             >
               <Toaster position="bottom-center" />
               <ModalProvider />

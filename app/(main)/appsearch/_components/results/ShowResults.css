@@ -1,12 +1,6 @@
 .cont-card{
-    /* margin: 50px 0 20px; */
+    overflow-wrap: break-word;
     padding: 10px; 
-    &:last-child{
-        margin-bottom: 80px;
-    }
-    &:first-child{
-        margin-top: 70px;
-    }
 }
 
 .card {
@@ -58,8 +52,5 @@ em{
     .card{
         margin-top: 20px;
         margin-bottom: 40px;
-        &:first-child{
-            margin-top: 5px;
-        }
       }
 }

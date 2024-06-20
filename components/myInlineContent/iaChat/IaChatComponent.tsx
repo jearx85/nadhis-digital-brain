@@ -4,12 +4,13 @@ import { useBlockNoteEditor } from '@blocknote/react';
 import { Spinner } from '@/components/spinner';
 import { toast } from 'sonner';
 import type { NextPage } from 'next';
+import { useMediaQuery } from "usehooks-ts";
 
 const IaChatComponent: NextPage = () => {
   const [isSend, setIsSend] = useState(false);
   const [textareaValue, setTextareaValue] = useState('');
   const [responseText, setResponseText] = useState('');
-
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const editor = useBlockNoteEditor();
 
   let contentToInsert = null;
@@ -33,23 +34,30 @@ const IaChatComponent: NextPage = () => {
   const handleClick = async () => {
     setIsSend(true);
     if (textareaValue) {
-      const data = { question: textareaValue };
+      const data = { 
+        "model": "phi3",
+        prompt: textareaValue,
+        "stream": false
+       };
+
+      // const data = { question: textareaValue };
       try {
-
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${textareaValue}`, {
-          method: "GET",
-
-        })
-
-
         // const response = await fetch("http://localhost:8000/ask", {
         //   method: "POST",
         //   headers: {
         //     "Content-Type": "application/json",
         //   },
         //   body: JSON.stringify(data),
-        //   mode: "cors", // Asegúrate de que el modo esté configurado correctamente
+        //   mode: "cors", 
         // });
+
+        const response = await fetch("http://10.11.220.52:11434/api/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data)
+        });
   
         if (!response.ok) {
           setIsSend(false);
@@ -58,7 +66,7 @@ const IaChatComponent: NextPage = () => {
           console.error("Error al realizar la solicitud:", errorData.detail[0].msg);
         } else {
           responseData = await response.json();
-          setResponseText(responseData.id);
+          setResponseText(responseData);
   
         contentToInsert = editor.insertBlocks(
           [
@@ -71,22 +79,11 @@ const IaChatComponent: NextPage = () => {
               content: [
                 {
                   type: "text",
+                  text: `${responseData.response}`, // Insertar la respuesta de la API
                   // text: `${responseData.answer}`, // Insertar la respuesta de la API
-                  text: `Nombre: ${responseData.name}`, // Insertar la respuesta de la API
                   styles: {},
                 },
               ],
-              children: [],
-            },
-            {
-              type: "image",
-              props: {
-                backgroundColor: "default",
-                textAlignment: "left",
-                url: `${responseData.sprites.other.dream_world.front_default}`,
-                caption: "",
-                width: 512,
-              },
               children: [],
             }
           ],
@@ -118,6 +115,7 @@ const IaChatComponent: NextPage = () => {
     <div className="container rounded-xl">
       <textarea
         value={textareaValue}
+        autoFocus
         onChange={handleTextareaChange}
         className="w-full p-3 mt-2 border rounded-xl"
         placeholder="Ingrese su pregunta"

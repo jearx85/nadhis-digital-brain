@@ -1,7 +1,5 @@
 .filtros-cont{
     margin-top: 150px;
-    border: 1px solid rgb(211, 209, 209);
-    border-radius: 20px;
     padding: 10px;
     
 }
@@ -46,7 +44,7 @@
 }
 
 
-@media (max-width: 1000px) {
+@media (max-width: 1010px) {
     .filtros{
         display: none;
     }
@@ -60,6 +58,7 @@
         box-shadow: 5px 5px 5px rgb(87, 86, 86);
         padding: 6px;
         align-self: center;
+        width: 50%;
     }
     .boton-offcanvas:hover{
         background-color: rgb(187, 185, 185);
@@ -70,12 +69,6 @@
         display: flex;
         justify-content: center;
         margin-top: 200px;
-    }
-}
-
-@media (max-width: 1000px) {
-    .boton-offcanvas{
-        width: 50%;
     }
 }
 
