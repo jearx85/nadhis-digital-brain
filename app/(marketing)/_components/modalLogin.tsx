@@ -11,10 +11,10 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-lg relative">
+      <div className="bg-white dark:bg-[#121212] p-5 rounded-lg shadow-lg relative">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 dark:text-gray-300"
+          className="absolute top-4 right-4 text-gray-500 dark:text-gray-300 text-xl"
         >
           &times;
         </button>

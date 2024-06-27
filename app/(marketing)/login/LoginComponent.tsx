@@ -5,8 +5,8 @@ import { signIn, signUp } from "./actions";
 
 export default function LoginComponent() {
   return (
-    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2 bg-white dark:bg-slate-600 my-5 rounded-xl shadow-lg mt-24">
-      <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2 bg-white dark:bg-[#121212] my-5 mt-10">
+      <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground dark:bg-[#121212] p-2">
         <label className="text-md" htmlFor="email">
           Email
         </label>
