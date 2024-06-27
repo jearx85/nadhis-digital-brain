@@ -76,7 +76,7 @@ export default function AIChat() {
 
       <hr className="mb-10 border-b-2 dark:border-slate-900"/>
 
-      <div className="h-96 response-area rounded-lg dark:bg-gray-900">
+      <div className="h-96 response-area rounded-lg dark:bg-[#121212]">
         <div className="main-chat">
           <div className="textUser">
             {/* <p>hola</p> */}
@@ -91,7 +91,7 @@ export default function AIChat() {
 
       <div className="request-chat flex mt-5">
         <textarea autoFocus ref={chatTextAreaRef} 
-          className="request-chat-area mt-5 w-full p-2 bg-gray-300 rounded-lg dark:bg-gray-900" 
+          className="request-chat-area mt-5 w-full p-2 bg-gray-300 rounded-lg dark:bg-[#121212]" 
           rows={3} cols={50}
         />
       </div>
