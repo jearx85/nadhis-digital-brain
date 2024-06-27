@@ -17,7 +17,6 @@ export const signIn = async (formData: FormData) => {
     return redirect(`/?message=${encodeURIComponent(error.message)}`);
   }
 
-  console.log(email)
   return redirect("/dashboard");
 };
 

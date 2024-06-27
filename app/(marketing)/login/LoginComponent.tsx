@@ -1,12 +1,32 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { signIn, signUp } from "./actions";
+import { Modal } from "../_components/modalLogin";
+import WrongCredential from "./messages/WrongCredential";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginComponent() {
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  useEffect(() => {
+    const message = searchParams.get("message");
+    if (message === "Invalid login credentials") {
+      setLoginModalOpen(true);
+    }
+  }, [searchParams]);
+
+
+  const handleClose = () => {
+    setLoginModalOpen(false);
+    router.push("/")
+  };
+
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2 bg-white dark:bg-[#121212] my-5 mt-10">
-      <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground dark:bg-[#121212] p-2">
+      <form method="post" action={signIn} className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground dark:bg-[#121212] p-2">
         <label className="text-md" htmlFor="email">
           Email
         </label>
@@ -27,7 +47,7 @@ export default function LoginComponent() {
           required
         />
         <button
-          formAction={signIn}
+          type="submit"
           className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
         >
           Sign In
@@ -39,6 +59,10 @@ export default function LoginComponent() {
           Sign Up
         </button>
       </form>
+
+      <Modal isOpen={isLoginModalOpen} onClose={handleClose}>
+        <WrongCredential />
+      </Modal>
     </div>
   );
 }
