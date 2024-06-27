@@ -38,7 +38,7 @@ const OffcanvasMenu = () => {
           {/* Contenedor del offcanvas */}
           <div className="fixed inset-y-0 right-0 mb-6 mt-2 mr-2 max-w-xs w-full bg-white dark:bg-zinc-800 z-50 shadow-lg rounded-lg overflow-hidden">
             {/* Cabecera del offcanvas */}
-            <div className="flex justify-between items-center bg-neutral-100 dark:bg-slate-900 px-4 py-3 ">
+            <div className="flex justify-between items-center bg-neutral-100 dark:bg-[#121212] px-4 py-3 ">
             <button
                 className="nav-offcanvas-item"
                 id="AIChat"
