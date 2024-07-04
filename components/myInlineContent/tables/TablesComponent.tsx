@@ -159,13 +159,13 @@ import classes from './TableScrollArea.module.css';
 // ];
 
 const getApiInfo = async () => {
-  const data = await fetch(`/api/elasticsearch`).then((res) => res.json());
-  return data.message.map((item: any) => item._source);
+  const data = await fetch(`http://localhost:8081/ultimos_registros/wazetraffic`).then((res) => res.json());
+  return data;
 };
 
 export default function TablesComponent() {
   const [scrolled, setScrolled] = useState(false);
-  const [datos, setDatos] = useState<any[]>([]); // Asegúrate de que el estado inicial sea un arreglo
+  const [datos, setDatos] = useState<any[]>([]); 
 
   useEffect(() => {
     getApiInfo().then((d) => {
