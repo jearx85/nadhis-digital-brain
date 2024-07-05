@@ -165,8 +165,6 @@ const IaChatComponent: NextPage = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const editor = useBlockNoteEditor();
 
-  let contentToInsert = null;
-
   const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextareaValue(event.target.value);
   };
@@ -185,16 +183,9 @@ const IaChatComponent: NextPage = () => {
   const handleClick = async () => {
     setIsSend(true);
     setIsLoading(true);
-    const responseDiv: any = document.getElementById('response');
-    const spinner = document.getElementById('spinner');
-
-    if (responseDiv && spinner) {
-      responseDiv.textContent = '';
-      spinner.style.display = 'block';
-    }
 
     if (textareaValue) {
-      const data = { question: textareaValue };
+      const data = { query: textareaValue };
       try {
         const response = await fetch("http://localhost:8081/ask", {
           method: "POST",
@@ -202,7 +193,7 @@ const IaChatComponent: NextPage = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(data),
-          mode: "cors", 
+          mode: "cors",
         });
 
         if (!response.body) {
@@ -211,6 +202,7 @@ const IaChatComponent: NextPage = () => {
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder("utf-8");
+        let fullResponseText = "";
 
         while (true) {
           const { done, value } = await reader.read();
@@ -220,22 +212,40 @@ const IaChatComponent: NextPage = () => {
           try {
             const json = JSON.parse(chunk);
             if (json.result && json.result.chunk) {
-              responseDiv.textContent += json.result.chunk;
+              fullResponseText += json.result.chunk;
+
+              // Update the editor with the full response text
+              editor.updateBlock(
+                blockId,
+                {
+                  type: "paragraph",
+                  props: {
+                    textColor: "default",
+                    backgroundColor: "default",
+                  },
+                  content: [
+                    {
+                      type: "text",
+                      text: fullResponseText,
+                      styles: {},
+                    },
+                  ],
+                  children: [],
+                }
+              );
             }
           } catch (e) {
             console.error("Error parsing JSON:", e);
           }
         }
+
+        setResponseText(fullResponseText);
+
       } catch (error: any) {
-        if (responseDiv) {
-          responseDiv.textContent = `Error: ${error.message}`;
-        }
+        toast.error(`Error: ${error.message}`);
         console.error("Error al realizar la solicitud:", error);
       } finally {
         setIsLoading(false);
-        if (spinner) {
-          spinner.style.display = 'none';
-        }
       }
     } else {
       setIsSend(false);

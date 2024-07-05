@@ -7,6 +7,7 @@ import { Tooltip } from 'react-tooltip';
 // import './navOffcanvas.css' 
 import MyCalendar from './MyCalendar/myCalendar';
 import { Item } from '@/app/(main)/_components/item';
+import TablesPlugin from './Tables/TablesPlugin';
 
 const OffcanvasMenu = () => {
   const [open, setOpen] = useState(false);
@@ -79,7 +80,7 @@ const OffcanvasMenu = () => {
               <button
                 className="nav-offcanvas-item"
                 id="tables"
-                onClick={() => handleComponentClick('plugin')}
+                onClick={() => handleComponentClick('tables')}
                 data-tooltip-id="tables"
                 data-tooltip-content="Tablas"
               >
@@ -113,6 +114,11 @@ const OffcanvasMenu = () => {
                     <>
                       <PluginElastic />
                       {/* < ElasticDPruebas />  */}
+                    </>
+                  )}
+                  {activeComponent === 'tables' && (
+                    <>
+                      <TablesPlugin />
                     </>
                   )}
               </div>
