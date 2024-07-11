@@ -2,7 +2,8 @@ import {
   DefaultReactSuggestionItem,
   createReactInlineContentSpec,
 } from "@blocknote/react";
-import TablesComponent  from "./TablesComponent";
+import TablesComponent from "./TablesComponent";
+import { useState, useEffect } from 'react';
 
 export const TablesContent = createReactInlineContentSpec(
   {
@@ -21,21 +22,45 @@ export const TablesContent = createReactInlineContentSpec(
   }
 );
 
-export const showTables = (editor: any): DefaultReactSuggestionItem[] => {
-  const columns = ["Tables"];
+export const showTables = (editor: any) => {
+  const getApiInfo = async () => {
+    const data = await fetch(`http://localhost:8081/ultimos_registros/wazetraffic`).then((res) => res.json());
+    return data;
+  };
+
+  const columns = ["Tables"]; // Columnas estáticas
 
   return columns.map((column) => ({
     title: column,
-    onItemClick: () => {
-      editor.insertInlineContent([
-        {
-            type: "tables",
+    onItemClick: async () => {
+      try {
+
+        const data = await getApiInfo();
+        const rows = data.content.rows
+
+
+        console.log(rows);
+
+        editor.insertInlineContent([
+          {
+            type: "table",
             props: {
-              column,
+              textColor: "default",
+              backgroundColor: "default",
+            },
+            content: {
+              type: "tableContent",
+              rows: rows,
             },
           },
-        " ",
-      ]);
+          " ", 
+        ]);
+      } catch (error) {
+        console.error("Error al obtener o procesar datos de la API:", error);
+      }
     },
   }));
 };
+
+
+

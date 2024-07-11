@@ -170,24 +170,26 @@ export default function TablesComponent() {
   useEffect(() => {
     getApiInfo().then((d) => {
       setDatos(d);
+      
     }).catch((error) => {
       console.error("Error fetching data: ", error);
       setDatos([]);
     });
+    console.log(datos);
   }, []);
 
-  const formatDateTime = (timestamp: number) => {
-    const date = new Date(timestamp);
-    return date.toLocaleString(); // Incluye fecha y hora
-  };
-  const rows = datos.map((row: any, index: number) => (
-    <tr key={index}>
-    <td>{row.retraso}</td>
-    <td>{parseFloat(row.velocidad).toFixed(1)}</td>
-    <td>{row.calle}</td>
-    <td>{formatDateTime(row.startTimeMillis)}</td>
-  </tr>
-  ));
+  // const formatDateTime = (timestamp: number) => {
+  //   const date = new Date(timestamp);
+  //   return date.toLocaleString(); // Incluye fecha y hora
+  // };
+  // const rows = datos.map((row: any, index: number) => (
+  //   <tr key={index}>
+  //   <td>{row.retraso}</td>
+  //   <td>{parseFloat(row.velocidad).toFixed(1)}</td>
+  //   <td>{row.calle}</td>
+  //   <td>{formatDateTime(row.startTimeMillis)}</td>
+  // </tr>
+  // ));
 
   return (
     <>
@@ -202,7 +204,7 @@ export default function TablesComponent() {
               <th>Start Time</th>
             </tr>
           </thead>
-          <tbody>{rows}</tbody>
+          {/* <tbody>{rows}</tbody> */}
         </Table>
       </ScrollArea>
     </>
