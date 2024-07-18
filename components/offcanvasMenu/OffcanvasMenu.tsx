@@ -6,10 +6,7 @@ import AIChat from './AIChat/AIChat';
 import { Tooltip } from 'react-tooltip';
 import MyCalendar from './MyCalendar/myCalendar';
 import { Item } from '@/app/(main)/_components/item';
-<<<<<<< HEAD
-=======
 import TablesPlugin from './Tables/TablesPlugin';
->>>>>>> dev
 
 const OffcanvasMenu = () => {
   const [open, setOpen] = useState(false);
