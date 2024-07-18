@@ -40,8 +40,7 @@ export default function TablesComponent() {
 
   useEffect(() => {
     setDocumentId(params.documentId);
-    console.log(editor)
-  }, []);
+  }, [params.documentId]);
 
   useEffect(() => {
     if (params.documentId) {
