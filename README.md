@@ -1,4 +1,4 @@
-# Nadhis digital brain-app integradora
+# Digital brain-app integradora
 
 
 ### Prerequisites

@@ -4,10 +4,13 @@ const nextConfig = {
     serverActions: true,
   },
   images: {
-    domains: [
-      "files.edgestore.dev"
-    ]
-  }
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'files.edgestore.dev',
+      },
+    ],
+  },
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;

@@ -1,12 +1,13 @@
 "use client";
 import { Fragment, useState } from 'react';
 import PluginElastic from './plugin/elasticdocs';
-import { FileSearch2, MessageSquare, CalendarDays, Bot  } from 'lucide-react';
+import { FileSearch2, MessageSquare, CalendarDays, Bot, Table } from 'lucide-react';
 import AIChat from './AIChat/AIChat';
 import { Tooltip } from 'react-tooltip';
 // import './navOffcanvas.css' 
 import MyCalendar from './MyCalendar/myCalendar';
 import { Item } from '@/app/(main)/_components/item';
+import TablesPlugin from './Tables/TablesPlugin';
 
 const OffcanvasMenu = () => {
   const [open, setOpen] = useState(false);
@@ -75,6 +76,17 @@ const OffcanvasMenu = () => {
                 <FileSearch2 style={{color: 'gray'}}/>
               </button>
               <Tooltip id="plugin-tooltip" />
+
+              <button
+                className="nav-offcanvas-item"
+                id="tables"
+                onClick={() => handleComponentClick('tables')}
+                data-tooltip-id="tables"
+                data-tooltip-content="Tablas"
+              >
+                <Table  style={{color: 'gray'}}/>
+              </button>
+              <Tooltip id="tables" />
              
               <button
                 onClick={() => setOpen(false)}
@@ -102,6 +114,11 @@ const OffcanvasMenu = () => {
                     <>
                       <PluginElastic />
                       {/* < ElasticDPruebas />  */}
+                    </>
+                  )}
+                  {activeComponent === 'tables' && (
+                    <>
+                      <TablesPlugin />
                     </>
                   )}
               </div>

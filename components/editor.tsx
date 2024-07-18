@@ -34,6 +34,7 @@ import { insertAtable } from "../components/myTypeBlocks/advanceTables/AdvanceTa
 import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
 import { IaChatContent, showArea } from "./myInlineContent/iaChat/IaChat";
 import { MapBlock, setColumns } from "./myInlineContent/mapBlockContent/MapBlockContent";
+import { TablesContent, showTables } from "./myInlineContent/tables/Tables";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -42,6 +43,7 @@ const schema = BlockNoteSchema.create({
     docLinks: DocLink,
     mapBlock: MapBlock,
     iachat: IaChatContent,
+    tables: TablesContent,
   },
   blockSpecs: {
     ...defaultBlockSpecs,
@@ -121,6 +123,12 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           getItems={async (query) =>
             // Gets the mentions menu items
             filterSuggestionItems(showArea(editor), query)
+          }
+        />
+        <SuggestionMenuController
+          triggerCharacter={"|"}
+          getItems={async (query) =>
+            filterSuggestionItems(showTables(editor), query)
           }
         />
         <SideMenuController

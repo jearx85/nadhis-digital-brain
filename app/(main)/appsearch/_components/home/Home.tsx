@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <>
       <div className="imagen-home">
-        <Image src="/logo_citra.png" alt="Logo" width={400} height={400} />
+        <Image src="/search-doc-logo.png" alt="Logo" width={100} height={100} />
       </div>
       <div className="home-container ">
         <form className="busqueda " onSubmit={handleClick}>

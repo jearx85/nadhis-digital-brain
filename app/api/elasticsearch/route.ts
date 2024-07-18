@@ -40,3 +40,33 @@ export async function GET(request: Request) {
   );
 
 }
+
+// export async function GET(request: Request) {
+//   const client = conn();
+//   const { searchParams } = new URL(request.url);
+
+//   const result = await client.search({
+//     index: 'wazetraffic',
+//       "query": {
+//         "match_all": {}
+//       },
+//       "sort": [
+//         {
+//           "@timestamp": {
+//             "order": "desc"
+//           }
+//         }
+//       ],
+//       "size": 20,
+//       "_source":["startTimeMillis", "calle", "velocidad", "retraso"],
+//   })
+//   const data = result.hits.hits.map((field: any) => {
+//     return field
+//   });
+//   return NextResponse.json(
+//     {
+//       message: data
+//     }
+//   );
+
+// }

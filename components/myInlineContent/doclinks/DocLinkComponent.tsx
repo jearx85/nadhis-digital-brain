@@ -65,7 +65,7 @@ export default function DocLinkComponent({ props }: any) {
   };
 
   return (
-    <div className="docLinkContainer">
+    <div className="docLinkContainer w-96">
       <span>
         <p>
           <b>🔗 Documento relacionado</b>
