@@ -1,5 +1,5 @@
 import EmbeddedPage from './appSearch';
-
+import Home from './_components/home/Home';
 
 export const metadata = {
  title: 'App Search',
@@ -7,7 +7,8 @@ export const metadata = {
 };
 export default function appSearch(){
   return (
-    <EmbeddedPage />
+    // <EmbeddedPage />
+    < Home />
   )
 };
 

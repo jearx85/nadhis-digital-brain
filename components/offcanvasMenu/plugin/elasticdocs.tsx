@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./PluginElastic.css";
+import { Spinner } from "@/components/spinner";
 
 import { queryCategories, queryCategory } from "../funciones";
 import { toast } from "sonner";
@@ -8,7 +9,7 @@ import { api } from "@/convex/_generated/api";
 import { generateUUID } from "./noteUtils";
 import { useRouter } from "next/navigation";
 
-const PluginElastic  = () => {
+const PluginElastic = () => {
 
   const router = useRouter();
   const [options, setOptions] = useState<string[]>([]);
@@ -18,6 +19,7 @@ const PluginElastic  = () => {
   const [searching, setSearching] = useState<boolean>(false);
   const [filteredTitles, setFilteredTitles] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const documents: any = useQuery(api.documents.getAllDocuments);
 
@@ -39,6 +41,7 @@ const PluginElastic  = () => {
       if (selectedCategory) {
         const data = await queryCategories(selectedCategory);
         setCategoryContent(data);
+        setFilteredTitles(data);
       }
     }
 
@@ -50,6 +53,8 @@ const PluginElastic  = () => {
     setSelectedCategory(selectedValue === "" ? null : selectedValue);
     setCategoryContent([]);
     setApiTitles([]);
+    setInputValue("");
+    setFilteredTitles([]);
   }
 
   //============================================================================
@@ -305,6 +310,7 @@ const PluginElastic  = () => {
     const url = `http://192.168.50.230:8087/query/${query}`;
 
     try {
+      setLoading(true);
       const response = await fetch(url, {
         method: "GET",
       });
@@ -320,6 +326,7 @@ const PluginElastic  = () => {
       if (data.hits) {
         const newTitles = data.hits.map((hit: any) => hit._source.title);
         setApiTitles(newTitles);
+        setLoading(false);
       }
 
       return response.status;
@@ -384,28 +391,27 @@ const PluginElastic  = () => {
     }
   }, [searching]);
 
-  //====================================================================
+  async function buscar(valor: string, categoria: any) {
+    const data = await queryCategories(categoria);
+    const resultados = data.filter((item: string) =>
+      item.toLowerCase().includes(valor.toLowerCase())
+    );
+    setFilteredTitles(resultados);
+  }
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    console.log("Input value:", value);
-
-    const combinedTitles = [...categoryContent, ...apiTitles];
-    console.log("Combined titles:", combinedTitles);
-
-    const filtered = combinedTitles.filter((titulo: string) =>
-      titulo.toLowerCase().includes(value.toLowerCase())
-    );
-    console.log("Filtered titles:", filtered);
-
     setInputValue(value);
-    setFilteredTitles(filtered);
+    if (selectedCategory) {
+      buscar(value, selectedCategory);
+    }
   };
 
   return (
     <>
       <div className="filtro-categorias d-flex">
         <select
-          className="Mydropdown"
+          className="Mydropdown bg-white dark:bg-[#121212]"
           name="categories"
           value={selectedCategory || ""}
           onChange={handleCategoryChange}
@@ -422,7 +428,7 @@ const PluginElastic  = () => {
       </div>
 
       <input
-        className="plugin-input"
+        className="plugin-input bg-white dark:bg-[#121212] "
         type="text"
         placeholder="Buscar..."
         id="plugin-input-filter"
@@ -431,33 +437,38 @@ const PluginElastic  = () => {
       />
 
       <textarea
-        className="plugin-text-area"
+        className="plugin-text-area bg-white dark:bg-[#121212]"
         placeholder="¿Cuéntame de qué habla el documento que quieres encontrar?"
         cols={40}
         rows={4}
         onKeyDown={handleKeyPress}
       ></textarea>
-
-      <div className="respuestaPlugin">
-        {categoryContent.map((titulo: any, index: any) => (
-          <h4
-            className="titulos"
-            key={index}
-            onClick={() => createNotePlugin(titulo)}
-          >
-            {titulo}
-          </h4>
-        ))}
-        {apiTitles.map((title, index) => (
-          <h4
-            className="titulos"
-            key={index}
-            onClick={() => createNotePlugin(title)}
-          >
-            {title}
-          </h4>
-        ))}
-      </div>
+        {loading ? ( // Mostrar spinner si está cargando
+        <div className="w-full flex items-center justify-center mt-10">
+          <Spinner size="lg"/>
+        </div>
+      ) : (
+        <div className="respuestaPlugin">
+          {filteredTitles.map((titulo: any, index: any) => (
+            <h4
+              className="titulos dark:hover:bg-[#121212]"
+              key={index}
+              onClick={() => createNotePlugin(titulo)}
+            >
+              {titulo}
+            </h4>
+          ))}
+          {apiTitles.map((title, index) => (
+            <h4
+              className="titulos dark:hover:bg-[#121212]"
+              key={index}
+              onClick={() => createNotePlugin(title)}
+            >
+              {title}
+            </h4>
+          ))}
+        </div>
+      )}
     </>
   );
 };

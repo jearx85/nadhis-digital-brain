@@ -26,25 +26,30 @@ import MenuCharts from "./dragHandleMenu/menuCharts/menuCharts";
 import { Charts } from "./myInlineContent/charts/Charts";
 
 import "./styles.css";
-// import { Atable } from "./myTypeBlocks/advanceTables/AdvanceTables";
-import { DocLink } from "./myInlineContent/doclinks/DocLink";
+import { Atable } from "./myTypeBlocks/advanceTables/AdvanceTables";
+import { DocLink, getTitleDocs } from "./myInlineContent/doclinks/DocLink";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { getTitleDocs } from "../components/myInlineContent/doclinks/DocLink";
+import { insertAtable } from "../components/myTypeBlocks/advanceTables/AdvanceTables";
 import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
-// import { SideToSideBlock, setColumns } from "./myInlineContent/sideToSideContent/SideToSideContent";
+import { IaChatContent, showArea } from "./myInlineContent/iaChat/IaChat";
+import { MapBlock, setColumns } from "./myInlineContent/mapBlockContent/MapBlockContent";
+import { TablesContent, showTables } from "./myInlineContent/tables/Tables";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
     ...defaultInlineContentSpecs,
     chartContent: Charts,
     docLinks: DocLink,
-    // sideToSide: SideToSideBlock,
+    mapBlock: MapBlock,
+    iachat: IaChatContent,
+    tables: TablesContent,
   },
   blockSpecs: {
     ...defaultBlockSpecs,
     chart: ChartBlock,
     docLink: DocLinkBlock,
+    aTable: Atable,
   },
 });
 
@@ -93,6 +98,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
             filterSuggestionItems(
               [
                 ...getDefaultReactSlashMenuItems(editor),
+                insertAtable(editor),
               ],
               query
             )
@@ -105,13 +111,26 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
             filterSuggestionItems(getTitleDocs(editor, docs), query)
           }
         />
-        {/* <SuggestionMenuController
+        <SuggestionMenuController
           triggerCharacter={"["}
           getItems={async (query) =>
             // Gets the mentions menu items
             filterSuggestionItems(setColumns(editor), query)
           }
-        /> */}
+        />
+        <SuggestionMenuController
+          triggerCharacter={"+"}
+          getItems={async (query) =>
+            // Gets the mentions menu items
+            filterSuggestionItems(showArea(editor), query)
+          }
+        />
+        <SuggestionMenuController
+          triggerCharacter={"|"}
+          getItems={async (query) =>
+            filterSuggestionItems(showTables(editor), query)
+          }
+        />
         <SideMenuController
           sideMenu={(props) => {
             return props.block.type === "table" ? (

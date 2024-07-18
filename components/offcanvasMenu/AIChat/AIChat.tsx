@@ -74,15 +74,15 @@ export default function AIChat() {
         <Tooltip id="new-chat-tooltip" />
       </div>
 
-      <hr className="mb-10 border-b-2"/>
+      <hr className="mb-10 border-b-2 dark:border-slate-900"/>
 
-      <div className="h-96 response-area">
+      <div className="h-96 response-area rounded-lg dark:bg-[#121212]">
         <div className="main-chat">
           <div className="textUser">
             {/* <p>hola</p> */}
           </div>
           {displayedText && (
-            <div className="user-message bg-lightgray p-10 rounded overflow-hidden break-words whitespace-normal max-w-200">
+            <div className="user-message bg-lightgray p-10 rounded overflow-hidden break-words whitespace-normal max-w-200 dark:bg-gray-600 bg-gray-300">
               <p>{displayedText}</p>
             </div>
           )}
@@ -91,12 +91,12 @@ export default function AIChat() {
 
       <div className="request-chat flex mt-5">
         <textarea autoFocus ref={chatTextAreaRef} 
-          className="request-chat-area mt-5 w-full p-2" 
+          className="request-chat-area mt-5 w-full p-2 bg-gray-300 rounded-lg dark:bg-[#121212]" 
           rows={3} cols={50}
         />
       </div>
       <button 
-        className="border-solid border-2 border-gray-400 mt-5 rounded-lg px-2 py-2 hover:bg-neutral-200" 
+        className="border-solid border-2 border-gray-400 mt-5 rounded-lg px-2 py-2 hover:bg-neutral-200 dark:hover:bg-slate-500" 
         onClick={handleSendClick}
       >
         Enviar

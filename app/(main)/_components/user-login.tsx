@@ -17,8 +17,8 @@ export const UserLogin = () => {
           </Avatar>
         </div>
         <div className="space-y-1">
-          <p className="text-sm line-clamp-1">
-            {user?.fullName}&apos;s Nadhis Digital Brain
+          <p className="text-sm line-clamp-1 m-4">
+            {user?.fullName}
           </p>
         </div>
       </div>

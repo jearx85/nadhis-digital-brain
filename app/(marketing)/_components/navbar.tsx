@@ -35,7 +35,7 @@ export const Navbar = () => {
             </SignInButton>
             <SignInButton mode="modal">
               <Button size="sm">
-                Get Nadhis Digital Brain free
+                Get Digital Brain free
               </Button>
             </SignInButton>
           </>
@@ -43,8 +43,8 @@ export const Navbar = () => {
         {isAuthenticated && !isLoading && (
           <>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/documents">
-                Enter Nadhis Digital Brain
+              <Link href="/dashboard">
+                Enter Digital Brain
               </Link>
             </Button>
             <UserButton

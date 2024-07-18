@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsLeft, Settings, MenuIcon, NotebookPen, CircleParking, Home } from "lucide-react";
+import { ChevronsLeft, Settings, MenuIcon, NotebookPen, CircleParking, Home, MapPinned  } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
@@ -107,6 +107,9 @@ export const MainNavigation = () => {
   const handleTrafficView = () => {
     router.push("/semaforos");
   };
+  const handleMapsView = () => {
+    router.push("/mapas");
+  };
 
   return (
     <>
@@ -155,6 +158,13 @@ export const MainNavigation = () => {
             onClick={handleTrafficView}
           />
           </div>
+          <div className="rounded-xl border shadow mb-2 mx-2"> 
+          <Item
+            label="Mapas"
+            icon={MapPinned}
+            onClick={handleMapsView}
+          />
+          </div>
         </div>
         <div className="mt-auto mb-4">
           <Item label="Settings" icon={Settings} onClick={settings.onOpen} />
@@ -170,7 +180,7 @@ export const MainNavigation = () => {
         className={cn(
           "absolute top-0 z-[10] left-60 w-[calc(100%-240px)]",
           isResetting && "transition-all ease-in-out duration-300",
-          isMobile && "left-0 w-full h-screen"
+          isMobile && "left-0 w-full"
         )}
       >
         <nav className="bg-transparent px-3 py-2 w-full z-auto">
