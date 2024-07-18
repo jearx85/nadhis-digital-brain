@@ -1,11 +1,7 @@
 import React from "react";
 import Grid from "../_components/grid/Grid";
 
-<<<<<<< HEAD
-import "./DashBoard.css";
-=======
 // import "./DashBoard.css";
->>>>>>> 6e2d0ad2ec6a8eaa5a1e7c806be7264d1fc43f1b
 import Navbar from "../_components/navigation/Navbar";
 
 export default async function Dashboard() {
