@@ -26,7 +26,7 @@ export const SettingsModal = () => {
               Appearance
             </Label>
             <span className="text-[0.8rem] text-muted-foreground">
-              Customize how Nadhis Digital Brain looks on your device
+              Customize how Digital Brain looks on your device
             </span>
           </div>
           <ModeToggle />

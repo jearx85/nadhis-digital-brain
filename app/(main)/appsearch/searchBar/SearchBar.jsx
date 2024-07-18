@@ -159,7 +159,7 @@ export default function SearchBar() {
       <div className={classNav}>
         <div className="imagen ml-10">
           <Link href="/appsearch">
-            <Image src="/logo_citra.png" alt="Logo" width={140} height={50} />
+            <Image src="/search-doc-logo.png" alt="Logo" width={50} height={50} />
           </Link>
         </div>
         <form className="custom-form flex p-3" onSubmit={handleSearch}>
