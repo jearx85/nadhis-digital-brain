@@ -39,7 +39,15 @@ export default function Semaforos() {
           </div>
         )}
 
-        <div className="relative flex-1">   
+        <div className="relative flex-1">
+          {/* <Image
+            className={`absolute inset-0 w-full h-full object-cover opacity-0 lg:opacity-100`}
+            src="/map.png"
+            alt="Background"
+            width={1000}
+            height={1000}
+          /> */}
+         
             <div className = {!showInfo ? "flex-1": ""}>
             <MapContainer
             className="leaflet-container"

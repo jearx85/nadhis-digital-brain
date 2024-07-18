@@ -173,11 +173,11 @@ export const Navigation = () => {
           <UserItem />
           <hr className="mt-2 mb-5 border-b-2"/>
           
-          {/* <Item
+          <Item
             label="Dashboard"
             icon={Home}
             onClick={handleGoHome} 
-            /> */}
+            />
 
           <Item
             label="App Search"
