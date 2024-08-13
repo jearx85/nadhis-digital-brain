@@ -30,11 +30,12 @@ import { Atable } from "./myTypeBlocks/advanceTables/AdvanceTables";
 import { DocLink, getTitleDocs } from "./myInlineContent/doclinks/DocLink";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { insertAtable } from "../components/myTypeBlocks/advanceTables/AdvanceTables";
+// import { insertAtable } from "../components/myTypeBlocks/advanceTables/AdvanceTables";
 import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
 import { IaChatContent, showArea } from "./myInlineContent/iaChat/IaChat";
 import { MapBlock, setColumns } from "./myInlineContent/mapBlockContent/MapBlockContent";
-import { TablesContent, showTables } from "./myInlineContent/tables/Tables";
+import { showTables, TablesContent } from "./myInlineContent/tables/Tables";
+import { Alert, insertAlert } from "../components/myTypeBlocks/alert/Alert";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -48,6 +49,7 @@ const schema = BlockNoteSchema.create({
   blockSpecs: {
     ...defaultBlockSpecs,
     chart: ChartBlock,
+    alert: Alert,
     docLink: DocLinkBlock,
     aTable: Atable,
   },
@@ -94,11 +96,12 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
       >
         <SuggestionMenuController
           triggerCharacter={"/"}
-          getItems={async (query) =>
+          getItems={async (query: any) =>
             filterSuggestionItems(
               [
                 ...getDefaultReactSlashMenuItems(editor),
-                insertAtable(editor),
+                // insertAtable(editor),
+                insertAlert(editor)
               ],
               query
             )
@@ -132,8 +135,8 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           }
         />
         <SideMenuController
-          sideMenu={(props) => {
-            return props.block.type === "table" ? (
+          sideMenu={(props: any) => {
+            return props.block.type === "table" || props.block.type === "aTable" ? (
               <SideMenu
                 {...props}
                 dragHandleMenu={(props) => (
