@@ -37,15 +37,8 @@ export const Alert = createReactBlockSpec(
   }
 );
 
-const schema = BlockNoteSchema.create({
-  blockSpecs: {
-    ...defaultBlockSpecs,
-    alert: Alert,
-  },
-});
 
-
-export const insertAlert = (editor: typeof schema.BlockNoteEditor) => ({
+export const insertAlert = (editor: any) => ({
   title: "alert",
   onItemClick: () => {
     insertOrUpdateBlock(editor, {
