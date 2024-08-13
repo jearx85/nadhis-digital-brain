@@ -6,12 +6,6 @@ import {
   createReactBlockSpec,
 } from "@blocknote/react";
 import "@blocknote/react/style.css";
-import { Item } from "@/app/(main)/_components/item";
-import {
-  Search,
-} from "lucide-react";
-import { useChartType } from "@/hooks/use-chart";
-
 
 export const DocLinkBlock = createReactBlockSpec(
   {
@@ -23,7 +17,6 @@ export const DocLinkBlock = createReactBlockSpec(
   },
   {
     render: ({ block, contentRef }) => {
-      // const chart = useChartType();
       const style = {
         backgroundColor: block.props.backgroundColor,
         textColor: block.props.textColor,
@@ -32,12 +25,6 @@ export const DocLinkBlock = createReactBlockSpec(
       return (
         <>
           <p ref={contentRef} style={style} />
-          {/* <Item
-            label="Search"
-            icon={Search}
-            isChart
-            onClick={chart.onOpen}
-          /> */}
         </>
       );
     },
