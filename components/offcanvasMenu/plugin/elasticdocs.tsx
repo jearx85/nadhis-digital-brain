@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./PluginElastic.css";
 import { Spinner } from "@/components/spinner";
 
-import { queryCategories, queryCategory } from "../funciones";
+import { queryCategories, queryCategory } from "./funciones";
 import { toast } from "sonner";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
