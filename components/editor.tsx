@@ -36,6 +36,7 @@ import { IaChatContent, showArea } from "./myInlineContent/iaChat/IaChat";
 import { MapBlock, setColumns } from "./myInlineContent/mapBlockContent/MapBlockContent";
 import { showTables, TablesContent } from "./myInlineContent/tables/Tables";
 import { Alert, insertAlert } from "../components/myTypeBlocks/alert/Alert";
+import InnerMenu from "./innerMenu/InnerMenu";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -94,6 +95,9 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           onChange(JSON.stringify(blocks, null, 2));
         }}
       >
+        <div className="flex">
+          <InnerMenu />
+        </div>
         <SuggestionMenuController
           triggerCharacter={"/"}
           getItems={async (query: any) =>
