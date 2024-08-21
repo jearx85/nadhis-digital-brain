@@ -2,7 +2,7 @@
 import React from "react";
 import Grid from "../../_components/grid/Grid";
 
-import "./Dashboard.css";
+import "./DashBoard.css";
 import Navbar from "../../_components/navigation/Navbar";
 
 export default function Dashboard() {

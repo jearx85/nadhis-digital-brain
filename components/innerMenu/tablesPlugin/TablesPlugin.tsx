@@ -5,14 +5,21 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useBlockNoteEditor } from "@blocknote/react";
+import { generateUUID } from '../../offcanvasMenu/plugin/noteUtils';
 
 interface ApiResponse {
-  content: {
-    rows: {
-      cells: any[];
-    }[];
-  };
-  type: string;
+  id: "string",
+    type: "table",
+    props: {
+      textColor: "default",
+      backgroundColor: "default"
+    },
+    content: {
+      rows: {
+        cells: any[];
+      }[];
+    };
+
 }
 
 const getApiInfo = async () => {
@@ -34,52 +41,70 @@ export default function TablesComponent() {
   const onChange = (content: any) => {
     update({
       id: params.documentId as Id<"documents">,
-      content: JSON.stringify(content) // Convert to JSON string
+      content  // Convert to JSON string
     });
   };
 
   useEffect(() => {
     setDocumentId(params.documentId);
+    console.log(editor)
   }, [params.documentId]);
 
   useEffect(() => {
-    if (params.documentId) {
-      getIdTitle({ id: params.documentId as Id<"documents"> }).then((title) => {
+    console.log(documentId)
+    if (documentId) {
+      getIdTitle({ id: documentId as Id<"documents"> }).then((title) => {
         setDocumentTitle(title);
       }).catch((error) => {
         console.error("Error fetching document title: ", error);
       });
     }
-  }, [params.documentId, getIdTitle]);
+  }, [documentId, getIdTitle]);
 
   const formatDateTime = (timestamp: number) => {
     const date = new Date(timestamp);
     return date.toLocaleString();
   };
 
-  const rows = datos.map((row: any, index: number) => (
-    <tr key={index}>
-      {row.cells.map((cell: any, cellIndex: number) => (
-        <td key={cellIndex}>{cell}</td>
-      ))}
-    </tr>
-  ));
+  // const rows = datos.map((row: any, index: number) => (
+  //   <tr key={index}>
+  //     {row.cells.map((cell: any, cellIndex: number) => (
+  //       <td key={cellIndex}>{cell}</td>
+  //     ))}
+  //   </tr>
+  // ));
 
   const handleClick = () => {
+    generateUUID();
+
     getApiInfo().then((data: ApiResponse) => {
       setDatos(data.content.rows);
-      console.log(data);
-      onChange(data.content.rows);
+      const content = [{
+        id: generateUUID(),
+        type: "table",
+        props: {
+          textColor: "default",
+          backgroundColor: "default"
+        },
+        content: {
+          rows: data.content.rows
+        },
+        children: [],
+      }]
+      console.log(content);
+      onChange(content);
     }).catch((error) => {
       console.error("Error fetching API data: ", error);
     });
   }
 
+
   return (
     <div>
-      <h1>La tabla se agregará en el documento: 
+      <h1 className="my-2 text-xl">Agregar Tablas</h1>
+      <p>La tabla se agregará en el documento: 
         <b> { documentTitle } </b>
-      </h1>
+      </p>
       <div className="filtro-categorias d-flex mt-10">
         <h1>Seleccione indice</h1>
         <select

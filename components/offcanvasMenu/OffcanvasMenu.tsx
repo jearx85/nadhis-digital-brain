@@ -7,7 +7,7 @@ import { Tooltip } from 'react-tooltip';
 // import './navOffcanvas.css' 
 import MyCalendar from './MyCalendar/myCalendar';
 import { Item } from '@/app/(main)/_components/item';
-import TablesPlugin from './Tables/TablesPlugin';
+import TablesPlugin from '../innerMenu/tablesPlugin/TablesPlugin';
 
 const OffcanvasMenu = () => {
   const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ const OffcanvasMenu = () => {
 
       {/* Offcanvas */}
       {open && (
-        <Fragment>
+        <>
           {/* Fondo oscuro para el offcanvas */}
           <div
             onClick={() => setOpen(false)}
@@ -124,7 +124,7 @@ const OffcanvasMenu = () => {
               </div>
             </div>
           </div>
-        </Fragment>
+        </>
       )}
     </div>
   );
