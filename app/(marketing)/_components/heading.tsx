@@ -57,7 +57,8 @@ export const Heading = () => {
                 )}
                 {isAuthenticated && !isLoading && (
                   <div className=" items-center flex justify-center">
-                    <Link href="/dashboard" className="mr-2">
+                    {/* <Link href="/dashboard" className="mr-2"> */}
+                    <Link href="/documents" className="mr-2">
                       <UserLogin />
                     </Link>
                   </div>
