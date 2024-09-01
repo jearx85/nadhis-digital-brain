@@ -42,7 +42,7 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <body className={inter.className}>
       <MantineProvider>
-        <ConvexClientProvider>
+        {/* <ConvexClientProvider> */}
           <EdgeStoreProvider>
             <ThemeProvider
               attribute="class"
@@ -56,7 +56,7 @@ export default function RootLayout({
               {children}
             </ThemeProvider>
           </EdgeStoreProvider>
-        </ConvexClientProvider>
+        {/* </ConvexClientProvider> */}
       </MantineProvider>
       </body>
     </html>

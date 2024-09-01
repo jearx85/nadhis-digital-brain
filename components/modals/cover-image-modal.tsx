@@ -12,12 +12,12 @@ import {
 import { useCoverImage } from "@/hooks/use-cover-image";
 import { SingleImageDropzone } from "@/components/single-image-dropzone";
 import { useEdgeStore } from "@/lib/edgestore";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+// import { api } from "@/convex/_generated/api";
+// import { Id } from "@/convex/_generated/dataModel";
 
 export const CoverImageModal = () => {
   const params = useParams();
-  const update = useMutation(api.documents.update);
+  // const update = useMutation(api.documents.update);
   const coverImage = useCoverImage();
   const { edgestore } = useEdgeStore();
   
@@ -42,10 +42,10 @@ export const CoverImageModal = () => {
         }
       });
 
-      await update({
-        id: params.documentId as Id<"documents">,
-        coverImage: res.url
-      });
+      // await update({
+      //   id: params.documentId as Id<"documents">,
+      //   coverImage: res.url
+      // });
 
       onClose();
     }

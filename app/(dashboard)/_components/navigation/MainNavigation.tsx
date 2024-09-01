@@ -8,7 +8,7 @@ import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/lib/utils";
 import { useSettings } from "@/hooks/use-settings";
 
-import { UserItem } from "../../../(main)/_components/user-item";
+// import { UserItem } from "../../../(main)/_components/user-item";
 import { Item } from "../../../(main)/_components/item";
 
 export const MainNavigation = () => {
@@ -110,6 +110,9 @@ export const MainNavigation = () => {
   const handleMapsView = () => {
     router.push("/mapas");
   };
+  const handleLogout = () => {
+    router.push("/");
+  };
 
   return (
     <>
@@ -133,7 +136,8 @@ export const MainNavigation = () => {
         </div>
         <div>
           <div className="shadow rounded-lg mb-10">
-           <UserItem />
+            <button onClick={handleLogout}>Logout</button>
+           {/* <UserItem /> */}
           </div>
 
           <div className="rounded-xl border shadow mb-2 mx-2"> 
