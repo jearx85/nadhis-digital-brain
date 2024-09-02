@@ -11,6 +11,8 @@ import TablesComponent from "./tablesPlugin/TablesPlugin";
 import { Item } from "@/app/(main)/_components/item";
 import { CirclePlus } from "lucide-react";
 import AddTitle from "./addTitle/AddTitle";
+import AskAi from "./askAi/AskAi";
+import { Button } from "../ui/button";
 
 const getChild = (height: number) => (
   <Skeleton height={height} radius="md" animate={false} />
@@ -27,6 +29,10 @@ export default function InnerMenu() {
     setIsOpen(!isOpen);
   }
 
+  function handleCloseMenu(){
+    setIsOpen(false);
+  }
+
   return (
     <div className="flex-col my-10 ">
       <Item label="Utils" icon={CirclePlus} onClick={openMenu} />
@@ -38,11 +44,15 @@ export default function InnerMenu() {
                 <TablesComponent />
               </div>
               <Stack>
-                <div className="border p-2 rounded-xl">
+                <Button className="border p-2 rounded-xl">
                   {/* {getChild(getSubHeight(2, px(theme.spacing.md) as number))} */}
                   < AddTitle />
-                </div>
-                {getChild(getSubHeight(3, px(theme.spacing.md) as number))}
+                </Button>
+                {/* {getChild(getSubHeight(3, px(theme.spacing.md) as number))} */}
+                <Button className="border p-2 rounded-xl flex align-middle gap-1">
+                  <p>✨</p>
+                  < AskAi />
+                </Button>
                 {getChild(getSubHeight(3, px(theme.spacing.md) as number))}
               </Stack>
               <Stack>
