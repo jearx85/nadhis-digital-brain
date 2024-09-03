@@ -32,6 +32,12 @@ EDGE_STORE_SECRET_KEY=
 npx convex dev
 
 ```
+### Setup Convex local backend
+
+```shell
+just convex dev
+
+```
 
 ### Start the app
 
