@@ -1,14 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { useBlockNoteEditor } from "@blocknote/react";
-import { generateUUID } from "@/components/offcanvasMenu/plugin/noteUtils";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -95,6 +93,7 @@ export default function AskAi() {
             const json = JSON.parse(chunk);
             if (json.result && json.result.chunk) {
               fullResponseText += json.result.chunk;
+              setIsModalOpen(false);
 
               // Update the editor with the full response text
               editor.updateBlock(lastBlockId, {
@@ -125,7 +124,6 @@ export default function AskAi() {
         console.error("Error al realizar la solicitud:", error);
     } finally {
         setIsLoading(false);
-        setIsModalOpen(false);
       }
     } else {
       setIsSend(false);
@@ -168,7 +166,6 @@ export default function AskAi() {
                 placeholder="✨ Hazme una regunta..."
                 value={textareaValue}
                 onChange={handleTextareaChange}
-                // onChange={(e) => setTitle(e.target.value)}
               />
             </div>
             <div className="flex justify-end pt-4">
