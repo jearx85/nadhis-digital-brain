@@ -47,11 +47,9 @@ export default function TablesComponent() {
 
   useEffect(() => {
     setDocumentId(params.documentId);
-    console.log(editor)
   }, [params.documentId]);
 
   useEffect(() => {
-    console.log(documentId)
     if (documentId) {
       getIdTitle({ id: documentId as Id<"documents"> }).then((title) => {
         setDocumentTitle(title);
@@ -91,7 +89,6 @@ export default function TablesComponent() {
         },
         children: [],
       }]
-      console.log(content);
       onChange(content);
     }).catch((error) => {
       console.error("Error fetching API data: ", error);
