@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useBlockNoteEditor } from "@blocknote/react";
-import { Button } from "@mantine/core";
-import MenuPandasAiTool from "./MenuPandasAi";
 import {
     Dialog,
     DialogContent,
@@ -9,9 +7,9 @@ import {
     DialogHeader,
     DialogTitle,
   } from "@/components/ui/dialog";
+import { Button } from "../ui/button";
 
-export function PandasAItool() {
-  const [showModal, setShowModal] = useState(false);
+export function PandasAItool({...props}: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const editor = useBlockNoteEditor();
@@ -29,9 +27,15 @@ export function PandasAItool() {
     setIsModalOpen(false); // Cierra el modal
   }
 
+  function sendInfo(){
+    console.log(inputValue)
+    console.log(props)
+    setIsModalOpen(false);
+  }
+
   return (
     <>
-      <Button onClick={handlemodal}>PandasAi</Button>
+      <button className="border p-2 rounded-xl" onClick={handlemodal}>✨ PandasAi</button>
       {isModalOpen &&  (
         <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
           <DialogContent>
@@ -51,7 +55,7 @@ export function PandasAItool() {
               />
             </div>
             <div className="flex justify-end pt-4">
-              <Button className="btn border rounded-xl p-2">Enviar</Button>
+              <Button className="btn border rounded-xl p-2" onClick={sendInfo}>Enviar</Button>
             </div>
           </DialogContent>
         </Dialog>
