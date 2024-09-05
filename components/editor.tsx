@@ -16,6 +16,15 @@ import {
   DragHandleMenu,
   RemoveBlockItem,
   BlockColorsItem,
+  BasicTextStyleButton,
+  BlockTypeSelect,
+  ColorStyleButton,
+  CreateLinkButton,
+  FormattingToolbar,
+  FormattingToolbarController,
+  NestBlockButton,
+  TextAlignButton,
+  UnnestBlockButton,
 } from "@blocknote/react";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/react/style.css";
@@ -37,9 +46,8 @@ import { MapBlock, setColumns } from "./myInlineContent/mapBlockContent/MapBlock
 import { showTables, TablesContent } from "./myInlineContent/tables/Tables";
 import { Alert, insertAlert } from "../components/myTypeBlocks/alert/Alert";
 import InnerMenu from "./innerMenu/InnerMenu";
-import MenuPandasAi from "./myTypeBlocks/menuPandasAi/MenuPandasAi";
 import { useEffect, useState } from "react";
-import { handleInsertpandasAi, PandasAi } from "./myTypeBlocks/menuPandasAi/TypePandasAi";
+import { PandasAItool } from "./myFormatingToolbar/PandasAiToolbar";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -49,7 +57,6 @@ const schema = BlockNoteSchema.create({
     mapBlock: MapBlock,
     iachat: IaChatContent,
     tables: TablesContent,
-    
   },
   blockSpecs: {
     ...defaultBlockSpecs,
@@ -57,7 +64,6 @@ const schema = BlockNoteSchema.create({
     alert: Alert,
     docLink: DocLinkBlock,
     aTable: Atable,
-    pandasai: PandasAi,
   },
 });
 
@@ -88,21 +94,6 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     uploadFile: handleUpload,
   });
 
-  useEffect(() =>{
-    editor.document.map((block) => {
-      if(block.type === "table"){
-        setIsTable(true);
-        setCurrentBlockid(block.id);
-      }
-    }) 
-  },[]);
-
-  useEffect(() => {
-    if (isTable && currentBlockid) {
-      handleInsertpandasAi(currentBlockid, editor);
-    }
-  }, [isTable, currentBlockid]);
-
   return (
     <div>
       <BlockNoteView
@@ -111,6 +102,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
         editable={editable}
         slashMenu={false}
         sideMenu={false}
+        formattingToolbar={false}
         onChange={() => {
           // Saves the document JSON to state.
           const blocks = editor.document;
@@ -120,9 +112,59 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
         <div className="flex">
           <InnerMenu />
         </div>
-        {/* {isTable && currentBlockid && (
-          handleInsertpandasAi(currentBlockid, editor)
-        )} */}
+
+        <FormattingToolbarController
+          formattingToolbar={() => (
+            <FormattingToolbar>
+              <BlockTypeSelect key={"blockTypeSelect"} />
+
+              <PandasAItool key={"customButton"} />
+
+              <BasicTextStyleButton
+                basicTextStyle={"bold"}
+                key={"boldStyleButton"}
+              />
+              <BasicTextStyleButton
+                basicTextStyle={"italic"}
+                key={"italicStyleButton"}
+              />
+              <BasicTextStyleButton
+                basicTextStyle={"underline"}
+                key={"underlineStyleButton"}
+              />
+              <BasicTextStyleButton
+                basicTextStyle={"strike"}
+                key={"strikeStyleButton"}
+              />
+              {/* Extra button to toggle code styles */}
+              <BasicTextStyleButton
+                key={"codeStyleButton"}
+                basicTextStyle={"code"}
+              />
+
+              <TextAlignButton
+                textAlignment={"left"}
+                key={"textAlignLeftButton"}
+              />
+              <TextAlignButton
+                textAlignment={"center"}
+                key={"textAlignCenterButton"}
+              />
+              <TextAlignButton
+                textAlignment={"right"}
+                key={"textAlignRightButton"}
+              />
+
+              <ColorStyleButton key={"colorStyleButton"} />
+
+              <NestBlockButton key={"nestBlockButton"} />
+              <UnnestBlockButton key={"unnestBlockButton"} />
+
+              <CreateLinkButton key={"createLinkButton"} />
+            </FormattingToolbar>
+          )}
+        />
+
         <SuggestionMenuController
           triggerCharacter={"/"}
           getItems={async (query: any) =>
@@ -170,7 +212,6 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
                   <DragHandleMenu {...props}>
                     <RemoveBlockItem {...props}>Delete</RemoveBlockItem>
                     <MenuCharts editor={editor} />
-                    {/* < MenuPandasAi /> */}
                   </DragHandleMenu>
                 )}
               />

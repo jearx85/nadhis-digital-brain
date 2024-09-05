@@ -10,23 +10,32 @@ import {
 } from "@/components/ui/dialog";
 import { useBlockNoteEditor } from "@blocknote/react";
 
-export default function MenuPandasAi() {
+export default function MenuPandasAi({...props}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [showItem, setShowItem] = useState(false);
   const editor = useBlockNoteEditor();
 
-  function handleModal(e: any) {
+  function handleModal() {
+    console.log(props)
     setIsModalOpen(true);
-    setInputValue(e.target.value);
+    
     editor.document.map((block) => {
       if (block.type === "table") {
         const tableContent = block.content;
-        // console.log(tableContent);
+        console.log(tableContent);
 
       }
     });
-    // console.log(e.target.value);
+  }
+
+  function handleInputChange(e: any){
+    const value = e.target.value;
+    setInputValue(value);
+  }
+
+  function handleModalClose() {
+    setIsModalOpen(false); // Cierra el modal
   }
 
   const handleMouseEnter = () => {
@@ -35,12 +44,13 @@ export default function MenuPandasAi() {
 
   return (
     <div className="mt-5">
-      <Menu withinPortal={false} zIndex={999999}>
+      <button onMouseEnter={handleModal} >Pandas</button>
+      {/* <Menu withinPortal={false} zIndex={999999}>
         <Menu.Target>
           <p className="texto" onClick={handleModal}>
             ✨
           </p>
-        </Menu.Target>
+        </Menu.Target> */}
         {/* {showItem && (
           <Menu.Item>
             <p className="texto" onClick={handleModal}>
@@ -48,9 +58,9 @@ export default function MenuPandasAi() {
             </p>
           </Menu.Item>
         )} */}
-      </Menu>
+      {/* </Menu> */}
       {isModalOpen && (
-        <Dialog open={isModalOpen}>
+        <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Pandas AI</DialogTitle>
@@ -64,6 +74,7 @@ export default function MenuPandasAi() {
                 type="text"
                 placeholder="✨ Hazme una regunta..."
                 value={inputValue}
+                onChange={handleInputChange}
               />
             </div>
             <div className="flex justify-end pt-4">
