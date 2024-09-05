@@ -37,6 +37,9 @@ import { MapBlock, setColumns } from "./myInlineContent/mapBlockContent/MapBlock
 import { showTables, TablesContent } from "./myInlineContent/tables/Tables";
 import { Alert, insertAlert } from "../components/myTypeBlocks/alert/Alert";
 import InnerMenu from "./innerMenu/InnerMenu";
+import MenuPandasAi from "./myTypeBlocks/menuPandasAi/MenuPandasAi";
+import { useEffect, useState } from "react";
+import { handleInsertpandasAi, PandasAi } from "./myTypeBlocks/menuPandasAi/TypePandasAi";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -46,6 +49,7 @@ const schema = BlockNoteSchema.create({
     mapBlock: MapBlock,
     iachat: IaChatContent,
     tables: TablesContent,
+    
   },
   blockSpecs: {
     ...defaultBlockSpecs,
@@ -53,6 +57,7 @@ const schema = BlockNoteSchema.create({
     alert: Alert,
     docLink: DocLinkBlock,
     aTable: Atable,
+    pandasai: PandasAi,
   },
 });
 
@@ -65,6 +70,8 @@ interface EditorProps {
 const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const { resolvedTheme } = useTheme();
   const { edgestore } = useEdgeStore();
+  const [isTable, setIsTable] = useState(false);
+  const [currentBlockid, setCurrentBlockid] = useState("");
   const docs = useQuery(api.documents.getAllDocuments);
 
   const handleUpload = async (file: File) => {
@@ -80,6 +87,21 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     initialContent: initialContent ? JSON.parse(initialContent) : undefined,
     uploadFile: handleUpload,
   });
+
+  useEffect(() =>{
+    editor.document.map((block) => {
+      if(block.type === "table"){
+        setIsTable(true);
+        setCurrentBlockid(block.id);
+      }
+    }) 
+  },[]);
+
+  useEffect(() => {
+    if (isTable && currentBlockid) {
+      handleInsertpandasAi(currentBlockid, editor);
+    }
+  }, [isTable, currentBlockid]);
 
   return (
     <div>
@@ -98,6 +120,9 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
         <div className="flex">
           <InnerMenu />
         </div>
+        {/* {isTable && currentBlockid && (
+          handleInsertpandasAi(currentBlockid, editor)
+        )} */}
         <SuggestionMenuController
           triggerCharacter={"/"}
           getItems={async (query: any) =>
@@ -121,14 +146,12 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
         <SuggestionMenuController
           triggerCharacter={"["}
           getItems={async (query) =>
-            // Gets the mentions menu items
             filterSuggestionItems(setColumns(editor), query)
           }
         />
         <SuggestionMenuController
           triggerCharacter={"+"}
           getItems={async (query) =>
-            // Gets the mentions menu items
             filterSuggestionItems(showArea(editor), query)
           }
         />
@@ -147,6 +170,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
                   <DragHandleMenu {...props}>
                     <RemoveBlockItem {...props}>Delete</RemoveBlockItem>
                     <MenuCharts editor={editor} />
+                    {/* < MenuPandasAi /> */}
                   </DragHandleMenu>
                 )}
               />
