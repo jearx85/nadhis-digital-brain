@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useBlockNoteEditor } from "@blocknote/react";
+import { useBlockNoteEditor,  useEditorContentOrSelectionChange, } from "@blocknote/react";
 import {
     Dialog,
     DialogContent,
@@ -7,15 +7,34 @@ import {
     DialogHeader,
     DialogTitle,
   } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 
-export function PandasAItool({...props}: any) {
+export function PandasAItool({isTable}: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const editor = useBlockNoteEditor();
+  // const Components = useComponentsContext()!;
+
+  const [isSelected, setIsSelected] = useState<boolean>(
+    editor.getActiveStyles().textColor === "blue" &&
+      editor.getActiveStyles().backgroundColor === "blue"
+  );
 
   function handlemodal() {
     setIsModalOpen(true);
+    // return (
+    //   <Components.FormattingToolbar.Button
+    //     mainTooltip={"Blue Text & Background"}
+    //     onClick={() => {
+    //       editor.toggleStyles({
+    //         textColor: "blue",
+    //         backgroundColor: "blue",
+    //       });
+    //     }}
+    //     isSelected={isSelected}>
+    //     Blue
+    //   </Components.FormattingToolbar.Button>
+    // );
   }
 
   function handleInputChange(e: any){
@@ -29,13 +48,15 @@ export function PandasAItool({...props}: any) {
 
   function sendInfo(){
     console.log(inputValue)
-    console.log(props)
+    console.log(isTable)
     setIsModalOpen(false);
   }
 
   return (
     <>
+    {isTable && (
       <button className="border p-2 rounded-xl" onClick={handlemodal}>✨ PandasAi</button>
+    )}
       {isModalOpen &&  (
         <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
           <DialogContent>

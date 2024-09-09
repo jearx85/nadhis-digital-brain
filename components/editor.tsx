@@ -47,7 +47,7 @@ import { showTables, TablesContent } from "./myInlineContent/tables/Tables";
 import { Alert, insertAlert } from "../components/myTypeBlocks/alert/Alert";
 import InnerMenu from "./innerMenu/InnerMenu";
 import { useEffect, useState } from "react";
-import { PandasAItool } from "./myFormatingToolbar/PandasAiToolbar";
+import { PandasAItool } from "./myFormatingToolbar/menuPandasAi/PandasAiToolbar";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -88,11 +88,19 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     return response.url;
   };
 
-  const editor = useCreateBlockNote({
+  const editor: any = useCreateBlockNote({
     schema,
     initialContent: initialContent ? JSON.parse(initialContent) : undefined,
     uploadFile: handleUpload,
   });
+
+  useEffect(() => {
+    editor.document.map((block: any) => {
+      if(block.type === "table"){
+        setIsTable(true)
+      }
+    })
+  },[])
 
   return (
     <div>
@@ -118,7 +126,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
             <FormattingToolbar>
               <BlockTypeSelect key={"blockTypeSelect"} />
 
-              <PandasAItool key={"customButton"} />
+              <PandasAItool key={"customButton"} isTable={isTable}/>
 
               <BasicTextStyleButton
                 basicTextStyle={"bold"}
