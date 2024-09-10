@@ -13,6 +13,7 @@ import { CirclePlus } from "lucide-react";
 import AddTitle from "./addTitle/AddTitle";
 import AskAi from "./askAi/AskAi";
 import { Button } from "../ui/button";
+import { Table } from "lucide-react";
 
 const getChild = (height: number) => (
   <Skeleton height={height} radius="md" animate={false} />
@@ -29,7 +30,7 @@ export default function InnerMenu() {
     setIsOpen(!isOpen);
   }
 
-  function handleCloseMenu(){
+  function handleCloseMenu() {
     setIsOpen(false);
   }
 
@@ -40,18 +41,17 @@ export default function InnerMenu() {
         <div className="w-full">
           <Container my="md">
             <SimpleGrid cols={{ base: 1, xs: 4 }}>
-              <div className="border p-2 rounded-xl">
-                <TablesComponent />
-              </div>
               <Stack>
                 <Button className="border p-2 rounded-xl">
-                  {/* {getChild(getSubHeight(2, px(theme.spacing.md) as number))} */}
-                  < AddTitle />
+                  <Table />
+                  <TablesComponent />
                 </Button>
-                {/* {getChild(getSubHeight(3, px(theme.spacing.md) as number))} */}
+                <Button className="border p-2 rounded-xl">
+                  <AddTitle />
+                </Button>
                 <Button className="border p-2 rounded-xl flex align-middle gap-1">
                   <p>✨</p>
-                  < AskAi />
+                  <AskAi />
                 </Button>
                 {getChild(getSubHeight(3, px(theme.spacing.md) as number))}
               </Stack>
