@@ -14,7 +14,7 @@ import { Menu } from "@mantine/core";
 export let chartType = "";
 export let textFormat = "";
 
-export default function MenuCharts({ editor }: any) {
+export default function MenuCharts({editor, props}: any) {
   const { resolvedTheme } = useTheme();
   const [selectedChartType, setSelectedChartType] = useState("");
 
@@ -80,6 +80,7 @@ export default function MenuCharts({ editor }: any) {
                   onClick={() => {
                     chartType = type.value;
                     handleChartTypeSelect(type.value);
+                    console.log(props)
 
                     editor.document.map((block: any) => {
                       if (block.type === "table") {

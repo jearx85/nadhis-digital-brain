@@ -39,6 +39,7 @@ import { Alert, insertAlert } from "../components/myTypeBlocks/alert/Alert";
 import InnerMenu from "./innerMenu/InnerMenu";
 import PandasAiButton from "./dragHandleMenu/pandasAi/PandasAiButton";
 import { PandasAi } from "./dragHandleMenu/pandasAi/PandasAiType";
+import MenuPruebas from "./dragHandleMenu/menuCharts/menuPruebas";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -147,7 +148,8 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
                 dragHandleMenu={(props) => (
                   <DragHandleMenu {...props}>
                     <RemoveBlockItem {...props}>Delete</RemoveBlockItem>
-                    <MenuCharts editor={editor} />
+                    {/* <MenuCharts props={props} editor={editor} /> */}
+                    <MenuPruebas props={props} editor={editor} />
                     <PandasAiButton props={props} editor={editor}/>
                   </DragHandleMenu >
                 )}
