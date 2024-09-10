@@ -15,7 +15,7 @@ import {
   SideMenu,
   DragHandleMenu,
   RemoveBlockItem,
-  BlockColorsItem,
+  BlockColorsItem
 } from "@blocknote/react";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/react/style.css";
@@ -30,11 +30,16 @@ import { Atable } from "./myTypeBlocks/advanceTables/AdvanceTables";
 import { DocLink, getTitleDocs } from "./myInlineContent/doclinks/DocLink";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { insertAtable } from "../components/myTypeBlocks/advanceTables/AdvanceTables";
+// import { insertAtable } from "../components/myTypeBlocks/advanceTables/AdvanceTables";
 import { DocLinkBlock } from "./myTypeBlocks/linkDocs/linkdocsType";
 import { IaChatContent, showArea } from "./myInlineContent/iaChat/IaChat";
 import { MapBlock, setColumns } from "./myInlineContent/mapBlockContent/MapBlockContent";
-import { TablesContent, showTables } from "./myInlineContent/tables/Tables";
+import { showTables, TablesContent } from "./myInlineContent/tables/Tables";
+import { Alert, insertAlert } from "../components/myTypeBlocks/alert/Alert";
+import InnerMenu from "./innerMenu/InnerMenu";
+import PandasAiButton from "./dragHandleMenu/pandasAi/PandasAiButton";
+import { PandasAi } from "./dragHandleMenu/pandasAi/PandasAiType";
+import MenuPruebas from "./dragHandleMenu/menuCharts/menuPruebas";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -44,10 +49,12 @@ const schema = BlockNoteSchema.create({
     mapBlock: MapBlock,
     iachat: IaChatContent,
     tables: TablesContent,
+    pandasAi: PandasAi,
   },
   blockSpecs: {
     ...defaultBlockSpecs,
     chart: ChartBlock,
+    alert: Alert,
     docLink: DocLinkBlock,
     aTable: Atable,
   },
@@ -72,7 +79,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     return response.url;
   };
 
-  const editor = useCreateBlockNote({
+  const editor: any = useCreateBlockNote({
     schema,
     initialContent: initialContent ? JSON.parse(initialContent) : undefined,
     uploadFile: handleUpload,
@@ -92,13 +99,17 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           onChange(JSON.stringify(blocks, null, 2));
         }}
       >
+        <div className="flex">
+          <InnerMenu />
+        </div>
+
         <SuggestionMenuController
           triggerCharacter={"/"}
-          getItems={async (query) =>
+          getItems={async (query: any) =>
             filterSuggestionItems(
               [
                 ...getDefaultReactSlashMenuItems(editor),
-                insertAtable(editor),
+                insertAlert(editor)
               ],
               query
             )
@@ -114,14 +125,12 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
         <SuggestionMenuController
           triggerCharacter={"["}
           getItems={async (query) =>
-            // Gets the mentions menu items
             filterSuggestionItems(setColumns(editor), query)
           }
         />
         <SuggestionMenuController
           triggerCharacter={"+"}
           getItems={async (query) =>
-            // Gets the mentions menu items
             filterSuggestionItems(showArea(editor), query)
           }
         />
@@ -132,15 +141,17 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           }
         />
         <SideMenuController
-          sideMenu={(props) => {
-            return props.block.type === "table" ? (
+          sideMenu={(props: any) => {
+            return props.block.type === "table" || props.block.type === "aTable" ? (
               <SideMenu
                 {...props}
                 dragHandleMenu={(props) => (
                   <DragHandleMenu {...props}>
                     <RemoveBlockItem {...props}>Delete</RemoveBlockItem>
-                    <MenuCharts editor={editor} />
-                  </DragHandleMenu>
+                    {/* <MenuCharts props={props} editor={editor} /> */}
+                    <MenuPruebas props={props} editor={editor} />
+                    <PandasAiButton props={props} editor={editor}/>
+                  </DragHandleMenu >
                 )}
               />
             ) : (

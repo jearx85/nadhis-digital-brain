@@ -1,9 +1,9 @@
 {
-  "name": "notion-clone",
+  "name": "smart-desicions-platform",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -27,6 +27,7 @@
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-navigation-menu": "^1.1.4",
     "@radix-ui/react-popover": "^1.0.7",
+    "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.0.2",
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.43.5",

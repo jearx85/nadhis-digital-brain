@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 export default function InfoMapa({ onShowRoutes }: any) {
-  const [showCamera, setShowCamera] = useState(true);
+  const [showCamera, setShowCamera] = useState(false);
 
   function handleClick() {
     setShowCamera(!showCamera);

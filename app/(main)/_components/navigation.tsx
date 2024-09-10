@@ -146,7 +146,8 @@ export const Navigation = () => {
     router.push('/appsearch');
   }
     const handleGoHome  = () =>{
-    router.push('/dashboard');
+    // router.push('/dashboard');
+    router.push('/documents');
   }
 
   return (
@@ -173,11 +174,11 @@ export const Navigation = () => {
           <UserItem />
           <hr className="mt-2 mb-5 border-b-2"/>
           
-          <Item
+          {/* <Item
             label="Dashboard"
             icon={Home}
             onClick={handleGoHome} 
-            />
+            /> */}
 
           <Item
             label="App Search"

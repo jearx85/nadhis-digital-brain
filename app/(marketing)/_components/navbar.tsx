@@ -43,7 +43,8 @@ export const Navbar = () => {
         {isAuthenticated && !isLoading && (
           <>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/dashboard">
+              {/* <Link href="/dashboard"> */}
+              <Link href="/documents">
                 Enter Digital Brain
               </Link>
             </Button>

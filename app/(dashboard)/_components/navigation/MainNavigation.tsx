@@ -99,7 +99,7 @@ export const MainNavigation = () => {
   };
 
   const handleGoHome  = () =>{
-    router.push('/dashboard');
+    router.push('/documents');
   }
   const handleEditorView = () => {
     router.push("/documents");
@@ -137,11 +137,11 @@ export const MainNavigation = () => {
           </div>
 
           <div className="rounded-xl border shadow mb-2 mx-2"> 
-            <Item
+            {/* <Item
               label="Dashboard"
               icon={Home}
               onClick={handleGoHome} 
-              />
+              /> */}
 
           </div>
           <div className="rounded-xl border shadow mb-2 mx-2"> 

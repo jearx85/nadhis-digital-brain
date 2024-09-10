@@ -11,7 +11,6 @@ import { CiViewTable } from "react-icons/ci";
 
 import "@blocknote/react/style.css";
 
-// import "./styles.css";
 import AdvanceTableComponent from "./AdvanceTableComponent";
 
 export const Atable = createReactBlockSpec(
@@ -19,26 +18,20 @@ export const Atable = createReactBlockSpec(
     type: "aTable",
     propSchema: {
       ...defaultProps,
-      textAlignment: defaultProps.textAlignment,
-      textColor: defaultProps.textColor,
     },
     content: "inline",
+    children: [],
   },
   {
     render: (props) => {
       //   return <h1>hola</h1>
-      return <AdvanceTableComponent />;
+      return <AdvanceTableComponent props = {props}/>;
     },
   }
 );
 
-const schema = BlockNoteSchema.create({
-  blockSpecs: {
-    ...defaultBlockSpecs,
-    aTable: Atable,
-  },
-});
 
+<<<<<<< HEAD
 export const insertAtable = (editor: any) => ({
   title: "aTable",
   onItemClick: () => {
@@ -50,3 +43,16 @@ export const insertAtable = (editor: any) => ({
   group: "Other",
   icon: <CiViewTable />,
 });
+=======
+// export const insertAtable = (editor: any) => ({
+//   title: "aTable",
+//   onItemClick: () => {
+//     insertOrUpdateBlock(editor, {
+//       type: "aTable",
+//     });
+//   },
+//   aliases: ["aTable"],
+//   group: "Other",
+//   icon: <CiViewTable />,
+// });
+>>>>>>> dev
