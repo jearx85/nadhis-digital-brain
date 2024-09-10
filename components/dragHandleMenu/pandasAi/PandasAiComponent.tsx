@@ -11,25 +11,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { useBlockNoteEditor } from "@blocknote/react";
 import usePandasProps from "@/hooks/use-pandasProps";
+import { Spinner } from "@/components/spinner";
 
-export default function PandasAiComponent() {
+export default function PandasAiComponent({ blockId }: { blockId: string }) {
   const [textareaValue, setTextareaValue] = useState("");
+  const [isSend, setIsSend] = useState(false);
   const editor = useBlockNoteEditor();
   const blockProps = usePandasProps((state) => state.blockProps);
-
-  let idList: string[] = [];
-  let blockId = "";
-  editor.document.map((block: any) => {
-    if (
-      block.content &&
-      block.content[0] != undefined &&
-      block.content[0].type === "pandasAi"
-    ) {
-      blockId = block.id;
-      idList.push(block.id);
-    }
-  });
-
 
   const handleClose = () => {
     editor.removeBlocks([blockId]);
@@ -37,10 +25,11 @@ export default function PandasAiComponent() {
 
   const handleSend = () => {
     if (textareaValue) {
+      setIsSend(true);
       const data = { query: textareaValue };
+      const tableContent = blockProps.block.content;
       console.log(data);
-      console.log(blockProps.block.content);
-      console.log(idList);
+      console.log(tableContent);
     }
   };
 
@@ -72,11 +61,24 @@ export default function PandasAiComponent() {
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button onClick={handleSend}>Enviar</Button>
+          {!isSend && (
+            <div>
+              <Button variant="outline" onClick={handleClose}>
+                Cancelar
+              </Button>
+              <Button onClick={handleSend}>Enviar</Button>
+            </div>
+          )}
         </CardFooter>
+        {isSend && (
+          <div
+            id="spinner"
+            className="w-full flex items-center justify-center  p-3"
+          >
+            <h1>Respondiendo...</h1>
+            <Spinner size="lg" />
+          </div>
+        )}
       </Card>
     </div>
   );
