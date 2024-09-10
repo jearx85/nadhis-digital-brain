@@ -4,6 +4,7 @@ import PluginElastic from './plugin/elasticdocs';
 import { FileSearch2, MessageSquare, CalendarDays, Bot, Table } from 'lucide-react';
 import AIChat from './AIChat/AIChat';
 import { Tooltip } from 'react-tooltip';
+// import './navOffcanvas.css' 
 import MyCalendar from './MyCalendar/myCalendar';
 import { Item } from '@/app/(main)/_components/item';
 
@@ -100,14 +101,6 @@ const OffcanvasMenu = () => {
                   {activeComponent === 'plugin' && (
                     <>
                       <PluginElastic />
-<<<<<<< HEAD
-                    </>
-                  )}
-                  {activeComponent === 'tables' && (
-                    <>
-                      <TablesPlugin />
-=======
->>>>>>> dev
                     </>
                   )}
               </div>

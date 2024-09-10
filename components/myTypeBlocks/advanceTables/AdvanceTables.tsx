@@ -31,19 +31,6 @@ export const Atable = createReactBlockSpec(
 );
 
 
-<<<<<<< HEAD
-export const insertAtable = (editor: any) => ({
-  title: "aTable",
-  onItemClick: () => {
-    insertOrUpdateBlock(editor, {
-      type: "aTable",
-    });
-  },
-  aliases: ["aTable"],
-  group: "Other",
-  icon: <CiViewTable />,
-});
-=======
 // export const insertAtable = (editor: any) => ({
 //   title: "aTable",
 //   onItemClick: () => {
@@ -55,4 +42,3 @@ export const insertAtable = (editor: any) => ({
 //   group: "Other",
 //   icon: <CiViewTable />,
 // });
->>>>>>> dev
