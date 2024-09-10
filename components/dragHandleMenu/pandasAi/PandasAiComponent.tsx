@@ -60,16 +60,14 @@ export default function PandasAiComponent({ blockId }: { blockId: string }) {
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-between">
-          {!isSend && (
-            <div>
-              <Button variant="outline" onClick={handleClose}>
-                Cancelar
-              </Button>
-              <Button onClick={handleSend}>Enviar</Button>
-            </div>
-          )}
-        </CardFooter>
+        {!isSend && (
+          <CardFooter className="flex justify-between">
+            <Button variant="outline" onClick={handleClose}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSend}>Enviar</Button>
+          </CardFooter>
+        )}
         {isSend && (
           <div
             id="spinner"
