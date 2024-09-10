@@ -134,7 +134,7 @@ export default function AskAi() {
 
   return (
     <div>
-      <button onClick={handleClick}>Preguntar a la Ai</button>
+      <button onClick={handleClick}>Preguntar a Clectif Ai</button>
 
       {isModalOpen && (
         <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
