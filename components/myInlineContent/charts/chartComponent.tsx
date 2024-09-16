@@ -24,28 +24,28 @@ interface ChartTooltipProps {
 
 export default function ChartComponent({ props }: any) {
   const isMobile = useMediaQuery("(max-width: 768px)");
-  let chartData: any[] = [];
-  let typeChart = "";
-  let chartDataKey = "";
-  let chartSeries: any = [];
+  // let chartData: any[] = [];
+  // let typeChart = "";
+  // let chartDataKey = "";
+  // let chartSeries: any = [];
 
   const editor = useBlockNoteEditor();
 
   const { resolvedTheme } = useTheme();
   let textcolor = "";
   
-  editor.document.map((doc: any) => {
-    if (doc.content[0] && (doc.type === "chart")) {
-      const arrContent = doc.content[0].props;
-      if (arrContent) {
-        // chartData = JSON.parse(doc.content[0].props.data);
-        chartData = doc.content[0].props.data ? JSON.parse(doc.content[0].props.data) : "";
-        chartDataKey = doc.content[0].props.dataKey;
-        chartSeries = doc.content[0].props.series ? JSON.parse(doc.content[0].props.series) : "";
-        typeChart = doc.content[0].props.type;
-      }
-    }
-  });
+  // editor.document.map((doc: any) => {
+  //   if (doc.content[0] && (doc.type === "chart")) {
+  //     const arrContent = doc.content[0].props;
+  //     if (arrContent) {
+  //       // chartData = JSON.parse(doc.content[0].props.data);
+  //       chartData = doc.content[0].props.data ? JSON.parse(doc.content[0].props.data) : "";
+  //       chartDataKey = doc.content[0].props.dataKey;
+  //       chartSeries = doc.content[0].props.series ? JSON.parse(doc.content[0].props.series) : "";
+  //       typeChart = doc.content[0].props.type;
+  //     }
+  //   }
+  // });
 
   if (resolvedTheme == "light") {
     textcolor = "black";
@@ -53,9 +53,14 @@ export default function ChartComponent({ props }: any) {
     textcolor = "white";
   }
 
+  let chartData = JSON.parse(props.inlineContent.props.data);
+  let chartDataKey = JSON.stringify(props.inlineContent.props.dataKey);
+  let chartSeries = JSON.parse(props.inlineContent.props.series);
+  let typeChart = JSON.stringify(props.inlineContent.props.type);
+
   const arrValores: any[] = [];
   try{
-    chartData.forEach((valor) => {
+    chartData.forEach((valor: any) => {
     arrValores.push(...Object.values(valor).slice(1, valor.length));
     });
 
@@ -138,9 +143,6 @@ export default function ChartComponent({ props }: any) {
               curveType="linear"
               connectNulls
             />
-            {/* <br />
-              <div className="border-solid border-2 border-sky-500 h-24">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos perferendis animi ea quidem pariatur eius deserunt sapiente nisi excepturi, harum in. Sit esse voluptatibus sint! Deserunt non commodi excepturi minus.</div>
-              <input type="text" /> */}
           </div>
         )}
         {props.inlineContent.props.type === "Bar" && (
