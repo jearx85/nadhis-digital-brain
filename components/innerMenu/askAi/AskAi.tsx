@@ -122,6 +122,7 @@ export default function AskAi() {
 
         setResponseText(fullResponseText);
       } catch (error: any) {
+        setSelectedContext("");
         toast.error(
           "Error al realizar la solicitud, intente de nuevo más tarde."
         );
@@ -161,6 +162,7 @@ export default function AskAi() {
               selectedContext === "Big data" ? (
                 <Button
                   onClick={() => selectContext("Big data")}
+                  onKeyDown={(e) => {e.preventDefault()}}
                   className={
                     selectedContext === "Big data"
                       ? "bg-blue-500 text-white"
@@ -176,6 +178,7 @@ export default function AskAi() {
               selectedContext === "Documento actual" ? (
                 <Button
                   onClick={() => selectContext("Documento actual")}
+                  onKeyDown={(e) => {e.preventDefault()}}
                   className={
                     selectedContext === "Documento actual"
                       ? "bg-blue-500 text-white"
@@ -191,6 +194,7 @@ export default function AskAi() {
               selectedContext === "Documentos" ? (
                 <Button
                   onClick={() => selectContext("Documentos")}
+                  onKeyDown={(e) => {e.preventDefault()}}
                   className={
                     selectedContext === "Documentos"
                       ? "bg-blue-500 text-white"
@@ -209,27 +213,34 @@ export default function AskAi() {
                 placeholder="✨ Hazme una regunta..."
                 value={textareaValue}
                 onChange={handleTextareaChange}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault(); 
+                    handleSendQuestion(); 
+                  }
+                }}
               />
             </div>
             <div className="flex justify-between pt-4">
-              {showcancelButton && textareaValue && selectedContext && (
-                <>
+              {showcancelButton && selectedContext && (
                   <Button
-                    className="border rounded-xl p-2 w-28"
+                    className="border rounded-xl p-2 w-auto"
                     onClick={cancelSelectionContext}
+                    onKeyDown={(e) => {e.preventDefault()}}
                   >
-                    Cancelar
+                    Cambiar contexto
                   </Button>
+                )}
 
+                {showcancelButton && textareaValue && selectedContext && (
                   <Button
                     className="border rounded-xl p-2 w-28"
                     onClick={handleSendQuestion}
-                    onSubmit={handleSendQuestion}
                   >
                     Enviar
                   </Button>
-                </>
-              )}
+                )}
+                
             </div>
             {isSend && isLoading && textareaValue && selectedContext && (
               <div
