@@ -8,11 +8,10 @@ import {
   px,
 } from "@mantine/core";
 import TablesComponent from "./tablesPlugin/TablesPlugin";
-import { CirclePlus } from "lucide-react";
+import { WandSparkles, Sparkles, Table } from 'lucide-react';
 import AddTitle from "./addTitle/AddTitle";
 import AskAi from "./askAi/AskAi";
 import { Button } from "../ui/button";
-import { Table } from "lucide-react";
 
 const getChild = (height: number) => (
   <Skeleton height={height} radius="md" animate={false} />
@@ -36,7 +35,7 @@ export default function InnerMenu() {
   return (
     <div className="flex-col my-10 ">
       <Button className="rounded-full" onClick={openMenu}>
-        <CirclePlus style={{ marginRight: '8px' }}/> 
+        <WandSparkles style={{ marginRight: '8px' }}/> 
         Utils 
       </Button>
       {isOpen && (
@@ -45,14 +44,14 @@ export default function InnerMenu() {
             <SimpleGrid cols={{ base: 1, xs: 4 }}>
               <Stack>
                 <Button className="border p-2 rounded-xl">
-                  <Table />
+                  <Table style={{ marginRight: '8px' }}/>
                   <TablesComponent />
                 </Button>
                 <Button className="border p-2 rounded-xl">
                   <AddTitle />
                 </Button>
-                <Button className="border p-2 rounded-xl flex align-middle gap-1">
-                  <p>✨</p>
+                <Button className="border p-4 rounded-xl flex align-middle gap-1">
+                 <Sparkles style={{ marginRight: '8px' }}/>
                   <AskAi />
                 </Button>
                 {/* {getChild(getSubHeight(3, px(theme.spacing.md) as number))} */}
