@@ -8,7 +8,6 @@ import {
   px,
 } from "@mantine/core";
 import TablesComponent from "./tablesPlugin/TablesPlugin";
-import { Item } from "@/app/(main)/_components/item";
 import { CirclePlus } from "lucide-react";
 import AddTitle from "./addTitle/AddTitle";
 import AskAi from "./askAi/AskAi";
@@ -36,7 +35,10 @@ export default function InnerMenu() {
 
   return (
     <div className="flex-col my-10 ">
-      <Item label="Utils" icon={CirclePlus} onClick={openMenu} />
+      <Button className="rounded-full" onClick={openMenu}>
+        <CirclePlus style={{ marginRight: '8px' }}/> 
+        Utils 
+      </Button>
       {isOpen && (
         <div className="w-full">
           <Container my="md">
@@ -53,14 +55,14 @@ export default function InnerMenu() {
                   <p>✨</p>
                   <AskAi />
                 </Button>
-                {getChild(getSubHeight(3, px(theme.spacing.md) as number))}
+                {/* {getChild(getSubHeight(3, px(theme.spacing.md) as number))} */}
               </Stack>
               <Stack>
+                {/* {getChild(getSubHeight(3, px(theme.spacing.md) as number))}
                 {getChild(getSubHeight(3, px(theme.spacing.md) as number))}
-                {getChild(getSubHeight(3, px(theme.spacing.md) as number))}
-                {getChild(getSubHeight(3, px(theme.spacing.md) as number))}
+                {getChild(getSubHeight(3, px(theme.spacing.md) as number))} */}
               </Stack>
-              {getChild(BASE_HEIGHT)}
+              {/* {getChild(BASE_HEIGHT)} */}
             </SimpleGrid>
           </Container>
         </div>
