@@ -17,10 +17,12 @@ export default function AskAi() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastBlockId, setLastBlockId] = useState("");
   const [isContextSelected, setIsContextSelected] = useState(true);
+  const [selectedContext, setSelectedContext] = useState("");
   const [isSend, setIsSend] = useState(false);
   const [textareaValue, setTextareaValue] = useState("");
   const [responseText, setResponseText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showButtons, setShowButtons] = useState(false);
 
   let idsList: any[] = [];
 
@@ -34,28 +36,22 @@ export default function AskAi() {
 
   function handleModalClose() {
     setIsModalOpen(false); // Cierra el modal
+    setSelectedContext("");
   }
 
-  function selectContext(e: any) {
-    setIsContextSelected(!isContextSelected);
-    let context = e.target.value;
+  function selectContext(context: string) {
     console.log(context);
+    setSelectedContext(context);
+    setShowButtons(false);
   }
 
   const handleTextareaChange = (event: any) => {
     setTextareaValue(event.target.value);
   };
 
-  let blockId = "";
-  editor.document.map((block: any) => {
-    if (
-      block.content &&
-      block.content[0] != undefined &&
-      block.content[0].type === "iachat"
-    ) {
-      blockId = block.id;
-    }
-  });
+  const cancelSelectionContext = () => {
+    setShowButtons(true);
+  }
 
   const handleSendQuestion = async () => {
     setIsLoading(true);
@@ -118,11 +114,10 @@ export default function AskAi() {
         }
 
         setResponseText(fullResponseText);
-        
-    } catch (error: any) {
+      } catch (error: any) {
         toast.error(`Error: ${error.message}`);
         console.error("Error al realizar la solicitud:", error);
-    } finally {
+      } finally {
         setIsLoading(false);
       }
     } else {
@@ -134,7 +129,7 @@ export default function AskAi() {
 
   return (
     <div>
-      <button onClick={handleClick}>Preguntar a Clectif Ai</button>
+      <p onClick={handleClick}>Preguntar a Clectif Ai</p>
 
       {isModalOpen && (
         <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
@@ -145,19 +140,47 @@ export default function AskAi() {
                 Permite elegir el contexto sobre el cual quieres preguntar.
               </DialogDescription>
             </DialogHeader>
-            {isContextSelected && (
-              <div className="mt-4 flex flex-col gap-3">
-                <Button onClick={selectContext} value="Big data">
+
+            <div className="mt-4 flex flex-col gap-3">
+              {showButtons || !selectedContext || selectedContext === "Big data" ? (
+                <Button
+                  onClick={() => selectContext("Big data")}
+                  className={
+                    selectedContext === "Big data"
+                      ? "bg-blue-500 text-white"
+                      : "bg-black"
+                  }
+                >
                   Big data
                 </Button>
-                <Button onClick={selectContext} value="Documento actual">
+              ) : null}
+
+              {showButtons || !selectedContext || selectedContext === "Documento actual" ? (
+                <Button
+                  onClick={() => selectContext("Documento actual")}
+                  className={
+                    selectedContext === "Documento actual"
+                      ? "bg-blue-500 text-white"
+                      : "bg-black"
+                  }
+                >
                   Documento actual
                 </Button>
-                <Button onClick={selectContext} value="Documentos">
+              ) : null}
+
+              {showButtons || !selectedContext || selectedContext === "Documentos" ? (
+                <Button
+                  onClick={() => selectContext("Documentos")}
+                  className={
+                    selectedContext === "Documentos"
+                      ? "bg-blue-500 text-white"
+                      : "bg-black"
+                  }
+                >
                   Documentos
                 </Button>
-              </div>
-            )}
+              ) : null}
+            </div>
 
             <div className="flex flex-col gap-y-1">
               <input
@@ -168,10 +191,17 @@ export default function AskAi() {
                 onChange={handleTextareaChange}
               />
             </div>
-            <div className="flex justify-end pt-4">
+            <div className="flex justify-between pt-4">
+              <Button
+                className="btn border rounded-xl p-2"
+                onClick={cancelSelectionContext}
+              >
+                Cancelar
+              </Button>
               <Button
                 className="btn border rounded-xl p-2"
                 onClick={handleSendQuestion}
+                onSubmit={handleSendQuestion}
               >
                 Enviar
               </Button>
