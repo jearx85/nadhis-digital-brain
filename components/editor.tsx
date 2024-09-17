@@ -98,7 +98,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           onChange(JSON.stringify(blocks, null, 2));
         }}
       >
-        <div className="flex">
+        <div className="p-3 rounded-3xl fixed mt-44 z-50 right-10 bottom-0">
           <InnerMenu />
         </div>
 
