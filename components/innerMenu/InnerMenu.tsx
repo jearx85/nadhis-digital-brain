@@ -41,7 +41,9 @@ export default function InnerMenu() {
 
   return (
     <div>
-      <Button className="rounded-full" onClick={openMenu}>
+      <Button 
+        className="rounded-full opacity-50 hover:opacity-100" 
+        onClick={openMenu}>
         <WandSparkles style={{ marginRight: "8px" }} />
         Utils
       </Button>
