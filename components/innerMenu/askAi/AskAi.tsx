@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Spinner } from "@/components/spinner";
@@ -16,13 +17,14 @@ export default function AskAi() {
   const editor = useBlockNoteEditor();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastBlockId, setLastBlockId] = useState("");
-  const [isContextSelected, setIsContextSelected] = useState(true);
+  const [isContextSelected, setIsContextSelected] = useState(false);
   const [selectedContext, setSelectedContext] = useState("");
   const [isSend, setIsSend] = useState(false);
   const [textareaValue, setTextareaValue] = useState("");
   const [responseText, setResponseText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showButtons, setShowButtons] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const [showcancelButton, setshowCancelButton] = useState(true);
 
   let idsList: any[] = [];
 
@@ -37,12 +39,15 @@ export default function AskAi() {
   function handleModalClose() {
     setIsModalOpen(false); // Cierra el modal
     setSelectedContext("");
+    setTextareaValue("");
+    setShowButton(true);
+    setshowCancelButton(true);
   }
 
   function selectContext(context: string) {
     console.log(context);
     setSelectedContext(context);
-    setShowButtons(false);
+    setShowButton(false);
   }
 
   const handleTextareaChange = (event: any) => {
@@ -50,17 +55,19 @@ export default function AskAi() {
   };
 
   const cancelSelectionContext = () => {
-    setShowButtons(true);
-  }
+    setSelectedContext("");
+    setShowButton(true);
+  };
 
   const handleSendQuestion = async () => {
     setIsLoading(true);
     setIsSend(true);
-
     setIsContextSelected(true);
-    setTextareaValue("");
 
-    if (textareaValue) {
+    if (textareaValue && selectedContext.length > 0) {
+      console.log(textareaValue);
+      setshowCancelButton(false);
+
       const data = { query: textareaValue };
       try {
         const response = await fetch("http://localhost:8081/ask", {
@@ -115,11 +122,18 @@ export default function AskAi() {
 
         setResponseText(fullResponseText);
       } catch (error: any) {
-        toast.error(`Error: ${error.message}`);
-        console.error("Error al realizar la solicitud:", error);
+        toast.error(
+          "Error al realizar la solicitud, intente de nuevo más tarde."
+        );
+        console.error("Error al realizar la solicitud:", error.message);
       } finally {
         setIsLoading(false);
+        setTextareaValue("");
+        setShowButton(true);
+        setshowCancelButton(true);
       }
+    } else if (selectedContext.length == 0) {
+      toast("Seleccione un contexto");
     } else {
       setIsSend(false);
       setIsLoading(false);
@@ -142,7 +156,9 @@ export default function AskAi() {
             </DialogHeader>
 
             <div className="mt-4 flex flex-col gap-3">
-              {showButtons || !selectedContext || selectedContext === "Big data" ? (
+              {showButton ||
+              !selectedContext ||
+              selectedContext === "Big data" ? (
                 <Button
                   onClick={() => selectContext("Big data")}
                   className={
@@ -155,7 +171,9 @@ export default function AskAi() {
                 </Button>
               ) : null}
 
-              {showButtons || !selectedContext || selectedContext === "Documento actual" ? (
+              {showButton ||
+              !selectedContext ||
+              selectedContext === "Documento actual" ? (
                 <Button
                   onClick={() => selectContext("Documento actual")}
                   className={
@@ -168,7 +186,9 @@ export default function AskAi() {
                 </Button>
               ) : null}
 
-              {showButtons || !selectedContext || selectedContext === "Documentos" ? (
+              {showButton ||
+              !selectedContext ||
+              selectedContext === "Documentos" ? (
                 <Button
                   onClick={() => selectContext("Documentos")}
                   className={
@@ -183,7 +203,7 @@ export default function AskAi() {
             </div>
 
             <div className="flex flex-col gap-y-1">
-              <input
+              <Input
                 className="p-2 mt-2"
                 type="text"
                 placeholder="✨ Hazme una regunta..."
@@ -192,21 +212,26 @@ export default function AskAi() {
               />
             </div>
             <div className="flex justify-between pt-4">
-              <Button
-                className="btn border rounded-xl p-2"
-                onClick={cancelSelectionContext}
-              >
-                Cancelar
-              </Button>
-              <Button
-                className="btn border rounded-xl p-2"
-                onClick={handleSendQuestion}
-                onSubmit={handleSendQuestion}
-              >
-                Enviar
-              </Button>
+              {showcancelButton && textareaValue && selectedContext && (
+                <>
+                  <Button
+                    className="border rounded-xl p-2 w-28"
+                    onClick={cancelSelectionContext}
+                  >
+                    Cancelar
+                  </Button>
+
+                  <Button
+                    className="border rounded-xl p-2 w-28"
+                    onClick={handleSendQuestion}
+                    onSubmit={handleSendQuestion}
+                  >
+                    Enviar
+                  </Button>
+                </>
+              )}
             </div>
-            {isSend && isLoading && (
+            {isSend && isLoading && textareaValue && selectedContext && (
               <div
                 id="spinner"
                 className="w-full flex items-center justify-center mt-10"
