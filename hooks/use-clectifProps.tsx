@@ -5,9 +5,9 @@ interface GlobalState {
   setBlockProps: (props: any) => void;
 }
 
-const usePandasProps = create<GlobalState>((set) => ({
+const useClectifProps = create<GlobalState>((set) => ({
   blockProps: null, // Estado inicial
   setBlockProps: (props) => set({ blockProps: props }),
 }));
 
-export default usePandasProps;
+export default useClectifProps;

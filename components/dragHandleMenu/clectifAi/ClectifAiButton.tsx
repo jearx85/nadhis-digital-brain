@@ -1,9 +1,9 @@
 import React from "react";
-import usePandasProps from "@/hooks/use-pandasProps";
+import useClectifProps from "@/hooks/use-clectifProps";
 import { generateUUID } from "@/components/offcanvasMenu/plugin/noteUtils";
 
-export default function PandasAiButton({editor, props}: any) {
-  const setBlockProps = usePandasProps((state) => state.setBlockProps);
+export default function ClectifAiButton({editor, props}: any) {
+  const setBlockProps = useClectifProps((state) => state.setBlockProps);
 
   function handleClick() {
     const blockId = props.block.id
@@ -21,7 +21,7 @@ export default function PandasAiButton({editor, props}: any) {
         },
         content: [
           {
-            type: "pandasAi",
+            type: "clectifAi",
             props: {
               column: "Chat"
             }
@@ -42,7 +42,7 @@ export default function PandasAiButton({editor, props}: any) {
   return (
     <div>
       <button className="text-xs" onClick={handleClick}>
-        ✨ Pandas AI
+        ✨ Clectif AI
       </button>
     </div>
   );

@@ -37,8 +37,8 @@ import { MapBlock, setColumns } from "./myInlineContent/mapBlockContent/MapBlock
 import { showTables, TablesContent } from "./myInlineContent/tables/Tables";
 import { Alert, insertAlert } from "../components/myTypeBlocks/alert/Alert";
 import InnerMenu from "./innerMenu/InnerMenu";
-import PandasAiButton from "./dragHandleMenu/pandasAi/PandasAiButton";
-import { PandasAi } from "./dragHandleMenu/pandasAi/PandasAiType";
+import ClectifAiButton from "./dragHandleMenu/clectifAi/ClectifAiButton";
+import { ClectifAi } from "./dragHandleMenu/clectifAi/ClectifAiType";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -48,7 +48,7 @@ const schema = BlockNoteSchema.create({
     mapBlock: MapBlock,
     iachat: IaChatContent,
     tables: TablesContent,
-    pandasAi: PandasAi,
+    clectifAi: ClectifAi,
   },
   blockSpecs: {
     ...defaultBlockSpecs,
@@ -98,7 +98,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           onChange(JSON.stringify(blocks, null, 2));
         }}
       >
-        <div className="flex">
+        <div className="p-3 rounded-3xl fixed mt-44 z-50 right-10 bottom-0">
           <InnerMenu />
         </div>
 
@@ -148,7 +148,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
                   <DragHandleMenu {...props}>
                     <RemoveBlockItem {...props}>Delete</RemoveBlockItem>
                     <MenuCharts props={props} editor={editor} />
-                    <PandasAiButton props={props} editor={editor}/>
+                    <ClectifAiButton props={props} editor={editor}/>
                   </DragHandleMenu >
                 )}
               />

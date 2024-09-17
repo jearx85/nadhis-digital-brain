@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useBlockNoteEditor } from "@blocknote/react";
-import usePandasProps from "@/hooks/use-pandasProps";
+import useClectifProps from "@/hooks/use-clectifProps";
 import { Spinner } from "@/components/spinner";
 
-export default function PandasAiComponent({ blockId }: { blockId: string }) {
+export default function ClectifAiComponent({ blockId }: { blockId: string }) {
   const [textareaValue, setTextareaValue] = useState("");
   const [isSend, setIsSend] = useState(false);
   const editor = useBlockNoteEditor();
-  const blockProps = usePandasProps((state) => state.blockProps);
+  const blockProps = useClectifProps((state) => state.blockProps);
 
   const handleClose = () => {
     editor.removeBlocks([blockId]);
@@ -41,7 +41,7 @@ export default function PandasAiComponent({ blockId }: { blockId: string }) {
     <div>
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>✨ Pandas AI</CardTitle>
+          <CardTitle>✨ Clectif AI</CardTitle>
           <CardDescription>
             Pregunta acerca de los datos de tus tablas.
           </CardDescription>
