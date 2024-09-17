@@ -9,6 +9,7 @@ import { generateUUID } from "../../offcanvasMenu/plugin/noteUtils";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -130,11 +131,14 @@ export default function TablesComponent() {
 
   return (
     <div>
-      <button onClick={handleModalClick}>Agregar Tablas</button>
+      <p onClick={handleModalClick}>Agregar Tablas</p>
       {isModalOpen && (
         <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
           <DialogContent>
             <DialogTitle>Agregue tablas</DialogTitle>
+            <DialogDescription>
+              Transforme sus datos no estructurados en tablas para una mejor visualización.
+            </DialogDescription>
             <DialogHeader className="border-b pb-3">
               <h2 className="text-lg font-medium">
                 La tabla se agregará en el documento:

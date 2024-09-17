@@ -60,7 +60,7 @@ export default function AddTitle() {
 
   return (
     <div>
-      <button onClick={handleClick}>Agregar título</button>
+      <p onClick={handleClick}>Agregar título</p>
 
       {isModalOpen && (
         <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
