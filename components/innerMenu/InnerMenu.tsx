@@ -49,22 +49,36 @@ export default function InnerMenu() {
         <Dialog open={isOpen} onOpenChange={handleCloseMenu}>
           <DialogContent>
             <DialogHeader className="border-b pb-3">
-            <DialogTitle className="text-3xl">Utils</DialogTitle>
+              <DialogTitle className="text-3xl">Utils</DialogTitle>
               <DialogDescription>
-              Agregue información importante a su documento.
+                Agregue información importante a su documento.
               </DialogDescription>
             </DialogHeader>
-            <Button className="border p-2 rounded-xl">
-              <Table style={{ marginRight: "8px" }} />
-              <TablesComponent />
-            </Button>
-            <Button className="border p-2 rounded-xl">
-              <AddTitle />
-            </Button>
-            <Button className="border p-4 rounded-xl flex align-middle gap-1">
-              <Sparkles style={{ marginRight: "8px" }} />
-              <AskAi />
-            </Button>
+            <div className="w-full p-2 border rounded-2xl">
+              <Container my="lg">
+                <SimpleGrid cols={{ base: 1, xs: 2 }}>
+                  <Stack>
+                    <Button className="border p-2 rounded-xl w-auto">
+                      <Table style={{ marginRight: "8px" }} />
+                      <TablesComponent />
+                    </Button>
+                    <Button className="border p-2 rounded-xl w-auto">
+                      <AddTitle />
+                    </Button>
+
+                    {getChild(getSubHeight(3, px(theme.spacing.md) as number))}
+                  </Stack>
+                  <Stack>
+                    <Button className="border p-4 rounded-xl flex align-middle gap-1 w-auto">
+                      <Sparkles style={{ marginRight: "8px" }} />
+                      <AskAi />
+                    </Button>
+
+                    {/* {getChild(getSubHeight(3, px(theme.spacing.md) as number))} */}
+                  </Stack>
+                </SimpleGrid>
+              </Container>
+            </div>
           </DialogContent>
         </Dialog>
       )}
