@@ -6,16 +6,13 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useBlockNoteEditor } from "@blocknote/react";
 import { generateUUID } from "../../offcanvasMenu/plugin/noteUtils";
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 interface ApiResponse {
@@ -82,14 +79,6 @@ export default function TablesComponent() {
     return date.toLocaleString();
   };
 
-  // const rows = datos.map((row: any, index: number) => (
-  //   <tr key={index}>
-  //     {row.cells.map((cell: any, cellIndex: number) => (
-  //       <td key={cellIndex}>{cell}</td>
-  //     ))}
-  //   </tr>
-  // ));
-
   function handleModalClose() {
     setIsModalOpen(false); // Cierra el modal
   }
@@ -100,21 +89,30 @@ export default function TablesComponent() {
     getApiInfo()
       .then((data: ApiResponse) => {
         setDatos(data.content.rows);
-        const content = [
-          {
-            id: generateUUID(),
-            type: "table",
-            props: {
-              textColor: "default",
-              backgroundColor: "default",
-            },
-            content: {
-              rows: data.content.rows,
-            },
-            children: [],
-          },
-        ];
-        onChange(content);
+        try {
+          editor.insertBlocks(
+            [
+              {
+                id: generateUUID(),
+                type: "table",
+                props: {
+                  textColor: "default",
+                  backgroundColor: "default",
+                },
+                content: {
+                  type: "tableContent",
+                  rows: data.content.rows,
+                },
+                children: [],
+              },
+            ],
+            lastBlockId,
+            "after"
+          );
+          setIsModalOpen(false);
+        } catch (error) {
+          console.error("Error insertando bloque de encabezado", error);
+        }
       })
       .catch((error) => {
         console.error("Error fetching API data: ", error);
@@ -133,10 +131,14 @@ export default function TablesComponent() {
 
   return (
     <div>
-      <button onClick={handleModalClick}>Agregar Tablas</button>
+      <p onClick={handleModalClick}>Agregar Tablas</p>
       {isModalOpen && (
         <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
           <DialogContent>
+            <DialogTitle>Agregue tablas</DialogTitle>
+            <DialogDescription>
+              Transforme sus datos no estructurados en tablas para una mejor visualización.
+            </DialogDescription>
             <DialogHeader className="border-b pb-3">
               <h2 className="text-lg font-medium">
                 La tabla se agregará en el documento:

@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Spinner } from "@/components/spinner";
@@ -16,11 +17,14 @@ export default function AskAi() {
   const editor = useBlockNoteEditor();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastBlockId, setLastBlockId] = useState("");
-  const [isContextSelected, setIsContextSelected] = useState(true);
+  const [isContextSelected, setIsContextSelected] = useState(false);
+  const [selectedContext, setSelectedContext] = useState("");
   const [isSend, setIsSend] = useState(false);
   const [textareaValue, setTextareaValue] = useState("");
   const [responseText, setResponseText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const [showcancelButton, setshowCancelButton] = useState(true);
 
   let idsList: any[] = [];
 
@@ -34,37 +38,36 @@ export default function AskAi() {
 
   function handleModalClose() {
     setIsModalOpen(false); // Cierra el modal
+    setSelectedContext("");
+    setTextareaValue("");
+    setShowButton(true);
+    setshowCancelButton(true);
   }
 
-  function selectContext(e: any) {
-    setIsContextSelected(!isContextSelected);
-    let context = e.target.value;
+  function selectContext(context: string) {
     console.log(context);
+    setSelectedContext(context);
+    setShowButton(false);
   }
 
   const handleTextareaChange = (event: any) => {
     setTextareaValue(event.target.value);
   };
 
-  let blockId = "";
-  editor.document.map((block: any) => {
-    if (
-      block.content &&
-      block.content[0] != undefined &&
-      block.content[0].type === "iachat"
-    ) {
-      blockId = block.id;
-    }
-  });
+  const cancelSelectionContext = () => {
+    setSelectedContext("");
+    setShowButton(true);
+  };
 
   const handleSendQuestion = async () => {
     setIsLoading(true);
     setIsSend(true);
-
     setIsContextSelected(true);
-    setTextareaValue("");
 
-    if (textareaValue) {
+    if (textareaValue && selectedContext.length > 0) {
+      console.log(textareaValue);
+      setshowCancelButton(false);
+
       const data = { query: textareaValue };
       try {
         const response = await fetch("http://localhost:8081/ask", {
@@ -118,13 +121,19 @@ export default function AskAi() {
         }
 
         setResponseText(fullResponseText);
-        
-    } catch (error: any) {
-        toast.error(`Error: ${error.message}`);
-        console.error("Error al realizar la solicitud:", error);
-    } finally {
+      } catch (error: any) {
+        toast.error(
+          "Error al realizar la solicitud, intente de nuevo más tarde."
+        );
+        console.error("Error al realizar la solicitud:", error.message);
+      } finally {
         setIsLoading(false);
+        setTextareaValue("");
+        setShowButton(true);
+        setshowCancelButton(true);
       }
+    } else if (selectedContext.length == 0) {
+      toast("Seleccione un contexto");
     } else {
       setIsSend(false);
       setIsLoading(false);
@@ -134,7 +143,7 @@ export default function AskAi() {
 
   return (
     <div>
-      <button onClick={handleClick}>Preguntar a Clectif Ai</button>
+      <p onClick={handleClick}>Preguntar a Clectif Ai</p>
 
       {isModalOpen && (
         <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
@@ -145,22 +154,56 @@ export default function AskAi() {
                 Permite elegir el contexto sobre el cual quieres preguntar.
               </DialogDescription>
             </DialogHeader>
-            {isContextSelected && (
-              <div className="mt-4 flex flex-col gap-3">
-                <Button onClick={selectContext} value="Big data">
+
+            <div className="mt-4 flex flex-col gap-3">
+              {showButton ||
+              !selectedContext ||
+              selectedContext === "Big data" ? (
+                <Button
+                  onClick={() => selectContext("Big data")}
+                  className={
+                    selectedContext === "Big data"
+                      ? "bg-blue-500 text-white"
+                      : "bg-black"
+                  }
+                >
                   Big data
                 </Button>
-                <Button onClick={selectContext} value="Documento actual">
+              ) : null}
+
+              {showButton ||
+              !selectedContext ||
+              selectedContext === "Documento actual" ? (
+                <Button
+                  onClick={() => selectContext("Documento actual")}
+                  className={
+                    selectedContext === "Documento actual"
+                      ? "bg-blue-500 text-white"
+                      : "bg-black"
+                  }
+                >
                   Documento actual
                 </Button>
-                <Button onClick={selectContext} value="Documentos">
+              ) : null}
+
+              {showButton ||
+              !selectedContext ||
+              selectedContext === "Documentos" ? (
+                <Button
+                  onClick={() => selectContext("Documentos")}
+                  className={
+                    selectedContext === "Documentos"
+                      ? "bg-blue-500 text-white"
+                      : "bg-black"
+                  }
+                >
                   Documentos
                 </Button>
-              </div>
-            )}
+              ) : null}
+            </div>
 
             <div className="flex flex-col gap-y-1">
-              <input
+              <Input
                 className="p-2 mt-2"
                 type="text"
                 placeholder="✨ Hazme una regunta..."
@@ -168,15 +211,27 @@ export default function AskAi() {
                 onChange={handleTextareaChange}
               />
             </div>
-            <div className="flex justify-end pt-4">
-              <Button
-                className="btn border rounded-xl p-2"
-                onClick={handleSendQuestion}
-              >
-                Enviar
-              </Button>
+            <div className="flex justify-between pt-4">
+              {showcancelButton && textareaValue && selectedContext && (
+                <>
+                  <Button
+                    className="border rounded-xl p-2 w-28"
+                    onClick={cancelSelectionContext}
+                  >
+                    Cancelar
+                  </Button>
+
+                  <Button
+                    className="border rounded-xl p-2 w-28"
+                    onClick={handleSendQuestion}
+                    onSubmit={handleSendQuestion}
+                  >
+                    Enviar
+                  </Button>
+                </>
+              )}
             </div>
-            {isSend && isLoading && (
+            {isSend && isLoading && textareaValue && selectedContext && (
               <div
                 id="spinner"
                 className="w-full flex items-center justify-center mt-10"
