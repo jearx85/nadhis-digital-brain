@@ -1,4 +1,6 @@
-const urlBase = "http://192.168.50.230:8087"
+// const urlBase = "http://192.168.50.230:8087"
+const urlBase = "http://35.223.72.198:8087"
+
 
 //=============================> Query para listar categorías <=============================
 export async function queryCategory(): Promise<any> {

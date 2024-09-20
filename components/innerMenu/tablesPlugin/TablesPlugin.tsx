@@ -31,7 +31,8 @@ interface ApiResponse {
 
 const getApiInfo = async () => {
   const data = await fetch(
-    `http://localhost:8081/ultimos_registros/wazetraffic`
+    // `http://localhost:8081/ultimos_registros/wazetraffic`
+    `http://35.223.72.198:8081/ultimos_registros/wazetraffic`
   ).then((res) => res.json());
   return data;
 };

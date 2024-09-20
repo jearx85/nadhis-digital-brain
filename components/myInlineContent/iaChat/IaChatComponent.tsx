@@ -187,7 +187,8 @@ const IaChatComponent: NextPage = () => {
     if (textareaValue) {
       const data = { query: textareaValue };
       try {
-        const response = await fetch("http://localhost:8081/ask", {
+        // const response = await fetch("http://localhost:8081/ask", {
+          const response = await fetch("http://35.223.72.198:8081/ask", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
