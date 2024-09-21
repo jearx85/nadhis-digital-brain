@@ -307,7 +307,9 @@ const PluginElastic = () => {
   //=====================================================================
   //========= Listar titulos cuando se hace busqueda semantica ==========
   async function getEmbeddings(query: string) {
-    const url = `http://192.168.50.230:8087/query/${query}`;
+    // const url = `http://192.168.50.230:8087/query/${query}`;
+    const url = `http://35.223.72.198:8087/query/${query}`;
+
 
     try {
       setLoading(true);
@@ -344,7 +346,9 @@ const PluginElastic = () => {
     if (!titulos.includes(selected)) {
       titulos.splice(0, 0, selected); // Agregar el elemento seleccionado en la primera posición
       try {
-        const response = await fetch("http://192.168.50.230:8087/relacion/", {
+        // const response = await fetch("http://192.168.50.230:8087/relacion/", {
+          const response = await fetch("http://35.223.72.198:8087/relacion/", {
+
           method: "POST",
           headers: {
             "Content-Type": "application/json",

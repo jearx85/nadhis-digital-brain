@@ -61,7 +61,8 @@ export default function SearchBar() {
   useEffect(() => {
     if (valorHome) {
       resetFilters();
-      const urlNdhis = `http://192.168.50.230:8087/query2/${valorHome}`;
+      // const urlNdhis = `http://192.168.50.230:8087/query2/${valorHome}`;
+      const urlNdhis = `http://35.223.72.198:8087/query2/${valorHome}`;
       fetch(urlNdhis)
         .then((response) => {
           if (!response.ok) {
@@ -108,7 +109,8 @@ export default function SearchBar() {
     if (!valorBusqueda) return; //Validar input vacío.
 
     resetFilters();
-    const urlNdhis = `http://192.168.50.230:8087/query2/${valorBusqueda}`;
+    // const urlNdhis = `http://192.168.50.230:8087/query2/${valorBusqueda}`;
+    const urlNdhis = `http://35.223.72.198:8087/query2/${valorBusqueda}`;
 
     router.push(`/appsearch/searchBar?search=${valorBusqueda}`);
     fetch(urlNdhis)
