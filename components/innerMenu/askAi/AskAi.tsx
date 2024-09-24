@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Spinner } from "@/components/spinner";
+import { WandSparkles } from "lucide-react";
+
 
 export default function AskAi() {
   const editor = useBlockNoteEditor();
@@ -145,7 +147,13 @@ export default function AskAi() {
 
   return (
     <div>
-      <p onClick={handleClick}>Preguntar a Clectif Ai</p>
+      {/* <p onClick={handleClick}>Preguntar a Clectif Ai</p> */}
+      <Button 
+        className="rounded-full opacity-50 hover:opacity-100" 
+        onClick={handleClick}>
+        <WandSparkles style={{ marginRight: "8px" }} />
+        Clectif Bot
+      </Button>
 
       {isModalOpen && (
         <Dialog open={isModalOpen} onOpenChange={handleModalClose}>

@@ -39,6 +39,7 @@ import { Alert, insertAlert } from "../components/myTypeBlocks/alert/Alert";
 import InnerMenu from "./innerMenu/InnerMenu";
 import ClectifAiButton from "./dragHandleMenu/clectifAi/ClectifAiButton";
 import { ClectifAi } from "./dragHandleMenu/clectifAi/ClectifAiType";
+import AskAi from "./innerMenu/askAi/AskAi";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -99,7 +100,8 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
         }}
       >
         <div className="p-3 rounded-3xl fixed mt-44 z-50 right-10 bottom-0">
-          <InnerMenu />
+          {/* <InnerMenu /> */}
+          <AskAi />
         </div>
 
         <SuggestionMenuController
