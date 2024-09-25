@@ -13,14 +13,15 @@ import { useBlockNoteEditor } from "@blocknote/react";
 import useClectifProps from "@/hooks/use-clectifProps";
 import { Spinner } from "@/components/spinner";
 
-export default function ClectifAiComponent({ blockId }: { blockId: string }) {
+export default function ClectifAiComponent(props: any) {
   const [textareaValue, setTextareaValue] = useState("");
   const [isSend, setIsSend] = useState(false);
   const editor = useBlockNoteEditor();
   const blockProps = useClectifProps((state) => state.blockProps);
 
   const handleClose = () => {
-    editor.removeBlocks([blockId]);
+    const id_chat = props.props.props.inlineContent.props.id_chat
+    editor.removeBlocks([id_chat]);
   };
 
   const handleSend = () => {

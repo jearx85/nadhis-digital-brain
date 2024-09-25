@@ -23,7 +23,8 @@ export default function ClectifAiButton({editor, props}: any) {
           {
             type: "clectifAi",
             props: {
-              column: "Chat"
+              column: "Chat",
+              id_chat: chatId
             }
           },
           {

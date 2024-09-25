@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,  useEffect  } from "react";
 import { useBlockNoteEditor } from "@blocknote/react";
 import {
   Dialog,
@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Spinner } from "@/components/spinner";
+import { WandSparkles } from "lucide-react";
+
 
 export default function AskAi() {
   const editor = useBlockNoteEditor();
@@ -27,6 +29,19 @@ export default function AskAi() {
   const [showcancelButton, setshowCancelButton] = useState(true);
 
   let idsList: any[] = [];
+
+  useEffect(() => {
+    function handleShortcut(event: KeyboardEvent) {
+      if (event.ctrlKey && event.key === "i") {
+        event.preventDefault();
+        handleClick();
+      }
+    }
+    window.addEventListener("keydown", handleShortcut);
+    return () => {
+      window.removeEventListener("keydown", handleShortcut);
+    };
+  }, []);
 
   function handleClick() {
     editor.document.map((block) => {
@@ -145,7 +160,14 @@ export default function AskAi() {
 
   return (
     <div>
-      <p onClick={handleClick}>Preguntar a Clectif Ai</p>
+      {/* <p onClick={handleClick}>Preguntar a Clectif Ai</p> */}
+      <Button 
+        className="rounded-full opacity-50 hover:opacity-100" 
+        onClick={handleClick}>
+        <WandSparkles style={{ marginRight: "8px" }} />
+        Clectif AI
+        <span className="text-xs ml-3 border rounded-md p-1">Ctrl + i</span>
+      </Button>
 
       {isModalOpen && (
         <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
