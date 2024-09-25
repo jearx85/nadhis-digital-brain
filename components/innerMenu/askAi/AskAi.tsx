@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,  useEffect  } from "react";
 import { useBlockNoteEditor } from "@blocknote/react";
 import {
   Dialog,
@@ -29,6 +29,19 @@ export default function AskAi() {
   const [showcancelButton, setshowCancelButton] = useState(true);
 
   let idsList: any[] = [];
+
+  useEffect(() => {
+    function handleShortcut(event: KeyboardEvent) {
+      if (event.ctrlKey && event.key === "i") {
+        event.preventDefault();
+        handleClick();
+      }
+    }
+    window.addEventListener("keydown", handleShortcut);
+    return () => {
+      window.removeEventListener("keydown", handleShortcut);
+    };
+  }, []);
 
   function handleClick() {
     editor.document.map((block) => {
@@ -153,6 +166,7 @@ export default function AskAi() {
         onClick={handleClick}>
         <WandSparkles style={{ marginRight: "8px" }} />
         Clectif AI
+        <span className="text-xs ml-3 border rounded-md p-1">Ctrl + i</span>
       </Button>
 
       {isModalOpen && (
