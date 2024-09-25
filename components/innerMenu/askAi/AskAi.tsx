@@ -152,7 +152,7 @@ export default function AskAi() {
         className="rounded-full opacity-50 hover:opacity-100" 
         onClick={handleClick}>
         <WandSparkles style={{ marginRight: "8px" }} />
-        Clectif Bot
+        Clectif AI
       </Button>
 
       {isModalOpen && (
