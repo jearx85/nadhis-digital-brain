@@ -5,7 +5,7 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useBlockNoteEditor } from "@blocknote/react";
-import { generateUUID } from "../../offcanvasMenu/plugin/noteUtils";
+import { generateUUID } from "../../offcanvasMenu/plugin/utils/noteUtils";
 import {
   Dialog,
   DialogContent,
