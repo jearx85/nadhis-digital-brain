@@ -7,7 +7,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useRouter } from "next/navigation";
-import { generateUUID } from "@/components/offcanvasMenu/plugin/noteUtils";
+import { generateUUID } from "@/components/offcanvasMenu/plugin/utils/noteUtils";
 import { useTheme } from "next-themes";
 
 interface Node {
