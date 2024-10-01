@@ -2,12 +2,10 @@ import { createReactInlineContentSpec } from "@blocknote/react";
 import ClectifAiComponent from "./ClectifAiComponent";
 import { useBlockNoteEditor } from "@blocknote/react";
 
-// Componente que se encarga de manejar el hook
 function ClectifAiWithBlockId(props: any) {
   const editor = useBlockNoteEditor();
   
   let blockId = "";
-  console.log(props)
   editor.document.map((block: any) => {
     if (
       block.content &&
@@ -21,7 +19,6 @@ function ClectifAiWithBlockId(props: any) {
   return <ClectifAiComponent props={props} />;
 }
 
-// Aquí definimos la especificación del contenido inline
 export const ClectifAi = createReactInlineContentSpec(
   {
     type: "clectifAi",

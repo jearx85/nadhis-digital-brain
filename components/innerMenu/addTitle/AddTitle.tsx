@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useBlockNoteEditor } from "@blocknote/react";
-import { generateUUID } from "@/components/offcanvasMenu/plugin/noteUtils";
+import { generateUUID } from "@/components/offcanvasMenu/plugin/utils/noteUtils";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 
 export default function AddTitle() {

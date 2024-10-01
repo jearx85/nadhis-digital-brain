@@ -1,6 +1,6 @@
 import React from "react";
 import useClectifProps from "@/hooks/use-clectifProps";
-import { generateUUID } from "@/components/offcanvasMenu/plugin/noteUtils";
+import { generateUUID } from "@/components/offcanvasMenu/plugin/utils/noteUtils";
 
 export default function ClectifAiButton({editor, props}: any) {
   const setBlockProps = useClectifProps((state) => state.setBlockProps);
@@ -11,6 +11,10 @@ export default function ClectifAiButton({editor, props}: any) {
     const chatId = generateUUID();
 
     editor.insertBlocks([
+      {
+        type: "paragraph", 
+        content: ""
+      },
       {
         id: chatId,
         type: "paragraph",

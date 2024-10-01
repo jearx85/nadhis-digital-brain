@@ -1,477 +1,62 @@
-import React, { useEffect, useState } from "react";
-import "./PluginElastic.css";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { toast } from "sonner";
 import { Spinner } from "@/components/spinner";
 
-import { queryCategories, queryCategory } from "./funciones";
-import { toast } from "sonner";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { generateUUID } from "./noteUtils";
-import { useRouter } from "next/navigation";
+import "./PluginElastic.css";
+import { useCategories } from "./hooks/useCategories";
+import { useSemanticSearch } from "./hooks/useSemanticSearch";
+import { useCreateNote } from "./hooks/useCreateNote";
+import CategorySelect from "./components/CategorySelect";
+import SearchInput from "./components/SeacrhInput";
+import SemanticSearchTextarea from "./components/SemanticSearchTextarea";
+import TitleList from "./components/TitleList";
 
-const PluginElastic = () => {
-
+const PluginElastic: React.FC = () => {
   const router = useRouter();
-  const [options, setOptions] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [categoryContent, setCategoryContent] = useState<string[]>([]);
-  const [apiTitles, setApiTitles] = useState<string[]>([]);
-  const [searching, setSearching] = useState<boolean>(false);
-  const [filteredTitles, setFilteredTitles] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const documents = useQuery(api.documents.getAllDocuments);
 
-  const documents: any = useQuery(api.documents.getAllDocuments);
+  const {
+    options,
+    selectedCategory,
+    categoryContent,
+    filteredTitles,
+    handleCategoryChange,
+    handleInputChange,
+  } = useCategories();
 
-  useEffect(() => {
-    async function loadCategories() {
-      try {
-        const data = await queryCategory();
-        setOptions(data);
-      } catch (error: any) {
-        console.error("Error loading categories:", error.message);
-      }
-    }
+  const {
+    apiTitles,
+    loading,
+    handleSemanticSearch,
+  } = useSemanticSearch();
 
-    loadCategories();
-  }, []);
-
-  useEffect(() => {
-    async function loadCategoryContent() {
-      if (selectedCategory) {
-        const data = await queryCategories(selectedCategory);
-        setCategoryContent(data);
-        setFilteredTitles(data);
-      }
-    }
-
-    loadCategoryContent();
-  }, [selectedCategory]);
-
-  function handleCategoryChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const selectedValue = event.target.value;
-    setSelectedCategory(selectedValue === "" ? null : selectedValue);
-    setCategoryContent([]);
-    setApiTitles([]);
-    setInputValue("");
-    setFilteredTitles([]);
-  }
-
-  //============================================================================
-  const getId = useMutation(api.documents.getTitleId);
-  const createNoteMutation = useMutation(api.documents.createNote);
-
-  async function parseBlocks(titulo: any, content: any) {
-    try {
-      const newContent = content.split("\n");
-      const uuid = generateUUID();
-      const tableArr: any[] = [];
-      let headerCells: string | any[] = [];
-      let tableUUID = "";
-
-      const formattedDataPromises = newContent.map(async (line: any) => {
-        let type = "paragraph";
-        let level = 0;
-        let textColor = "default";
-
-        if (
-          line.startsWith("![") &&
-          line.includes("](") &&
-          line.includes(")")
-        ) {
-          type = "image";
-          const urlMatch = line.match(/\((.*?)\)/);
-          const url = urlMatch ? urlMatch[1] : "";
-          return {
-            id: generateUUID(),
-            type: type,
-            props: {
-              backgroundColor: "default",
-              textAlignment: "left",
-              url: url,
-              caption: "",
-              width: 512,
-            },
-            children: [],
-          };
-        } else if (line.includes("http")) {
-          type = "paragraph";
-          return {
-            id: generateUUID(),
-            type: type,
-            props: {
-              textColor: "blue",
-              backgroundColor: "default",
-              textAlignment: "left",
-            },
-            content: [
-              {
-                type: "link",
-                href: line.trim(),
-                content: [
-                  {
-                    type: "text",
-                    text: line.trim(),
-                    styles: {},
-                  },
-                ],
-              },
-            ],
-            children: [],
-          };
-        } else if (line.startsWith("- ")) {
-          type = "bulletListItem";
-          level = 0;
-          line = line.slice(2).trim();
-        } else if (/^\d+\.\s/.test(line)) {
-          type = "numberedListItem";
-          level = 0;
-          line = line.replace(/^\d+\.\s/, "").trim();
-        } else if (line.startsWith("#")) {
-          type = "heading";
-          let i = 0;
-          while (line.charAt(i) === "#") {
-            i++;
-          }
-          level = i;
-          level = level > 0 ? level : 1;
-          if (level === 2) {
-            textColor = "gray";
-          }
-        } else if (line.startsWith("|")) {
-          type = "table";
-          const cells = line
-            .split("|")
-            .map((cell: string) => {
-              return cell.trim() === ""
-                ? null
-                : [
-                    {
-                      type: "text",
-                      text: cell.trim(),
-                      styles: {},
-                    },
-                  ];
-            })
-            .filter((cell: any) => cell !== null);
-          if (headerCells.length === 0) {
-            headerCells = cells;
-          } else {
-            tableArr.push(cells);
-          }
-          tableUUID = uuid;
-          return null;
-        } else if (line.startsWith(">[") && line.includes("]")) {
-          type = "paragraph";
-          return {
-            id: generateUUID(),
-            type: type,
-            props: {
-              textColor: textColor,
-              backgroundColor: "default",
-              textAlignment: "left",
-              level: level,
-            },
-            content: [
-              {
-                type: "text",
-                text: "",
-                styles: {},
-              },
-            ],
-            children: [],
-          };
-        } else if (line.startsWith("[[") && line.includes("]]")) {
-          const linkText = line.match(/\[\[(.*?)\]\]/)![1];
-
-          const docId = await getId({ title: linkText });
-          if (docId) {
-            const formatLinkDoc = {
-              id: generateUUID(),
-              type: "paragraph",
-              props: {
-                textColor: "default",
-                backgroundColor: "default",
-                textAlignment: "default",
-              },
-              content: [
-                {
-                  type: "text",
-                  text: "🔗" + "Documentos relacionados\n",
-                  styles: {
-                    bold: true,
-                    textColor: "black"
-                  },
-                },
-                {
-                  type: "docLinks",
-                  props: {
-                    docId: docId, 
-                    docTitle: linkText, 
-                  },
-                },
-              ],
-              children: [],
-            };
-            return formatLinkDoc;
-          } else {
-            const formatLinks = {
-              id: generateUUID(),
-              type: "docLink",
-              props: {
-                textColor: "default",
-                backgroundColor: "#99ad9b",
-                textAlignment: "left",
-              },
-              content: [
-                {
-                  type: "link",
-                  href: linkText,
-                  content: [
-                    {
-                      type: "text",
-                      text: linkText,
-                      styles: {
-                        textColor: "blue"
-                      },
-                    },
-                  ],
-                },
-              ],
-              children: [],
-            };
-            return formatLinks;
-          }
-        }
-
-        return {
-          id: generateUUID(),
-          type: type,
-          props: {
-            textColor: textColor,
-            backgroundColor: "default",
-            textAlignment: "left",
-            level: level,
-          },
-          content: [
-            {
-              type: "text",
-              text: line.replace(/^#+\s*/, ""),
-              styles: {},
-            },
-          ],
-          children: [],
-        };
-      });
-
-      const formattedData = await Promise.all(formattedDataPromises);
-      const filteredFormattedData = formattedData.filter(
-        (data: any) => data !== null
-      );
-
-      // Agregar la tabla al arreglo formattedData si hay datos de la tabla
-      if (tableUUID && headerCells.length > 0 && tableArr.length > 0) {
-        filteredFormattedData.push({
-          id: tableUUID,
-          type: "table",
-          props: {
-            textColor: "default",
-            backgroundColor: "default",
-          },
-          content: {
-            type: "tableContent",
-            rows: [
-              { cells: headerCells },
-              ...tableArr.map((cells) => ({ cells })),
-            ],
-          },
-          children: [],
-        });
-      }
-
-      const promise = createNoteMutation({
-        title: titulo,
-        content: JSON.stringify(filteredFormattedData),
-      }).then((documentId) => router.push(`/documents/${documentId}`));
-
-      toast.promise(promise, {
-        loading: "Creating a new note...",
-        success: "New note created!",
-        error: "Failed to create a new note.",
-      });
-    } catch (error: any) {
-      console.error("Error al crear la nota:", error.message);
-    }
-  }
-
-  //=====================================================================
-  //========= Listar titulos cuando se hace busqueda semantica ==========
-  async function getEmbeddings(query: string) {
-    // const url = `http://192.168.50.230:8087/query/${query}`;
-    const url = `http://35.223.72.198:8087/query/${query}`;
-
-
-    try {
-      setLoading(true);
-      const response = await fetch(url, {
-        method: "GET",
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `No se pudo obtener los datos para la consulta: ${query}`
-        );
-      }
-
-      const data = await response.json();
-
-      if (data.hits) {
-        const newTitles = data.hits.map((hit: any) => hit._source.title);
-        setApiTitles(newTitles);
-        setLoading(false);
-      }
-
-      return response.status;
-    } catch (error: any) {
-      console.log("Error en la conslta:", error.message);
-    }
-  }
-  //=====================================================================
-  const titulos: string[] = [];
-  async function createNotePlugin(titulo: string) {
-    const selected = titulo;
-    documents?.forEach((document: any) => {
-      titulos.push(document.title);
-    });
-    if (!titulos.includes(selected)) {
-      titulos.splice(0, 0, selected); // Agregar el elemento seleccionado en la primera posición
-      try {
-        // const response = await fetch("http://192.168.50.230:8087/relacion/", {
-          const response = await fetch("http://35.223.72.198:8087/relacion/", {
-
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(titulos),
-        });
-
-        if (response.status === 201) {
-          const noteTitle = titulo;
-          const noteContent = await response.json();
-
-          parseBlocks(noteTitle, noteContent);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }else{
-      toast('ℹ️ El documento seleccionado ya existe')
-    }
-  }
-  //=====================================================================
-
-  const handleKeyPress = (event: { key: string }) => {
-    if (event.key === "Enter") {
-      const textarea = document.querySelector(
-        ".plugin-text-area"
-      ) as HTMLTextAreaElement;
-      const data = textarea?.value;
-      if (data) {
-        setSearching(true);
-        getEmbeddings(data);
-      } else {
-        toast("El campo de busqueda esta vacío");
-      }
-    }
-  };
-  //==================================================================
-  // Limpiar los títulos cuando se inicia una nueva búsqueda
-  useEffect(() => {
-    if (searching) {
-      setCategoryContent([]);
-      setApiTitles([]);
-      setSearching(false);
-    }
-  }, [searching]);
-
-  async function buscar(valor: string, categoria: any) {
-    const data = await queryCategories(categoria);
-    const resultados = data.filter((item: string) =>
-      item.toLowerCase().includes(valor.toLowerCase())
-    );
-    setFilteredTitles(resultados);
-  }
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setInputValue(value);
-    if (selectedCategory) {
-      buscar(value, selectedCategory);
-    }
-  };
+  const { createNotePlugin }: any = useCreateNote(documents, router);
 
   return (
     <>
-      <div className="filtro-categorias d-flex">
-        <select
-          className="Mydropdown bg-white dark:bg-[#121212]"
-          name="categories"
-          value={selectedCategory || ""}
-          onChange={handleCategoryChange}
-        >
-          <option value="" disabled>
-            Seleccione categoría
-          </option>
-          {options.map((option: any) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <input
-        className="plugin-input bg-white dark:bg-[#121212] "
-        type="text"
-        placeholder="Buscar..."
-        id="plugin-input-filter"
+      <CategorySelect
+        options={options}
+        selectedCategory={selectedCategory}
+        onChange={handleCategoryChange}
+      />
+      <SearchInput
         value={inputValue}
         onChange={handleInputChange}
       />
-
-      <textarea
-        className="plugin-text-area bg-white dark:bg-[#121212]"
-        placeholder="¿Cuéntame de qué habla el documento que quieres encontrar?"
-        cols={40}
-        rows={4}
-        onKeyDown={handleKeyPress}
-      ></textarea>
-        {loading ? ( // Mostrar spinner si está cargando
+      <SemanticSearchTextarea onSearch={handleSemanticSearch} />
+      {loading ? (
         <div className="w-full flex items-center justify-center mt-10">
-          <Spinner size="lg"/>
+          <Spinner size="lg" />
         </div>
       ) : (
-        <div className="respuestaPlugin">
-          {filteredTitles.map((titulo: any, index: any) => (
-            <h4
-              className="titulos dark:hover:bg-[#121212]"
-              key={index}
-              onClick={() => createNotePlugin(titulo)}
-            >
-              {titulo}
-            </h4>
-          ))}
-          {apiTitles.map((title, index) => (
-            <h4
-              className="titulos dark:hover:bg-[#121212]"
-              key={index}
-              onClick={() => createNotePlugin(title)}
-            >
-              {title}
-            </h4>
-          ))}
-        </div>
+        <TitleList
+          titles={[...filteredTitles, ...apiTitles]}
+          onTitleClick={createNotePlugin}
+        />
       )}
     </>
   );

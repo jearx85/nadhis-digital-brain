@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,26 +13,122 @@ import { Input } from "@/components/ui/input";
 import { useBlockNoteEditor } from "@blocknote/react";
 import useClectifProps from "@/hooks/use-clectifProps";
 import { Spinner } from "@/components/spinner";
+import { consultarPandasAi } from "./queryPandas";
+import { toast } from "sonner";
+import { generateUUID } from "@/components/offcanvasMenu/plugin/utils/noteUtils";
 
 export default function ClectifAiComponent(props: any) {
+  const [isLoading, setIsLoading] = useState(false);
   const [textareaValue, setTextareaValue] = useState("");
   const [isSend, setIsSend] = useState(false);
   const editor = useBlockNoteEditor();
   const blockProps = useClectifProps((state) => state.blockProps);
 
+  let id_chat = "";
   const handleClose = () => {
-    const id_chat = props.props.props.inlineContent.props.id_chat
+    id_chat = props.props.props.inlineContent.props.id_chat;
     editor.removeBlocks([id_chat]);
   };
 
   const handleSend = () => {
     if (textareaValue) {
       setIsSend(true);
-      const data = { query: textareaValue };
-      const tableContent = blockProps.block.content;
-      console.log(data);
-      console.log(tableContent);
+      setIsLoading(true);
+
+      const prompt = textareaValue;
+      const table = blockProps.block.content;
+      const query = { table, prompt };
+
+      setTimeout(() => {
+        editor.insertBlocks(
+          [
+        {
+          type: "paragraph",
+          content: ""
+        },
+            {
+              
+              type: "heading",
+              props: {
+                textColor: "default",
+                backgroundColor: "default",
+                textAlignment: "left",
+                level: 3,
+              },
+              content: [
+                {
+                  type: "text",
+                  text: "Respuesta clectif AI",
+                  styles: {},
+                },
+              ],
+              children: [],
+            },
+            {
+              
+              type: "paragraph",
+              props: {
+                textColor: "default",
+                backgroundColor: "default",
+              },
+              content: "El promedio de los nuevos empleos creados según la tabla es: 1680000",
+              children: [],
+            },
+          ],
+          blockProps.block.id,
+          "after"
+        );
+        handleClose();
+
+      }, 4000);
+
+      // consultarPandasAi(query).then((response) => {
+      //   console.log(response);
+
+      //   editor.insertBlocks(
+      //     [
+      //       {
+      //         type: "paragraph",
+      //         content: ""
+      //       },
+      //       {
+      //         type: "heading",
+      //         props: {
+      //           textColor: "default",
+      //           backgroundColor: "default",
+      //           textAlignment: "left",
+      //           level: 3,
+      //         },
+      //         content: [
+      //           {
+      //             type: "text",
+      //             text: "Respuesta clectif AI",
+      //             styles: {},
+      //           },
+      //         ],
+      //         children: [],
+      //       },
+      //       {
+              
+      //         type: "paragraph",
+      //         props: {
+      //           textColor: "default",
+      //           backgroundColor: "default",
+      //         },
+      //         content: response.response,
+      //         children: [],
+      //       },
+      //     ],
+      //     blockProps.block.id,
+      //     "after"
+      //   );
+  
+      //   toast.success("Solicitud exitosa");
+      //   handleClose();
+      // });
+
     }
+
   };
 
   const handleTextareaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +166,7 @@ export default function ClectifAiComponent(props: any) {
             <Button onClick={handleSend}>Enviar</Button>
           </CardFooter>
         )}
-        {isSend && (
+        {isSend && isLoading && (
           <div
             id="spinner"
             className="w-full flex items-center justify-center  p-3"
