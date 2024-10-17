@@ -9,12 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/core": "^0.36.0",
     "@blocknote/core": "^0.12.4",
     "@blocknote/react": "^0.12.4",
     "@clerk/clerk-react": "^4.26.3",
+    "@convex-dev/auth": "^0.0.72",
     "@edgestore/react": "^0.1.4",
     "@edgestore/server": "^0.1.4",
     "@elastic/elasticsearch": "^8.13.1",
+    "@fortawesome/fontawesome-free": "^6.6.0",
     "@heroicons/react": "^2.1.1",
     "@mantine/charts": "^7.11.2",
     "@mantine/core": "^7.11.2",
@@ -40,6 +43,7 @@
     "css-loader": "^7.1.2",
     "emoji-picker-react": "^4.5.2",
     "html-react-parser": "^5.1.10",
+    "js-cookie": "^3.0.5",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.367.0",
     "next": "^14.2.5",
