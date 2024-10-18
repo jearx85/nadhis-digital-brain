@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useUser } from "@clerk/clerk-react";
+// import { useUser } from "@clerk/clerk-react";
 import { PlusCircle } from "lucide-react";
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
@@ -9,10 +9,13 @@ import { useRouter } from "next/navigation";
 
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 const DocumentsPage = () => {
   const router = useRouter();
-  const { user } = useUser();
+  // const { user } = useUser();
+  const user = useFusionAuthUser();
+
   const create = useMutation(api.documents.create);
 
   const onCreate = () => {
@@ -44,6 +47,7 @@ const DocumentsPage = () => {
       />
       <h2 className="text-lg font-medium">
         Welcome to {user?.firstName}&apos;s Digital Brain
+        {/* Welcome to name user Digital Brain */}
       </h2>
       <Button onClick={onCreate}>
         <PlusCircle className="h-4 w-4 mr-2" />

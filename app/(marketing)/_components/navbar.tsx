@@ -1,7 +1,7 @@
 "use client";
 
-import { useConvexAuth } from "convex/react";
-import { SignInButton, UserButton } from "@clerk/clerk-react";
+// import { useConvexAuth } from "convex/react";
+// import { SignInButton, UserButton } from "@clerk/clerk-react";
 import Link from "next/link";
 
 import { useScrollTop } from "@/hooks/use-scroll-top";
@@ -11,9 +11,11 @@ import { Spinner } from "@/components/spinner";
 import { cn } from "@/lib/utils";
 
 import { Logo } from "./logo";
+import useFusionAuth from "@/hooks/use-fusionauth";
 
 export const Navbar = () => {
-  const { isAuthenticated, isLoading } = useConvexAuth();
+  // const { isAuthenticated, isLoading } = useConvexAuth();
+  const { isAuthenticated, isLoading } = useFusionAuth();
   const scrolled = useScrollTop();
 
   return (
@@ -26,7 +28,7 @@ export const Navbar = () => {
         {isLoading && (
           <Spinner />
         )}
-        {!isAuthenticated && !isLoading && (
+        {/* {!isAuthenticated && !isLoading && (
           <>
             <SignInButton mode="modal">
               <Button variant="ghost" size="sm">
@@ -39,7 +41,7 @@ export const Navbar = () => {
               </Button>
             </SignInButton>
           </>
-        )}
+        )} */}
         {isAuthenticated && !isLoading && (
           <>
             <Button variant="ghost" size="sm" asChild>
@@ -48,9 +50,9 @@ export const Navbar = () => {
                 Enter Digital Brain
               </Link>
             </Button>
-            <UserButton
+            {/* <UserButton
               afterSignOutUrl="/"
-            />
+            /> */}
           </>
         )}
         <ModeToggle />

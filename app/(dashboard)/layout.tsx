@@ -1,12 +1,15 @@
 "use client";
 
-import { useConvexAuth } from "convex/react";
+// import { useConvexAuth } from "convex/react";
 import { redirect } from "next/navigation";
 import { Spinner } from "@/components/spinner";
 import { MainNavigation } from "./_components/navigation/MainNavigation";
+import useFusionAuth from "@/hooks/use-fusionauth";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated, isLoading } = useConvexAuth();
+  // const { isAuthenticated, isLoading } = useConvexAuth();
+  const { isAuthenticated, isLoading } = useFusionAuth();
+
 
   if (isLoading) {
     return (

@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/clerk-react";
+// import { useUser } from "@clerk/clerk-react";
+
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
 import { MoreHorizontal, Trash } from "lucide-react";
@@ -17,6 +18,7 @@ import {
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 interface MenuProps {
   documentId: Id<"documents">;
@@ -26,7 +28,9 @@ export const Menu = ({
   documentId
 }: MenuProps) => {
   const router = useRouter();
-  const { user } = useUser();
+  // const { user } = useUser();
+  const user = useFusionAuthUser();
+
 
   const archive = useMutation(api.documents.archive);
 

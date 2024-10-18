@@ -11,6 +11,7 @@ import { Title } from "./title";
 import { Banner } from "./banner";
 import { Menu } from "./menu";
 import { Publish } from "./publish";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 interface NavbarProps {
   isCollapsed: boolean;
@@ -22,9 +23,13 @@ export const Navbar = ({
   onResetWidth
 }: NavbarProps) => {
   const params = useParams();
+  const user = useFusionAuthUser();
+
+  const userId: any = user.userId;
 
   const document = useQuery(api.documents.getById, {
     documentId: params.documentId as Id<"documents">,
+    userId
   });
 
   if (document === undefined) {

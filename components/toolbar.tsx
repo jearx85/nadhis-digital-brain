@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 
 import { IconPicker } from "./icon-picker";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 interface ToolbarProps {
   initialData: Doc<"documents">;
@@ -26,6 +27,8 @@ export const Toolbar = ({
   const [value, setValue] = useState(initialData.title);
 
   const update = useMutation(api.documents.update);
+  const user = useFusionAuthUser();
+  const userId: any = user?.userId;
   const removeIcon = useMutation(api.documents.removeIcon);
 
   const coverImage = useCoverImage();
@@ -46,6 +49,7 @@ export const Toolbar = ({
     setValue(value);
     update({
       id: initialData._id,
+      userId,
       title: value || "Untitled"
     });
   };
@@ -62,6 +66,7 @@ export const Toolbar = ({
   const onIconSelect = (icon: string) => {
     update({
       id: initialData._id,
+      userId,
       icon,
     });
   };

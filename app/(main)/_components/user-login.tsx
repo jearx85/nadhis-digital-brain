@@ -1,12 +1,16 @@
 "use client";
 
 import { ChevronsLeftRight } from "lucide-react";
-import { useUser, SignOutButton } from "@clerk/clerk-react";
+// import { useUser, SignOutButton } from "@clerk/clerk-react";
+
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 export const UserLogin = () => {
-  const { user } = useUser();
+  // const { user } = useUser();
+  const user = useFusionAuthUser();
+
 
   return (
     <>
@@ -14,16 +18,19 @@ export const UserLogin = () => {
         <div className="rounded-md bg-secondary p-1">
           <Avatar className="h-8 w-8">
             <AvatarImage src={user?.imageUrl} />
+            <AvatarImage />
           </Avatar>
         </div>
         <div className="space-y-1">
           <p className="text-sm line-clamp-1 m-4">
             {user?.fullName}
+            full name user
           </p>
         </div>
       </div>
       <div className="mt-10 hover:text-cyan-500">
-        <SignOutButton>Log out</SignOutButton>
+        {/* <SignOutButton>Log out</SignOutButton> */}
+        log out
       </div>
     </>
   );

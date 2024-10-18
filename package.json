@@ -9,11 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth/core": "^0.36.0",
     "@blocknote/core": "^0.12.4",
     "@blocknote/react": "^0.12.4",
     "@clerk/clerk-react": "^4.26.3",
-    "@convex-dev/auth": "^0.0.72",
     "@edgestore/react": "^0.1.4",
     "@edgestore/server": "^0.1.4",
     "@elastic/elasticsearch": "^8.13.1",
@@ -47,6 +45,7 @@
     "leaflet": "^1.9.4",
     "lucide-react": "^0.367.0",
     "next": "^14.2.5",
+    "next-auth": "^4.24.8",
     "next-themes": "^0.2.1",
     "postcss-loader": "^8.1.1",
     "primereact": "^10.6.2",

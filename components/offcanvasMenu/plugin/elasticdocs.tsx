@@ -13,11 +13,13 @@ import CategorySelect from "./components/CategorySelect";
 import SearchInput from "./components/SeacrhInput";
 import SemanticSearchTextarea from "./components/SemanticSearchTextarea";
 import TitleList from "./components/TitleList";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 const PluginElastic: React.FC = () => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState<string>("");
-  const documents = useQuery(api.documents.getAllDocuments);
+  const { userId } = useFusionAuthUser();
+  const documents = useQuery(api.documents.getAllDocuments, { userId });
 
   const {
     options,

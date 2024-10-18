@@ -4,15 +4,12 @@ import { mutation, query } from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
 
 export const archive = mutation({
-  args: { id: v.id("documents") },
+  args: { 
+    id: v.id("documents"),
+    userId: v.string(), // Añadimos el userId como argumento
+  },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    const userId = identity.subject;
+    const { userId } = args; // Obtenemos el userId de los argumentos
 
     const existingDocument = await ctx.db.get(args.id);
 
@@ -41,37 +38,36 @@ export const archive = mutation({
 
         await recursiveArchive(child._id);
       }
-    }
+    };
 
     const document = await ctx.db.patch(args.id, {
       isArchived: true,
     });
 
-    recursiveArchive(args.id);
+    await recursiveArchive(args.id); // Asegúrate de esperar la función recursiva
 
     return document;
   }
-})
+});
 
 export const getSidebar = query({
   args: {
-    parentDocument: v.optional(v.id("documents"))
+    parentDocument: v.optional(v.id("documents")),
+    userId: v.optional(v.string()), // Aseguramos que se reciba el userId como argumento
   },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Not authenticated");
+  handler: async (ctx, { parentDocument, userId }) => {
+    // Verificar si el userId está presente
+    if (!userId) {
+      throw new Error("User ID is required");
     }
 
-    const userId = identity.subject;
-
+    // Consultar los documentos que pertenecen al userId y al parentDocument
     const documents = await ctx.db
       .query("documents")
       .withIndex("by_user_parent", (q) =>
         q
-          .eq("userId", userId)
-          .eq("parentDocument", args.parentDocument)
+          .eq("userId", userId) // Usamos el userId pasado como argumento
+          .eq("parentDocument", parentDocument)
       )
       .filter((q) =>
         q.eq(q.field("isArchived"), false)
@@ -79,33 +75,27 @@ export const getSidebar = query({
       .order("desc")
       .collect();
 
-    return documents;
+    return documents; // Devolver los documentos
   },
 });
+
 //-----------------------------
 export const getAllDocuments = query({
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Not authenticated");
+  handler: async (ctx, { userId }: any) => {
+    // Verificar si se pasó el `userId`
+    if (!userId) {
+      throw new Error("User ID is required");
     }
 
-    const userId = identity.subject;
-
+    // Consultar los documentos que pertenecen al `userId` y que no están archivados
     const documents = await ctx.db
       .query("documents")
-      .withIndex("by_user", (q) =>
-        q
-          .eq("userId", userId)
-      )
-      .filter((q) =>
-        q.eq(q.field("isArchived"), false)
-      )
-      .order("desc")
-      .collect();
+      .withIndex("by_user", (q) => q.eq("userId", userId)) // Usamos el userId pasado desde el frontend
+      .filter((q) => q.eq(q.field("isArchived"), false)) // Filtrar los documentos no archivados
+      .order("desc") // Ordenar en orden descendente
+      .collect(); // Recoger todos los documentos filtrados
 
-    return documents;
+    return documents; // Devolver la lista de documentos
   },
 });
 
@@ -114,16 +104,12 @@ export const getAllDocuments = query({
 export const create = mutation({
   args: {
     title: v.string(),
-    parentDocument: v.optional(v.id("documents"))
+    parentDocument: v.optional(v.id("documents")),
+    userId: v.optional(v.string()), // Asegúrate de que el userId también se pase como argumento
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    const userId = identity.subject;
+    // El userId ahora se pasa directamente como argumento
+    const { userId }: any = args;
 
     const document = await ctx.db.insert("documents", {
       title: args.title,
@@ -136,26 +122,22 @@ export const create = mutation({
     return document;
   }
 });
+
 //-----------------
 export const createNote = mutation({
   args: {
     title: v.string(),
-    content: v.optional(v.string()), 
-    parentDocument: v.optional(v.id("documents"))
+    content: v.optional(v.string()),
+    parentDocument: v.optional(v.id("documents")),
+    userId: v.string(), // Añadimos el userId como argumento
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    const userId = identity.subject;
+    const { userId, title, content, parentDocument } = args; // Obtenemos el userId de los argumentos
 
     const document = await ctx.db.insert("documents", {
-      title: args.title,
-      content: args.content,
-      parentDocument: args.parentDocument,
+      title,
+      content,
+      parentDocument,
       userId,
       isArchived: false,
       isPublished: false,
@@ -166,25 +148,18 @@ export const createNote = mutation({
 });
 
 
+
 //-----------------
 
-
 export const getTrash = query({
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    const userId = identity.subject;
-
+  args: {
+    userId: v.optional(v.string()), // Añadimos el userId como argumento
+  },
+  handler: async (ctx, { userId }) => {
     const documents = await ctx.db
       .query("documents")
       .withIndex("by_user", (q) => q.eq("userId", userId))
-      .filter((q) =>
-        q.eq(q.field("isArchived"), true),
-      )
+      .filter((q) => q.eq(q.field("isArchived"), true))
       .order("desc")
       .collect();
 
@@ -193,34 +168,28 @@ export const getTrash = query({
 });
 
 export const restore = mutation({
-  args: { id: v.id("documents") },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    const userId = identity.subject;
-
-    const existingDocument = await ctx.db.get(args.id);
+  args: {
+    id: v.id("documents"),
+    userId: v.string(), // Añadimos el userId como argumento
+  },
+  handler: async (ctx, { id, userId }) => {
+    const existingDocument = await ctx.db.get(id);
 
     if (!existingDocument) {
-      throw new Error("Not found");
+      throw new Error("Document not found");
     }
 
     if (existingDocument.userId !== userId) {
       throw new Error("Unauthorized");
     }
 
-    const recursiveRestore = async (documentId: Id<"documents">) => {
+    // Función recursiva para restaurar los documentos hijos
+    const recursiveRestore = async (documentId: any) => {
       const children = await ctx.db
         .query("documents")
-        .withIndex("by_user_parent", (q) => (
-          q
-            .eq("userId", userId)
-            .eq("parentDocument", documentId)
-        ))
+        .withIndex("by_user_parent", (q) =>
+          q.eq("userId", userId).eq("parentDocument", documentId)
+        )
         .collect();
 
       for (const child of children) {
@@ -230,12 +199,17 @@ export const restore = mutation({
 
         await recursiveRestore(child._id);
       }
-    }
+    };
 
-    const options: Partial<Doc<"documents">> = {
+    // Aseguramos que el tipo options permita parentDocument opcionalmente
+    const options: Partial<{
+      isArchived: boolean;
+      parentDocument?: Id<"documents"> | undefined; // En lugar de string | null, usamos Id<"documents"> o undefined
+    }> = {
       isArchived: false,
     };
 
+    // Si el documento tiene un documento padre archivado, quitamos el documento padre
     if (existingDocument.parentDocument) {
       const parent = await ctx.db.get(existingDocument.parentDocument);
       if (parent?.isArchived) {
@@ -243,51 +217,46 @@ export const restore = mutation({
       }
     }
 
-    const document = await ctx.db.patch(args.id, options);
+    const document = await ctx.db.patch(id, options);
 
-    recursiveRestore(args.id);
+    // Restauramos recursivamente los documentos hijos
+    await recursiveRestore(id);
 
     return document;
   }
 });
 
 export const remove = mutation({
-  args: { id: v.id("documents") },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    const userId = identity.subject;
-
-    const existingDocument = await ctx.db.get(args.id);
+  args: {
+    id: v.id("documents"),
+    userId: v.string(), // Añadimos el userId como argumento
+  },
+  handler: async (ctx, { id, userId }) => {
+    const existingDocument = await ctx.db.get(id);
 
     if (!existingDocument) {
-      throw new Error("Not found");
+      throw new Error("Document not found");
     }
 
     if (existingDocument.userId !== userId) {
       throw new Error("Unauthorized");
     }
 
-    const document = await ctx.db.delete(args.id);
+    // Eliminamos el documento
+    const document = await ctx.db.delete(id);
 
     return document;
   }
 });
 
 export const getSearch = query({
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Not authenticated");
+  handler: async (ctx, { userId }: any) => {
+    // Verificar si el userId está presente
+    if (!userId) {
+      throw new Error("User ID is required");
     }
 
-    const userId = identity.subject;
-
+    // Consultar los documentos que pertenecen al userId
     const documents = await ctx.db
       .query("documents")
       .withIndex("by_user", (q) => q.eq("userId", userId))
@@ -295,33 +264,35 @@ export const getSearch = query({
         q.eq(q.field("isArchived"), false),
       )
       .order("desc")
-      .collect()
+      .collect();
 
     return documents;
-  }
+  },
 });
 
 export const getById = query({
-  args: { documentId: v.id("documents") },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    const document = await ctx.db.get(args.documentId);
+  args: {
+    documentId: v.id("documents"),
+    userId: v.optional(v.string()) // Añadimos el userId como argumento opcional
+  },
+  handler: async (ctx, { documentId, userId }) => {
+    const document = await ctx.db.get(documentId);
 
     if (!document) {
-      throw new Error("Not found");
+      throw new Error("Document not found");
     }
 
+    // Si el documento está publicado y no archivado, se puede devolver sin autenticación
     if (document.isPublished && !document.isArchived) {
       return document;
     }
 
-    if (!identity) {
+    // Si el documento no está publicado, necesitamos un userId para la autenticación
+    if (!userId) {
       throw new Error("Not authenticated");
     }
 
-    const userId = identity.subject;
-
+    // Verificamos si el documento pertenece al usuario autenticado
     if (document.userId !== userId) {
       throw new Error("Unauthorized");
     }
@@ -330,27 +301,19 @@ export const getById = query({
   }
 });
 
+// 1. Mutación para actualizar un documento
 export const update = mutation({
   args: {
     id: v.id("documents"),
+    userId: v.optional(v.string()), // Añadimos el userId como argumento opcional
     title: v.optional(v.string()),
     content: v.optional(v.string()),
     coverImage: v.optional(v.string()),
     icon: v.optional(v.string()),
     isPublished: v.optional(v.boolean())
   },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Unauthenticated");
-    }
-
-    const userId = identity.subject;
-
-    const { id, ...rest } = args;
-
-    const existingDocument = await ctx.db.get(args.id);
+  handler: async (ctx, { id, userId, ...rest }) => {
+    const existingDocument = await ctx.db.get(id);
 
     if (!existingDocument) {
       throw new Error("Not found");
@@ -360,26 +323,16 @@ export const update = mutation({
       throw new Error("Unauthorized");
     }
 
-    const document = await ctx.db.patch(args.id, {
-      ...rest,
-    });
-
+    const document = await ctx.db.patch(id, { ...rest });
     return document;
-  },
+  }
 });
 
+// 2. Mutación para eliminar el ícono de un documento
 export const removeIcon = mutation({
-  args: { id: v.id("documents") },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Unauthenticated");
-    }
-
-    const userId = identity.subject;
-
-    const existingDocument = await ctx.db.get(args.id);
+  args: { id: v.id("documents"), userId: v.optional(v.string()) },
+  handler: async (ctx, { id, userId }) => {
+    const existingDocument = await ctx.db.get(id);
 
     if (!existingDocument) {
       throw new Error("Not found");
@@ -389,7 +342,7 @@ export const removeIcon = mutation({
       throw new Error("Unauthorized");
     }
 
-    const document = await ctx.db.patch(args.id, {
+    const document = await ctx.db.patch(id, {
       icon: undefined
     });
 
@@ -397,18 +350,11 @@ export const removeIcon = mutation({
   }
 });
 
+// 3. Mutación para eliminar la imagen de portada de un documento
 export const removeCoverImage = mutation({
-  args: { id: v.id("documents") },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Unauthenticated");
-    }
-
-    const userId = identity.subject;
-
-    const existingDocument = await ctx.db.get(args.id);
+  args: { id: v.id("documents"), userId: v.optional(v.string()) },
+  handler: async (ctx, { id, userId }) => {
+    const existingDocument = await ctx.db.get(id);
 
     if (!existingDocument) {
       throw new Error("Not found");
@@ -418,78 +364,50 @@ export const removeCoverImage = mutation({
       throw new Error("Unauthorized");
     }
 
-    const document = await ctx.db.patch(args.id, {
-      coverImage: undefined,
+    const document = await ctx.db.patch(id, {
+      coverImage: undefined
     });
 
     return document;
   }
 });
 
-
-
+// 4. Mutación para obtener el ID de un documento a partir de su título
 export const getTitleId = mutation({
-  args: { title: v.optional(v.string())},
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Unauthenticated");
-    }
-
-    const userId = identity.subject;
-
+  args: { title: v.optional(v.string()), userId: v.optional(v.string()) },
+  handler: async (ctx, { title, userId }) => {
     const documents = await ctx.db
       .query("documents")
-      .withIndex("by_user_parent", (q) =>
-        q
-          .eq("userId", userId)
-      )
-      .filter((q) =>
-        q.eq(q.field("title"), args.title)
-      )
+      .withIndex("by_user_parent", (q) => q.eq("userId", userId))
+      .filter((q) => q.eq(q.field("title"), title))
       .order("desc")
       .first();
 
     return documents?._id;
   }
-
 });
 
+// 5. Mutación para obtener el título de un documento a partir de su ID
 export const getIdTitle = mutation({
-  args: { id: v.id("documents")},
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Unauthenticated");
-    }
-
-    const userId = identity.subject;
-
+  args: { id: v.id("documents"), userId: v.optional(v.string()) },
+  handler: async (ctx, { id, userId }) => {
     const documents = await ctx.db
       .query("documents")
-      .withIndex("by_user_parent", (q) =>
-        q
-          .eq("userId", userId)
-      )
-      .filter((q) =>
-        q.eq(q.field("_id"), args.id)
-      )
+      .withIndex("by_user_parent", (q) => q.eq("userId", userId))
+      .filter((q) => q.eq(q.field("_id"), id))
       .order("desc")
       .first();
 
     return documents?.title;
   }
-
 });
 
-export const getDocument = query(
-  {args: 
-    {documentsId: v.id("documents")},
-    handler: async(ctx, args) => {
-        const doc = await ctx.db.get(args.documentsId);
-        return doc
-    },
+// 6. Consulta para obtener un documento por ID
+export const getDocument = query({
+  args: { documentsId: v.id("documents") },
+  handler: async (ctx, { documentsId }) => {
+    const doc = await ctx.db.get(documentsId);
+    return doc;
   }
-);
+});
+

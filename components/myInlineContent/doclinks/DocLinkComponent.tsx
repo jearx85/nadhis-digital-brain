@@ -6,10 +6,12 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useBlockNoteEditor } from "@blocknote/react";
 import { idDeleteDoc } from "@/app/(main)/_components/item";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 export default function DocLinkComponent({ props }: any) {
   const router = useRouter();
-  const docs = useQuery(api.documents.getAllDocuments);
+  const { userId } = useFusionAuthUser();
+  const docs = useQuery(api.documents.getAllDocuments, { userId });
   const editor = useBlockNoteEditor();
 
   const idsGlobal: string[] = [];

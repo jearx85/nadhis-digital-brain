@@ -34,6 +34,7 @@ import { DocumentList } from "./document-list";
 import { TrashBox } from "./trash-box";
 import { Navbar } from "./navbar";
 import OffcanvasMenu from "@/components/offcanvasMenu/OffcanvasMenu";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
  
 export const Navigation = () => {
   const router = useRouter();
@@ -49,8 +50,7 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
-
-  
+  const user = useFusionAuthUser();
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -128,7 +128,9 @@ export const Navigation = () => {
   }
 
   const handleCreate = () => {
-    const promise = create({ title: "Untitled" })
+    const userId: any = user.userId
+    console.log(user.userId)
+    const promise = create({ title: "Untitled", userId})
       .then((documentId) => router.push(`/documents/${documentId}`))
 
     toast.promise(promise, {

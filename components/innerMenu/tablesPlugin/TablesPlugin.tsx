@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 interface ApiResponse {
   id: "string";
@@ -49,12 +50,15 @@ export default function TablesComponent() {
   const params = useParams();
   const getIdTitle = useMutation(api.documents.getIdTitle);
   const update = useMutation(api.documents.update);
+  const user = useFusionAuthUser();
+  const userId: any = user?.userId;
 
   const editor = useBlockNoteEditor();
 
   const onChange = (content: any) => {
     update({
       id: params.documentId as Id<"documents">,
+      userId,
       content, // Convert to JSON string
     });
   };

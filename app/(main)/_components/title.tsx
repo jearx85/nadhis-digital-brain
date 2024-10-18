@@ -8,6 +8,7 @@ import { api } from "@/convex/_generated/api";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 interface TitleProps {
   initialData: Doc<"documents">;
@@ -18,6 +19,8 @@ export const Title = ({
 }: TitleProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const update = useMutation(api.documents.update);
+  const user = useFusionAuthUser();
+  const userId: any = user?.userId;
 
   const [title, setTitle] = useState(initialData.title || "Untitled");
   const [isEditing, setIsEditing] = useState(false);
@@ -41,6 +44,7 @@ export const Title = ({
     setTitle(event.target.value);
     update({
       id: initialData._id,
+      userId,
       title: event.target.value || "Untitled"
     });
   };

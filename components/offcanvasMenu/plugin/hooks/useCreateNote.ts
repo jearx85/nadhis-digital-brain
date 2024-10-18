@@ -2,10 +2,13 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { generateUUID } from "../utils/noteUtils";
 import { toast } from "sonner";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 export const useCreateNote = (documents: any, router: any) => {
+    const { userId }: any = useFusionAuthUser();
     const getId = useMutation(api.documents.getTitleId);
     const createNoteMutation = useMutation(api.documents.createNote);
+
 
     async function parseBlocks(titulo: any, content: any) {
         try {
@@ -248,6 +251,7 @@ export const useCreateNote = (documents: any, router: any) => {
           }
       
           const promise = createNoteMutation({
+            userId: userId,
             title: titulo,
             content: JSON.stringify(formattedData),
           }).then((documentId) => router.push(`/documents/${documentId}`));

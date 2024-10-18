@@ -14,8 +14,11 @@ import { SingleImageDropzone } from "@/components/single-image-dropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 export const CoverImageModal = () => {
+  const user = useFusionAuthUser();
+  const userId: any = user?.userId;
   const params = useParams();
   const update = useMutation(api.documents.update);
   const coverImage = useCoverImage();
@@ -44,6 +47,7 @@ export const CoverImageModal = () => {
 
       await update({
         id: params.documentId as Id<"documents">,
+        userId,
         coverImage: res.url
       });
 

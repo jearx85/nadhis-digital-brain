@@ -14,6 +14,7 @@ import {
 import { useOrigin } from "@/hooks/use-origin";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 interface PublishProps {
   initialData: Doc<"documents">
@@ -25,6 +26,9 @@ export const Publish = ({
   const origin = useOrigin();
   const update = useMutation(api.documents.update);
 
+  const user = useFusionAuthUser();
+  const userId: any = user?.userId;
+
   const [copied, setCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,6 +39,7 @@ export const Publish = ({
 
     const promise = update({
       id: initialData._id,
+      userId,
       isPublished: true,
     })
       .finally(() => setIsSubmitting(false));
@@ -51,6 +56,7 @@ export const Publish = ({
 
     const promise = update({
       id: initialData._id,
+      userId,
       isPublished: false,
     })
       .finally(() => setIsSubmitting(false));

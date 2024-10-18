@@ -40,6 +40,7 @@ import InnerMenu from "./innerMenu/InnerMenu";
 import ClectifAiButton from "./dragHandleMenu/clectifAi/ClectifAiButton";
 import { ClectifAi } from "./dragHandleMenu/clectifAi/ClectifAiType";
 import AskAi from "./innerMenu/askAi/AskAi";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
@@ -69,7 +70,8 @@ interface EditorProps {
 const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const { resolvedTheme } = useTheme();
   const { edgestore } = useEdgeStore();
-  const docs = useQuery(api.documents.getAllDocuments);
+  const { userId } = useFusionAuthUser();
+  const docs = useQuery(api.documents.getAllDocuments, { userId });
 
   const handleUpload = async (file: File) => {
     const response = await edgestore.publicFiles.upload({

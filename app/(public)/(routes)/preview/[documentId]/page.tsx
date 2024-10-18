@@ -9,6 +9,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { Toolbar } from "@/components/toolbar";
 import { Cover } from "@/components/cover";
 import { Skeleton } from "@/components/ui/skeleton";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 interface DocumentIdPageProps {
   params: {
@@ -20,16 +21,22 @@ const DocumentIdPage = ({
   params
 }: DocumentIdPageProps) => {
   const Editor = useMemo(() => dynamic(() => import("@/components/editor"), { ssr: false }) ,[]);
+  const user = useFusionAuthUser();
+
+  const userId: any = user.userId;
 
   const document = useQuery(api.documents.getById, {
-    documentId: params.documentId
+    documentId: params.documentId,
+    userId
   });
 
   const update = useMutation(api.documents.update);
+  
 
   const onChange = (content: string) => {
     update({
       id: params.documentId,
+      userId,
       content
     });
   };

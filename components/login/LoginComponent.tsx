@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-// import { signIn } from "next-auth/react"; // Importa signIn de next-auth
+import { signIn } from "next-auth/react"; // Importa signIn de next-auth
 import { Mail, LockKeyhole } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import Register from "../Register";
 import { ModalRegister } from "../modalRegister";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
+import useFusionAuth from "@/hooks/use-fusionauth";
 
 export default function Login() {
   const router = useRouter();
@@ -16,6 +18,8 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  const { authenticate, isLoading, isAuthenticated } = useFusionAuth();
+  const user = useFusionAuthUser();
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -25,28 +29,30 @@ export default function Login() {
 
     try {
       const clientId = process.env.NEXT_PUBLIC_FUSIONAUTH_CLIENT_ID || "";
-      const clientSecret =
-        process.env.NEXT_PUBLIC_FUSIONAUTH_CLIENT_SECRET || "";
+      const clientSecret = process.env.NEXT_PUBLIC_FUSIONAUTH_CLIENT_SECRET || "";
 
-      const response = await fetch("http://34.174.97.159:9011/oauth2/token", {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      const urlencoded = new URLSearchParams();
+      urlencoded.append("client_id", clientId);
+      urlencoded.append("client_secret", clientSecret);
+      urlencoded.append("grant_type", "password");
+      urlencoded.append("username", "jearx@hotmail.com");
+      urlencoded.append("password", "12345678");
+
+      const requestOptions = {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          client_id: clientId,
-          client_secret: clientSecret,
-          grant_type: "password",
-          username: email,
-          password: password,
-        }),
-        mode: "cors",
-      });
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: "follow" as RequestRedirect,
+      };
 
+      const response = await fetch("http://34.174.97.159:9011/oauth2/token", requestOptions)
       const data = await response.json();
 
       if (response.ok && data.access_token) {
-        router.push("/dashboard");
+        router.push("/documents");
       } else {
         setErrorMessage(
           data.error_description || "Usuario o contraseña incorrectos."
@@ -59,17 +65,25 @@ export default function Login() {
     }
   };
 
-  // const handleGoogleLogin = () => {
-  //   signIn("google"); // Autenticación con Google
-  // };
+  const handleGoogleLogin = () => {
+    signIn("google"); // Autenticación con Google
+  };
+
 
   const handleRegisterClick = () => {
     setLoginModalOpen(true);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    await authenticate(email, password);
     router.push("/documents")
   }
+
+  useEffect(() => {
+    if (user.user != null) {
+      console.log("Usuario autenticado:", user);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (showAlert) {
@@ -166,7 +180,7 @@ export default function Login() {
             <div className="mt-4 flex justify-center">
             <Button
                 className="w-full flex items-center bg-white border border-gray-300 text-gray-600 py-2 px-4 rounded-lg hover:bg-gray-100"
-                // onClick={handleGoogleLogin}
+                onClick={handleGoogleLogin}
               >
                 <img
                   src="./google.png"

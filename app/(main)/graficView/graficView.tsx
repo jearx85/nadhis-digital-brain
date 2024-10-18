@@ -1,14 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-
 import Graph from "react-vis-network-graph";
-import { docs, edgesP } from "./data";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useRouter } from "next/navigation";
 import { generateUUID } from "@/components/offcanvasMenu/plugin/utils/noteUtils";
 import { useTheme } from "next-themes";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 interface Node {
   id: Id<"documents">;
@@ -28,84 +27,54 @@ interface EdgeProps {
 export default function GraficView() {
   const { resolvedTheme } = useTheme();
   const router = useRouter();
-  const documents = useQuery(api.documents.getAllDocuments);
+  const { userId } = useFusionAuthUser(); // Usa el hook para obtener el userId
+  const documents = useQuery(api.documents.getAllDocuments, { userId }); // Pasar userId a la consulta
   const [edgesDocs, setEdgesDocs] = useState<EdgeProps[]>([]);
   const [nodes, setNodes] = useState<Node[]>([]);
 
   useEffect(() => {
-    const newNodes: Node[] = [];
-    documents?.map((doc) => {
-      let nodeFormat = {
-        id: doc._id,
-        title: doc.title,
-        label: doc.title,
-      };
-      newNodes.push(nodeFormat);
-    });
+    if (!documents) return; // Agregar verificación para documentos
+    const newNodes: Node[] = documents.map(doc => ({
+      id: doc._id,
+      title: doc.title,
+      label: doc.title,
+    }));
     setNodes(newNodes);
 
-    const newEdgesDocs: EdgeProps[] = [];
-    documents?.map((doc) => {
+    const newEdgesDocs: EdgeProps[] = documents.flatMap(doc => {
       if (doc.content) {
         const arrContent = JSON.parse(doc.content);
-        let currentId = doc._id;
-        arrContent.map((item: any) => {
-          if(item.type === 'paragraph') {
+        const currentId = doc._id;
+        return arrContent.flatMap((item: { type: string; content: any; }) => {
+          if (item.type === 'paragraph') {
             const paragraphContent = item.content;
-            if(paragraphContent.length > 0){
-              paragraphContent.map((paragraph: any) => {
-                if(paragraph.type === 'docLinks'){
-                  const docId = paragraph.props.docId;
-                  // const docTitle = paragraph.props.docTitle;
-                  let edgeFormat = {
-                    from: currentId,
-                    to: docId,
-                    id: generateUUID(),
-                  };
-                  newEdgesDocs.push(edgeFormat);
-                }
-              })
-            }
+            return paragraphContent.flatMap((paragraph: { type: string; props: { docId: any; }; }) => {
+              if (paragraph.type === 'docLinks') {
+                const docId = paragraph.props.docId;
+                return [{
+                  from: currentId,
+                  to: docId,
+                  id: generateUUID(),
+                }];
+              }
+              return []; // Retorna un arreglo vacío si no se cumplen las condiciones
+            });
           }
-          // if (item.type !== "docLinks") {
-          //   return;
-          // } else {
-          //   let currentId = doc._id;
-          //   let arrItemContent = item.content;
-
-          //   // console.log(arrItemContent)
-
-          //   // const linkElement = arrItemContent.filter((item: any) => {
-          //   //   return item.type === "link";
-          //   // });
-
-          //   // linkElement.map((item: any) => {
-          //   //   let link = item.href;
-          //   //   let dataSplit = link.split("/");
-          //   //   let edgeFormat = {
-          //   //     from: currentId,
-          //   //     to: dataSplit[dataSplit.length - 1],
-          //   //     id: generateUUID(),
-          //   //   };
-          //   //   newEdgesDocs.push(edgeFormat);
-          //   // });
-          // }
+          return []; // Retorna un arreglo vacío si no se cumplen las condiciones
         });
       }
+      return []; // Retorna un arreglo vacío si no hay contenido
     });
     setEdgesDocs(newEdgesDocs);
   }, [documents]);
 
-  // const data: ObjetoProps = { nodes: docs, edges: edgesP };
-  const data: ObjetoProps = { nodes: nodes, edges: edgesDocs };
+  const data: ObjetoProps = { nodes, edges: edgesDocs };
 
   let themeNodes = {
     shape: "dot",
-    // color: "#363534",
     scaling: {
       label: true,
     },
-    // chosen: true,
     color: {
       border: "",
       background: "",
