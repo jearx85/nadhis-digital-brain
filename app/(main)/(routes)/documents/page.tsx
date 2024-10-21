@@ -17,9 +17,10 @@ const DocumentsPage = () => {
   const user = useFusionAuthUser();
 
   const create = useMutation(api.documents.create);
+  const userId: any = user.userId;
 
   const onCreate = () => {
-    const promise = create({ title: "Untitled" })
+    const promise = create({ title: "Untitled", userId })
       .then((documentId) => router.push(`/documents/${documentId}`))
 
     toast.promise(promise, {
@@ -46,8 +47,7 @@ const DocumentsPage = () => {
         className="hidden dark:block"
       />
       <h2 className="text-lg font-medium">
-        Welcome to {user?.firstName}&apos;s Digital Brain
-        {/* Welcome to name user Digital Brain */}
+        Welcome to {user?.user?.firstName}&apos;s Digital Brain
       </h2>
       <Button onClick={onCreate}>
         <PlusCircle className="h-4 w-4 mr-2" />
