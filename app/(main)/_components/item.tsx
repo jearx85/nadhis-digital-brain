@@ -62,12 +62,15 @@ export const Item = ({
   const create = useMutation(api.documents.create);
   const archive = useMutation(api.documents.archive);
 
+  const fullName = user?.user?.firstName + ' ' + user?.user?.lastName
+
   const onArchive = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     event.stopPropagation();
     if (!id) return;
-    const promise = archive({ id })
+    const userId: any = user.userId
+    const promise = archive({ id, userId })
       .then(() => router.push("/documents"))
 
       idDeleteDoc = id
@@ -179,7 +182,7 @@ export const Item = ({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <div className="text-xs text-muted-foreground p-2">
-                Last edited by: {user?.fullName}
+                Last edited by: {fullName}
               </div>
             </DropdownMenuContent>
           </DropdownMenu>

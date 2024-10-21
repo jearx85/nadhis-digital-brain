@@ -6,7 +6,7 @@ import { Doc, Id } from "./_generated/dataModel";
 export const archive = mutation({
   args: { 
     id: v.id("documents"),
-    userId: v.string(), // Añadimos el userId como argumento
+    userId: v.optional(v.string()), // Añadimos el userId como argumento
   },
   handler: async (ctx, args) => {
     const { userId } = args; // Obtenemos el userId de los argumentos

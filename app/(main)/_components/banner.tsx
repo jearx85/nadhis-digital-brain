@@ -8,6 +8,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 interface BannerProps {
   documentId: Id<"documents">;
@@ -17,12 +18,16 @@ export const Banner = ({
   documentId
 }: BannerProps) => {
   const router = useRouter();
+  const { userId }: any = useFusionAuthUser();
 
   const remove = useMutation(api.documents.remove);
   const restore = useMutation(api.documents.restore);
 
   const onRemove = () => {
-    const promise = remove({ id: documentId });
+    const promise = remove({
+      id: documentId,
+      userId
+    });
 
     toast.promise(promise, {
       loading: "Deleting note...",
@@ -34,7 +39,10 @@ export const Banner = ({
   };
 
   const onRestore = () => {
-    const promise = restore({ id: documentId });
+    const promise = restore({
+      id: documentId,
+      userId
+    });
 
     toast.promise(promise, {
       loading: "Restoring note...",

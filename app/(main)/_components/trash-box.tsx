@@ -11,11 +11,13 @@ import { Id } from "@/convex/_generated/dataModel";
 import { Spinner } from "@/components/spinner";
 import { Input } from "@/components/ui/input";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
+import useFusionAuthUser from "@/hooks/useFusionAuthUser";
 
 export const TrashBox = () => {
+  const { userId }: any = useFusionAuthUser();
   const router = useRouter();
   const params = useParams();
-  const documents = useQuery(api.documents.getTrash);
+  const documents = useQuery(api.documents.getTrash, {userId});
   const restore = useMutation(api.documents.restore);
   const remove = useMutation(api.documents.remove);
 
@@ -34,7 +36,10 @@ export const TrashBox = () => {
     documentId: Id<"documents">,
   ) => {
     event.stopPropagation();
-    const promise = restore({ id: documentId });
+    const promise = restore({
+      id: documentId,
+      userId
+    });
 
     toast.promise(promise, {
       loading: "Restoring note...",
@@ -46,7 +51,10 @@ export const TrashBox = () => {
   const onRemove = (
     documentId: Id<"documents">,
   ) => {
-    const promise = remove({ id: documentId });
+    const promise = remove({
+      id: documentId,
+      userId
+    });
 
     toast.promise(promise, {
       loading: "Deleting note...",

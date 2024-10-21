@@ -34,8 +34,11 @@ export const Menu = ({
 
   const archive = useMutation(api.documents.archive);
 
+  const fullName = user?.user?.firstName + ' ' + user?.user?.lastName;
+  const userId: any = user.userId; 
+
   const onArchive = () => {
-    const promise = archive({ id: documentId })
+    const promise = archive({ id: documentId, userId })
 
     toast.promise(promise, {
       loading: "Moving to trash...",
@@ -65,7 +68,7 @@ export const Menu = ({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <div className="text-xs text-muted-foreground p-2">
-          Last edited by: {user?.fullName}
+          Last edited by: {fullName}
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
